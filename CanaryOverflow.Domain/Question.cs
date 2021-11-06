@@ -11,7 +11,9 @@ namespace CanaryOverflow.Domain
         {
             var question = new Question
             {
-                CreatedAt = DateTime.Now
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.Now,
+                _votes = new List<QuestionVote>()
             };
             return question.UpdateTitle(title)
                 .Bind(q => q.UpdateText(text))
@@ -42,21 +44,23 @@ namespace CanaryOverflow.Domain
         public DateTime LastAnswer => Answers.Max(a => a.CreatedAt);
         public Answer Answer { get; private set; }
 
-        private HashSet<QuestionVote> _votes;
-        public IReadOnlyCollection<QuestionVote> Votes => _votes;
+        private List<QuestionVote> _votes;
+        public IReadOnlyList<QuestionVote> Votes => _votes;
         public int Rating => Votes.Sum(v => v.Vote);
 
         public QuestionState State { get; private set; }
 
         public Result<Question> SetApproved()
         {
-            return Result.SuccessIf(_questionStateMachine.SetApproved(), this, "Can not set as approved.");
+            return Result.SuccessIf(_questionStateMachine.SetApproved(), this, "Can not set as approved.")
+                .Tap(() => State = QuestionState.Approved);
         }
 
         public Result<Question> SetAnswered(Answer answer)
         {
             return Result.SuccessIf(_questionStateMachine.SetAnswered(), this, "Can not set as answered.")
-                .Tap(() => Answer = answer);
+                .Tap(() => Answer = answer)
+                .Tap(() => State = QuestionState.Answered);
         }
 
         public Result<Question> UpdateTitle(string title)
@@ -100,10 +104,62 @@ namespace CanaryOverflow.Domain
         {
             return Result.SuccessIf(_answers.Add(answer), this, "Answer does not added.");
         }
-        
+
         public Result<Question> RemoveAnswer(Answer answer)
         {
             return Result.SuccessIf(_answers.Remove(answer), this, "Answer does not removed.");
+        }
+
+        public Result<QuestionVote> Upvote(User user)
+        {
+            return QuestionVote.CreateUpvote(this, user)
+                .Tap(v =>
+                {
+                    var foundIndex = _votes.FindIndex(qv => qv.VotedBy == user);
+                    if (foundIndex != -1)
+                    {
+                        switch (_votes[foundIndex].Vote)
+                        {
+                            case -1:
+                                _votes[foundIndex].ToggleVote();
+                                break;
+                            
+                            case 1:
+                                _votes.RemoveAt(foundIndex);
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        _votes.Add(v);
+                    }
+                });
+        }
+
+        public Result<QuestionVote> Downvote(User user)
+        {
+            return QuestionVote.CreateDownvote(this, user)
+                .Tap(v =>
+                {
+                    var foundIndex = _votes.FindIndex(qv => qv.VotedBy == user);
+                    if (foundIndex != -1)
+                    {
+                        switch (_votes[foundIndex].Vote)
+                        {
+                            case -1:
+                                _votes.RemoveAt(foundIndex);
+                                break;
+                            
+                            case 1:
+                                _votes[foundIndex].ToggleVote();
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        _votes.Add(v);
+                    }
+                });
         }
     }
 }
