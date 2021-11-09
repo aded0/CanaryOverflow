@@ -36,15 +36,15 @@ namespace CanaryOverflow.Domain
         private HashSet<Tag> _tags;
         public IReadOnlyCollection<Tag> Tags => _tags;
 
-        private HashSet<QuestionComment> _comments;
+        private readonly HashSet<QuestionComment> _comments;
         public IReadOnlyCollection<QuestionComment> Comments => _comments;
 
-        private HashSet<Answer> _answers;
+        private readonly HashSet<Answer> _answers;
         public IReadOnlyCollection<Answer> Answers => _answers;
         public DateTime LastAnswer => Answers.Max(a => a.CreatedAt);
         public Answer Answer { get; private set; }
 
-        private List<QuestionVote> _votes;
+        private readonly List<QuestionVote> _votes;
         public IReadOnlyList<QuestionVote> Votes => _votes;
         public int Rating => Votes.Sum(v => v.Vote);
 
@@ -65,13 +65,13 @@ namespace CanaryOverflow.Domain
 
         public Result<Question> UpdateTitle(string title)
         {
-            return Result.SuccessIf(!string.IsNullOrWhiteSpace(title), this, "Title empty or whitespace.")
+            return Result.SuccessIf(!string.IsNullOrWhiteSpace(title), this, "Title is empty or whitespace.")
                 .Tap(() => Title = title);
         }
 
         public Result<Question> UpdateText(string text)
         {
-            return Result.SuccessIf(!string.IsNullOrWhiteSpace(text), this, "Text empty or whitespace.")
+            return Result.SuccessIf(!string.IsNullOrWhiteSpace(text), this, "Text is empty or whitespace.")
                 .Tap(() => Text = text);
         }
 

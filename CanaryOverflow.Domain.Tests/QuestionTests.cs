@@ -14,7 +14,7 @@ namespace CanaryOverflow.Domain.Tests
             var createdBy = new User();
             var result = Question.Create("test title", "test question", createdBy)
                 .Bind(q => q.SetApproved())
-                .Tap(q => { q.State.Should().Be(QuestionState.Approved); });
+                .Tap(q => q.State.Should().Be(QuestionState.Approved));
             result.IsFailure.Should().BeFalse();
         }
 

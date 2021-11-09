@@ -1,4 +1,5 @@
 ﻿using System;
+using CanaryOverflow.Domain.EntityFrameworkCore.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
@@ -25,7 +26,7 @@ namespace CanaryOverflow.Domain.EntityFrameworkCore.Contexts
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.ApplyConfigurationsFromAssembly(typeof(CanaryDbContext).Assembly);
+            builder.ApplyConfiguration(new QuestionVoteEntityTypeConfiguration());
             base.OnModelCreating(builder);
         }
 
@@ -33,7 +34,7 @@ namespace CanaryOverflow.Domain.EntityFrameworkCore.Contexts
         {
             if (args.Length != 1)
             {
-                throw new ArgumentException("Single argument must be connection string.", nameof(args));
+                throw new ArgumentException("Single argument must be a connection string.", nameof(args));
             }
 
             var optionsBuilder = new DbContextOptionsBuilder<CanaryDbContext>();
