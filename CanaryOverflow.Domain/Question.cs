@@ -9,12 +9,7 @@ namespace CanaryOverflow.Domain
     {
         public static Result<Question> Create(string title, string text, User askedBy)
         {
-            var question = new Question
-            {
-                Id = Guid.NewGuid(),
-                CreatedAt = DateTime.Now,
-                _votes = new List<QuestionVote>()
-            };
+            var question = new Question();
             return question.UpdateTitle(title)
                 .Bind(q => q.UpdateText(text))
                 .Tap(q => q.AskedBy = askedBy);
@@ -25,6 +20,11 @@ namespace CanaryOverflow.Domain
         private Question()
         {
             _questionStateMachine = new QuestionStateMachine(State);
+            Id = Guid.NewGuid();
+            CreatedAt = DateTime.Now;
+            _comments = new HashSet<QuestionComment>();
+            _votes = new List<QuestionVote>();
+            _answers = new HashSet<Answer>();
         }
 
         public string Title { get; private set; }
