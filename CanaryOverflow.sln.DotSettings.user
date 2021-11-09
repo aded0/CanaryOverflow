@@ -1,11 +1,7 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=9250d967_002D879e_002D4f99_002D939c_002D48846abcd86c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="QuestionStateMachineTest" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
-  &lt;TestAncestor&gt;&#xD;
-    &lt;TestId&gt;xUnit::A81C4A47-9425-4F9E-AF06-60CA2D1B48A6::net5.0::CanaryOverflow.Domain.Tests.QuestionStateMachineTest&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::A81C4A47-9425-4F9E-AF06-60CA2D1B48A6::net5.0::CanaryOverflow.Domain.Tests.QuestionTests.SetApprovedTest&lt;/TestId&gt;&#xD;
-    &lt;TestId&gt;xUnit::A81C4A47-9425-4F9E-AF06-60CA2D1B48A6::net5.0::CanaryOverflow.Domain.Tests.QuestionTests.UpvoteTest&lt;/TestId&gt;&#xD;
-  &lt;/TestAncestor&gt;&#xD;
+  &lt;Project Location="C:\Users\Ivan\source\repos\CanaryOverflow\CanaryOverflow.Domain.Tests" Presentation="&amp;lt;CanaryOverflow.Domain.Tests&amp;gt;" /&gt;&#xD;
 &lt;/SessionState&gt;</s:String>
 	
 	

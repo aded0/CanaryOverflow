@@ -1,16 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.24.1" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.11">
+      <PackageReference Include="CSharpFunctionalExtensions" Version="2.24.3" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.10" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0-rc.2" />
       <PackageReference Include="stateless" Version="5.11.0" />
     </ItemGroup>
 
