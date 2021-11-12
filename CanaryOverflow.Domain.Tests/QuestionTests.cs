@@ -1,4 +1,7 @@
 ﻿using System.Linq;
+using System.Security.AccessControl;
+using CanaryOverflow.Domain.QuestionAggregate;
+using CanaryOverflow.Domain.UserAggregate;
 using CSharpFunctionalExtensions;
 using FluentAssertions;
 using Xunit;
@@ -136,14 +139,13 @@ namespace CanaryOverflow.Domain.Tests
         {
             var createdBy = new User();
             var createResult = Question.Create("test title", "test question", createdBy);
+
             createResult.IsFailure.Should().BeFalse();
 
             var commentedBy = new User();
 
-            var result = createResult.Bind(q =>
-                QuestionComment.Create("test comment", commentedBy)
-                    .Check(q.AddComment));
-            createResult.Tap(q => { q.Comments.Count.Should().Be(1); });
+            var result = createResult.Bind(q => q.AddComment("test comment", commentedBy))
+                .Tap(q => { q.Comments.Count.Should().Be(1); });
             result.IsFailure.Should().BeFalse();
         }
 
@@ -155,9 +157,8 @@ namespace CanaryOverflow.Domain.Tests
             var createResult = Question.Create("test title", "test question", createdBy);
             createResult.IsFailure.Should().BeFalse();
 
-            var result = createResult.Bind(q => Answer.Create("my answer", createdBy)
-                    .Bind(q.AddAnswer))
-                .Tap(q => { q.Answers.Count.Should().Be(1); });
+            var result = createResult.Bind(q => q.AddAnswer("my answer", createdBy))
+                .Tap(question => question.Answers.Count.Should().Be(1));
             result.IsFailure.Should().BeFalse();
         }
 
@@ -169,16 +170,28 @@ namespace CanaryOverflow.Domain.Tests
             var questionResult = Question.Create("test title", "test question", createdBy);
 
             questionResult.Bind(q => q.SetApproved())
-                .Bind(q => Answer.Create("my answer", createdBy)
-                    .Check(q.AddAnswer)
-                    .Bind(q.SetAnswered))
+                .Bind(q => q.AddAnswer("my answer", createdBy))
+                .Bind(q => q.SetAnswered(0))
                 .Tap(q =>
                 {
+                    q.Answers.Count.Should().Be(1);
                     q.State.Should().Be(QuestionState.Answered);
-                    var answer = q.Answers.First();
-                    q.Answer.Should().BeSameAs(answer);
                 });
             questionResult.IsFailure.Should().BeFalse();
+        }
+
+        [Fact]
+        [Trait("Category", "Tags")]
+        public void AddTagTwiceTest()
+        {
+            var createdBy = new User();
+            var questionResult = Question.Create("test title", "test question", createdBy);
+
+            var addingResult = questionResult.Bind(q => q.AddTag("sql"))
+                .Check(q => Result.SuccessIf(q.Tags.Count == 1, q, "single tag expected"))
+                .Bind(q => q.AddTag("sql"))
+                .Check(q => Result.SuccessIf(q.Tags.Count == 1, q, "single tag expected"));
+            addingResult.IsFailure.Should().BeTrue();
         }
     }
 }

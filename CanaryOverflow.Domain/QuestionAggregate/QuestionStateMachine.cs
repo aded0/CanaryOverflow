@@ -1,7 +1,7 @@
 ﻿using System;
 using Stateless;
 
-namespace CanaryOverflow.Domain
+namespace CanaryOverflow.Domain.QuestionAggregate
 {
     public enum QuestionState
     {

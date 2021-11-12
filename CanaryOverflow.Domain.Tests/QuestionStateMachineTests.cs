@@ -1,3 +1,4 @@
+using CanaryOverflow.Domain.QuestionAggregate;
 using CSharpFunctionalExtensions;
 using FluentAssertions;
 using Xunit;

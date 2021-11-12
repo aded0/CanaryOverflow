@@ -1,7 +1,8 @@
 ﻿using System;
+using CanaryOverflow.Domain.UserAggregate;
 using CSharpFunctionalExtensions;
 
-namespace CanaryOverflow.Domain
+namespace CanaryOverflow.Domain.QuestionAggregate
 {
     public class AnswerComment : Entity
     {

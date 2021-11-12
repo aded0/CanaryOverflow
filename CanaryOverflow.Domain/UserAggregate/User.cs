@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using CanaryOverflow.Domain.QuestionAggregate;
 using CSharpFunctionalExtensions;
 
-namespace CanaryOverflow.Domain
+namespace CanaryOverflow.Domain.UserAggregate
 {
     public class User : Entity<Guid>
     {

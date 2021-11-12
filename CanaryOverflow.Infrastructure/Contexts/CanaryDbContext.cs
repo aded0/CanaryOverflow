@@ -1,9 +1,11 @@
 ﻿using System;
-using CanaryOverflow.Domain.EntityFrameworkCore.Configurations;
+using CanaryOverflow.Domain.QuestionAggregate;
+using CanaryOverflow.Domain.UserAggregate;
+using CanaryOverflow.Infrastructure.Questions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace CanaryOverflow.Domain.EntityFrameworkCore.Contexts
+namespace CanaryOverflow.Infrastructure.Contexts
 {
     public class CanaryDbContext : DbContext, IDesignTimeDbContextFactory<CanaryDbContext>
     {
@@ -16,13 +18,12 @@ namespace CanaryOverflow.Domain.EntityFrameworkCore.Contexts
         {
         }
 
-        public DbSet<Answer> Answers { get; set; }
-        public DbSet<AnswerComment> AnswerComments { get; set; }
-        public DbSet<Question> Questions { get; set; }
-        public DbSet<QuestionComment> QuestionComments { get; set; }
-        public DbSet<QuestionVote> QuestionVotes { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<Answer> Answers { get; set; } = null!;
+        public DbSet<AnswerComment> AnswerComments { get; set; } = null!;
+        public DbSet<Question> Questions { get; set; } = null!;
+        public DbSet<QuestionComment> QuestionComments { get; set; } = null!;
+        public DbSet<QuestionVote> QuestionVotes { get; set; } = null!;
+        public DbSet<User> Users { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

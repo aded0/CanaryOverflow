@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using CanaryOverflow.Domain.UserAggregate;
 using CSharpFunctionalExtensions;
 
-namespace CanaryOverflow.Domain
+namespace CanaryOverflow.Domain.QuestionAggregate
 {
     public class Answer : Entity
     {
