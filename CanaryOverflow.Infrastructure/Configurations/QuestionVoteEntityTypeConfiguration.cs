@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CanaryOverflow.Infrastructure.Questions
+namespace CanaryOverflow.Infrastructure.Configurations
 {
     public class QuestionVoteEntityTypeConfiguration : IEntityTypeConfiguration<QuestionVote>
     {

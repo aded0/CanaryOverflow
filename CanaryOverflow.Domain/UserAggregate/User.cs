@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using CanaryOverflow.Domain.QuestionAggregate;
-using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Identity;
 
 namespace CanaryOverflow.Domain.UserAggregate
 {
-    public class User : Entity<Guid>
+    public class User : IdentityUser<Guid>
     {
         private HashSet<QuestionVote> _votes;
         public IReadOnlyCollection<QuestionVote> Votes => _votes;
