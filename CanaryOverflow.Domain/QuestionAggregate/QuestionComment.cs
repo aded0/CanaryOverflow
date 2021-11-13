@@ -11,10 +11,14 @@ namespace CanaryOverflow.Domain.QuestionAggregate
             var (isSuccess, _, error) = Result.Combine(
                 Result.FailureIf(() => string.IsNullOrWhiteSpace(text), "Text is null or whitespace."),
                 Result.FailureIf(() => user is null, "User is null."));
-            
+
             return Result.SuccessIf(isSuccess, new QuestionComment(text, user), error);
         }
-        
+
+        private QuestionComment()
+        {
+        }
+
         private QuestionComment(string text, User user)
         {
             Text = text;

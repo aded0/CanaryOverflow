@@ -16,11 +16,15 @@ namespace CanaryOverflow.Domain.QuestionAggregate
 
             return Result.SuccessIf(success, new Answer(text, createdBy), error);
         }
-        
-        private Answer(string text, User createdBy)
+
+        private Answer()
+        {
+        }
+
+        private Answer(string text, User answeredBy)
         {
             Text = text;
-            AnsweredBy = createdBy;
+            AnsweredBy = answeredBy;
             CreatedAt = DateTime.Now;
             _comments = new HashSet<AnswerComment>();
         }
@@ -32,11 +36,12 @@ namespace CanaryOverflow.Domain.QuestionAggregate
         private readonly HashSet<AnswerComment> _comments;
         public IReadOnlyCollection<AnswerComment> Comments => _comments;
 
-        public Result<Answer> AddComment(AnswerComment comment)
+        public Result<Answer> AddComment(string text, User commentedBy)
         {
-            return Result.SuccessIf(_comments.Add(comment), this, "Comment does not added.");
+            return AnswerComment.Create(text, commentedBy)
+                .Bind(c => Result.SuccessIf(_comments.Add(c), this, "Comment does not added."));
         }
-        
+
         public Result<Answer> UpdateText(string text)
         {
             return Result.SuccessIf(!string.IsNullOrWhiteSpace(text), this, "Text is empty or whitespace.")

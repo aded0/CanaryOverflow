@@ -15,14 +15,18 @@ namespace CanaryOverflow.Domain.QuestionAggregate
 
             return Result.SuccessIf(success, new AnswerComment(text, createdBy), error);
         }
-        
+
+        private AnswerComment()
+        {
+        }
+
         private AnswerComment(string text, User createdBy)
         {
             Text = text;
             CommentedBy = createdBy;
             CreatedAt = DateTime.Now;
         }
-        
+
         public string Text { get; private set; }
         public User CommentedBy { get; private set; }
         public DateTime CreatedAt { get; private set; }

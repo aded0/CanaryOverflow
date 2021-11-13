@@ -22,13 +22,17 @@ namespace CanaryOverflow.Domain.QuestionAggregate
             return Result.SuccessIf(isSuccess, new QuestionVote(question, user, -1), error);
         }
 
+        private QuestionVote()
+        {
+        }
+
         private QuestionVote(Question question, User user, sbyte vote)
         {
             Question = question;
             VotedBy = user;
             Vote = vote;
         }
-        
+
         public Guid QuestionId { get; private set; }
         public Question Question { get; private set; }
 
