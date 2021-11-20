@@ -8,13 +8,13 @@ namespace CanaryOverflow.Domain.QuestionAggregate
 {
     public sealed class Question : Entity<Guid>
     {
-        public static Result<Question> Create(string title, string text, User askedBy)
+        public static Result<Question> Create(string title, string text, Guid askedByUserId)
         {
             var question = new Question();
             return question.UpdateTitle(title)
                 .Bind(q => q.UpdateText(text))
-                .Check(_ => Result.SuccessIf(() => askedBy is not null, question, "User is null.")
-                    .Tap(q => q.AskedBy = askedBy));
+                .Check(_ => Result.SuccessIf(() => askedByUserId != Guid.Empty, question, "User's identifier is empty.")
+                    .Tap(q => q.AskedById = askedByUserId));
         }
 
         private readonly QuestionStateMachine _questionStateMachine;
@@ -34,7 +34,9 @@ namespace CanaryOverflow.Domain.QuestionAggregate
         public DateTime CreatedAt { get; private set; }
         public long ViewsCount { get; private set; }
         public string Text { get; private set; }
-        public User AskedBy { get; private set; }
+
+        public Guid AskedById { get; private set; }
+        private User AskedBy { get; set; }
 
         private readonly HashSet<string> _tags;
         public IReadOnlyCollection<string> Tags => _tags;
@@ -96,9 +98,9 @@ namespace CanaryOverflow.Domain.QuestionAggregate
             return Result.SuccessIf(_tags.Remove(tag), this, "Tag does not removed.");
         }
 
-        public Result<Question> AddComment(string text, User commentedBy)
+        public Result<Question> AddComment(string text, Guid commentedByUserId)
         {
-            return QuestionComment.Create(text, commentedBy).Bind(c =>
+            return QuestionComment.Create(text, commentedByUserId).Bind(c =>
                 Result.SuccessIf(_comments.Add(c), this, "Comment does not added."));
         }
 
@@ -108,9 +110,9 @@ namespace CanaryOverflow.Domain.QuestionAggregate
             return Result.SuccessIf(numRemoved > 0, this, "Comment does not removed.");
         }
 
-        public Result<Question> AddAnswer(string text, User answeredBy)
+        public Result<Question> AddAnswer(string text, Guid answeredByUserId)
         {
-            return Answer.Create(text, answeredBy).Bind(a =>
+            return Answer.Create(text, answeredByUserId).Bind(a =>
                 Result.SuccessIf(_answers.Add(a), this, "Answer does not added."));
         }
 
@@ -120,12 +122,12 @@ namespace CanaryOverflow.Domain.QuestionAggregate
             return Result.SuccessIf(numRemoved > 0, this, "Answer does not removed.");
         }
 
-        public Result<QuestionVote> Upvote(User user)
+        public Result<QuestionVote> Upvote(Guid userId)
         {
-            return QuestionVote.CreateUpvote(this, user)
+            return QuestionVote.CreateUpvote(this, userId)
                 .Tap(v =>
                 {
-                    var foundIndex = _votes.FindIndex(qv => qv.VotedBy == user);
+                    var foundIndex = _votes.FindIndex(qv => qv.VotedById == userId);
                     if (foundIndex != -1)
                     {
                         switch (_votes[foundIndex].Vote)
@@ -146,12 +148,12 @@ namespace CanaryOverflow.Domain.QuestionAggregate
                 });
         }
 
-        public Result<QuestionVote> Downvote(User user)
+        public Result<QuestionVote> Downvote(Guid userId)
         {
-            return QuestionVote.CreateDownvote(this, user)
+            return QuestionVote.CreateDownvote(this, userId)
                 .Tap(v =>
                 {
-                    var foundIndex = _votes.FindIndex(qv => qv.VotedBy == user);
+                    var foundIndex = _votes.FindIndex(qv => qv.VotedById == userId);
                     if (foundIndex != -1)
                     {
                         switch (_votes[foundIndex].Vote)

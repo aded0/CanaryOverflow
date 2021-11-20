@@ -1,5 +1,5 @@
-﻿using CanaryOverflow.Domain.QuestionAggregate;
-using CanaryOverflow.Domain.UserAggregate;
+﻿using System;
+using CanaryOverflow.Domain.QuestionAggregate;
 using CSharpFunctionalExtensions;
 using FluentAssertions;
 using Xunit;
@@ -11,24 +11,24 @@ namespace CanaryOverflow.Domain.Tests
         [Fact]
         public void FailedCreateUpvoteTest()
         {
-            var upvote = QuestionVote.CreateUpvote(null, null);
+            var upvote = QuestionVote.CreateUpvote(null, Guid.Empty);
             upvote.IsFailure.Should().BeTrue();
         }
-        
+
         [Fact]
         public void CreateUpvoteTest()
         {
-            var user = new User();
-            var result = Question.Create("test title", "test text", user)
+            var askedByUserId = Guid.NewGuid();
+            var result = Question.Create("test title", "test text", askedByUserId)
                 .Tap(q =>
                 {
-                    QuestionVote.CreateUpvote(q, user)
+                    QuestionVote.CreateUpvote(q, askedByUserId)
                         .Tap(v =>
-                    {
-                        v.Question.Should().BeSameAs(q);
-                        v.VotedBy.Should().BeSameAs(user);
-                        v.Vote.Should().Be(1);
-                    });
+                        {
+                            v.Question.Should().BeSameAs(q);
+                            v.VotedById.Should().Be(askedByUserId);
+                            v.Vote.Should().Be(1);
+                        });
                 });
             result.IsSuccess.Should().BeTrue();
         }
@@ -36,22 +36,22 @@ namespace CanaryOverflow.Domain.Tests
         [Fact]
         public void FailedCreateDownvote()
         {
-            var downvote = QuestionVote.CreateDownvote(null, null);
+            var downvote = QuestionVote.CreateDownvote(null, Guid.Empty);
             downvote.IsFailure.Should().BeTrue();
         }
-        
+
         [Fact]
         public void CreateDownvoteTest()
         {
-            var user = new User();
-            var result = Question.Create("test title", "test text", user)
+            var askedByUserId = Guid.NewGuid();
+            var result = Question.Create("test title", "test text", askedByUserId)
                 .Tap(q =>
                 {
-                    QuestionVote.CreateDownvote(q, user)
+                    QuestionVote.CreateDownvote(q, askedByUserId)
                         .Tap(v =>
                         {
                             v.Question.Should().BeSameAs(q);
-                            v.VotedBy.Should().BeSameAs(user);
+                            v.VotedById.Should().Be(askedByUserId);
                             v.Vote.Should().Be(-1);
                         });
                 });

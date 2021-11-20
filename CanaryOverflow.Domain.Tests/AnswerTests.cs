@@ -1,5 +1,5 @@
-﻿using CanaryOverflow.Domain.QuestionAggregate;
-using CanaryOverflow.Domain.UserAggregate;
+﻿using System;
+using CanaryOverflow.Domain.QuestionAggregate;
 using CSharpFunctionalExtensions;
 using FluentAssertions;
 using Xunit;
@@ -11,11 +11,11 @@ namespace CanaryOverflow.Domain.Tests
         [Fact]
         public void AddCommentTest()
         {
-            var answeredBy = new User();
-            var commentedBy = new User();
+            var createdByUserId = Guid.NewGuid();
+            var commentedByUserId = Guid.NewGuid();
 
-            var answerResult = Answer.Create("answer text", answeredBy)
-                .Bind(a => a.AddComment("answer comment", commentedBy))
+            var answerResult = Answer.Create("answer text", createdByUserId)
+                .Bind(a => a.AddComment("answer comment", commentedByUserId))
                 .Tap(a => a.Comments.Count.Should().Be(1));
 
             answerResult.IsFailure.Should().BeFalse();

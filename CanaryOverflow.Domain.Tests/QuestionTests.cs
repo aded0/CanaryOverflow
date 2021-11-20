@@ -1,7 +1,5 @@
-﻿using System.Linq;
-using System.Security.AccessControl;
+﻿using System;
 using CanaryOverflow.Domain.QuestionAggregate;
-using CanaryOverflow.Domain.UserAggregate;
 using CSharpFunctionalExtensions;
 using FluentAssertions;
 using Xunit;
@@ -14,8 +12,8 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "State")]
         public void SetApprovedTest()
         {
-            var createdBy = new User();
-            var result = Question.Create("test title", "test question", createdBy)
+            var askedByUserId = Guid.NewGuid();
+            var result = Question.Create("test title", "test question", askedByUserId)
                 .Bind(q => q.SetApproved())
                 .Tap(q => q.State.Should().Be(QuestionState.Approved));
             result.IsFailure.Should().BeFalse();
@@ -25,14 +23,14 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "Votes")]
         public void UpvoteTest()
         {
-            var createdBy = new User();
-            var question = Question.Create("test title", "test question", createdBy);
-            var upvotedBy = new User();
+            var askedByUserId = Guid.NewGuid();
+            var question = Question.Create("test title", "test question", askedByUserId);
+            var userId = Guid.NewGuid();
 
             var result = question
                 .Tap(q =>
                 {
-                    var result = q.Upvote(upvotedBy)
+                    var result = q.Upvote(userId)
                         .Tap(v => v.Vote.Should().Be(1));
 
                     result.IsFailure.Should().BeFalse();
@@ -44,14 +42,14 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "Votes")]
         public void DoubleUpvoteTest()
         {
-            var createdBy = new User();
-            var question = Question.Create("test title", "test question", createdBy);
-            var upvotedBy = new User();
+            var askedByUserId = Guid.NewGuid();
+            var question = Question.Create("test title", "test question", askedByUserId);
+            var userId = Guid.NewGuid();
 
             var result = question.Tap(q =>
             {
-                q.Upvote(upvotedBy);
-                q.Upvote(upvotedBy);
+                q.Upvote(userId);
+                q.Upvote(userId);
                 q.Votes.Count.Should().Be(0);
             });
             result.IsFailure.Should().BeFalse();
@@ -61,14 +59,14 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "Votes")]
         public void DoubleDownvoteTest()
         {
-            var createdBy = new User();
-            var question = Question.Create("test title", "test question", createdBy);
-            var upvotedBy = new User();
+            var askedByUserId = Guid.NewGuid();
+            var question = Question.Create("test title", "test question", askedByUserId);
+            var userId = Guid.NewGuid();
 
             var result = question.Tap(q =>
             {
-                q.Downvote(upvotedBy);
-                q.Downvote(upvotedBy);
+                q.Downvote(userId);
+                q.Downvote(userId);
                 q.Votes.Count.Should().Be(0);
             });
             result.IsFailure.Should().BeFalse();
@@ -78,14 +76,14 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "Votes")]
         public void DownvoteToUpvoteTest()
         {
-            var createdBy = new User();
-            var question = Question.Create("test title", "test question", createdBy);
-            var upvotedBy = new User();
+            var askedByUserId = Guid.NewGuid();
+            var question = Question.Create("test title", "test question", askedByUserId);
+            var userId = Guid.NewGuid();
 
             var result = question.Tap(q =>
             {
-                q.Downvote(upvotedBy);
-                var result = q.Upvote(upvotedBy)
+                q.Downvote(userId);
+                var result = q.Upvote(userId)
                     .Tap(qv => qv.Vote.Should().Be(1));
 
                 result.IsFailure.Should().BeFalse();
@@ -98,14 +96,14 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "Votes")]
         public void UpvoteToDownvoteTest()
         {
-            var createdBy = new User();
-            var question = Question.Create("test title", "test question", createdBy);
-            var upvotedBy = new User();
+            var askedByUserId = Guid.NewGuid();
+            var question = Question.Create("test title", "test question", askedByUserId);
+            var userId = Guid.NewGuid();
 
             var result = question.Tap(q =>
             {
-                q.Upvote(upvotedBy);
-                var result = q.Downvote(upvotedBy)
+                q.Upvote(userId);
+                var result = q.Downvote(userId)
                     .Tap(qv => qv.Vote.Should().Be(-1));
 
                 result.IsFailure.Should().BeFalse();
@@ -118,11 +116,11 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "Votes")]
         public void RatingTest()
         {
-            var createdBy = new User();
-            var question = Question.Create("test title", "test question", createdBy);
-            var alice = new User();
-            var bob = new User();
-            var john = new User();
+            var askedByUserId = Guid.NewGuid();
+            var question = Question.Create("test title", "test question", askedByUserId);
+            var alice = Guid.NewGuid();
+            var bob = Guid.NewGuid();
+            var john = Guid.NewGuid();
 
             var result = question.Tap(q =>
             {
@@ -137,15 +135,15 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "Comments")]
         public void AddCommentTest()
         {
-            var createdBy = new User();
-            var createResult = Question.Create("test title", "test question", createdBy);
+            var askedByUserId = Guid.NewGuid();
+            var createResult = Question.Create("test title", "test question", askedByUserId);
 
             createResult.IsFailure.Should().BeFalse();
 
-            var commentedBy = new User();
+            var commentedByUserId = Guid.NewGuid();
 
-            var result = createResult.Bind(q => q.AddComment("test comment", commentedBy))
-                .Tap(q => { q.Comments.Count.Should().Be(1); });
+            var result = createResult.Bind(q => q.AddComment("test comment", commentedByUserId))
+                .Tap(q => q.Comments.Count.Should().Be(1));
             result.IsFailure.Should().BeFalse();
         }
 
@@ -153,11 +151,11 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "Answers")]
         public void AddAnswerTest()
         {
-            var createdBy = new User();
-            var createResult = Question.Create("test title", "test question", createdBy);
+            var answeredByUserId = Guid.NewGuid();
+            var createResult = Question.Create("test title", "test question", answeredByUserId);
             createResult.IsFailure.Should().BeFalse();
 
-            var result = createResult.Bind(q => q.AddAnswer("my answer", createdBy))
+            var result = createResult.Bind(q => q.AddAnswer("my answer", answeredByUserId))
                 .Tap(question => question.Answers.Count.Should().Be(1));
             result.IsFailure.Should().BeFalse();
         }
@@ -166,11 +164,11 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "State")]
         public void SetAnswerTest()
         {
-            var createdBy = new User();
-            var questionResult = Question.Create("test title", "test question", createdBy);
+            var answeredByUserId = Guid.NewGuid();
+            var questionResult = Question.Create("test title", "test question", answeredByUserId);
 
             questionResult.Bind(q => q.SetApproved())
-                .Bind(q => q.AddAnswer("my answer", createdBy))
+                .Bind(q => q.AddAnswer("my answer", answeredByUserId))
                 .Bind(q => q.SetAnswered(0))
                 .Tap(q =>
                 {
@@ -184,8 +182,8 @@ namespace CanaryOverflow.Domain.Tests
         [Trait("Category", "Tags")]
         public void AddTagTwiceTest()
         {
-            var createdBy = new User();
-            var questionResult = Question.Create("test title", "test question", createdBy);
+            var askedByUserId = Guid.NewGuid();
+            var questionResult = Question.Create("test title", "test question", askedByUserId);
 
             var addingResult = questionResult.Bind(q => q.AddTag("sql"))
                 .Check(q => Result.SuccessIf(q.Tags.Count == 1, q, "single tag expected"))

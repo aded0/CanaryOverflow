@@ -8,13 +8,7 @@ namespace CanaryOverflow.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<QuestionVote> builder)
         {
-            builder.HasKey(v => new {v.QuestionId, v.UserId});
-            builder.HasOne(v => v.Question)
-                .WithMany(q => q.Votes)
-                .HasForeignKey(v => v.QuestionId);
-            builder.HasOne(v => v.VotedBy)
-                .WithMany(u => u.Votes)
-                .HasForeignKey(v => v.UserId);
+            builder.HasKey(v => new {v.QuestionId, v.VotedById});
         }
     }
 }

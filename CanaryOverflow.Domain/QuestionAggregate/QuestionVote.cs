@@ -4,39 +4,39 @@ using CSharpFunctionalExtensions;
 
 namespace CanaryOverflow.Domain.QuestionAggregate
 {
-    public class QuestionVote
+    public sealed class QuestionVote
     {
-        public static Result<QuestionVote> CreateUpvote(Question question, User user)
+        public static Result<QuestionVote> CreateUpvote(Question question, Guid userId)
         {
             var (isSuccess, _, error) = Result.Combine(
                 Result.FailureIf(() => question is null, "Question is null."),
-                Result.FailureIf(() => user is null, "User is null."));
-            return Result.SuccessIf(isSuccess, new QuestionVote(question, user, 1), error);
+                Result.FailureIf(() => userId == Guid.Empty, "User's identifier is empty."));
+            return Result.SuccessIf(isSuccess, new QuestionVote(question, userId, 1), error);
         }
 
-        public static Result<QuestionVote> CreateDownvote(Question question, User user)
+        public static Result<QuestionVote> CreateDownvote(Question question, Guid userId)
         {
             var (isSuccess, _, error) = Result.Combine(
                 Result.FailureIf(() => question is null, "Question is null."),
-                Result.FailureIf(() => user is null, "User is null."));
-            return Result.SuccessIf(isSuccess, new QuestionVote(question, user, -1), error);
+                Result.FailureIf(() => userId == Guid.Empty, "User's identifier is empty."));
+            return Result.SuccessIf(isSuccess, new QuestionVote(question, userId, -1), error);
         }
 
         private QuestionVote()
         {
         }
 
-        private QuestionVote(Question question, User user, sbyte vote)
+        private QuestionVote(Question question, Guid userId, sbyte vote)
         {
             Question = question;
-            VotedBy = user;
+            VotedById = userId;
             Vote = vote;
         }
 
         public Guid QuestionId { get; private set; }
         public Question Question { get; private set; }
 
-        public Guid UserId { get; private set; }
+        public Guid VotedById { get; private set; }
         public User VotedBy { get; private set; }
 
         public sbyte Vote { get; private set; }

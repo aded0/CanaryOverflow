@@ -1,5 +1,4 @@
-﻿using System;
-using CanaryOverflow.Domain.QuestionAggregate;
+﻿using CanaryOverflow.Domain.QuestionAggregate;
 using CanaryOverflow.Domain.UserAggregate;
 using CanaryOverflow.Infrastructure.Configurations;
 using Microsoft.AspNetCore.Identity;
