@@ -8,9 +8,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanaryOverflow.Infrastructu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{0B796B67-F1A6-40E5-942C-CE9CD30191B0}"
 	ProjectSection(SolutionItems) = preProject
-		LICENSE = LICENSE
-		README.md = README.md
-		.gitignore = .gitignore
+		..\.gitignore = ..\.gitignore
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{6AF08CD1-7DA5-4A0C-BA36-D716F39964A1}"
+	ProjectSection(SolutionItems) = preProject
+		..\docs\design.md = ..\docs\design.md
 	EndProjectSection
 EndProject
 Global
@@ -31,5 +36,8 @@ Global
 		{807CAA26-73C1-4BAB-BDEE-CD7EC58F0E2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{807CAA26-73C1-4BAB-BDEE-CD7EC58F0E2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{807CAA26-73C1-4BAB-BDEE-CD7EC58F0E2F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6AF08CD1-7DA5-4A0C-BA36-D716F39964A1} = {0B796B67-F1A6-40E5-942C-CE9CD30191B0}
 	EndGlobalSection
 EndGlobal
