@@ -1,0 +1,28 @@
+﻿@model SignupViewModel
+@{
+  Layout = "_LayoutSlim";
+  ViewData["Title"] = "Signup";
+}
+
+<main class="grow flex flex-col justify-center items-center text-zinc-600">
+  <form class="flex flex-col bg-white rounded w-250px p-3" asp-controller="Auth" asp-action="Signup" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <section class="flex flex-col">
+      <label asp-for="Email"></label>
+      <input asp-for="Email" type="text" autocomplete="email" aria-required="true" class="p-1 rounded border border-zinc-400 focus:outline-none focus:ring focus:ring-sky-200 focus:border-sky-500"/>
+      <span asp-validation-for="Email" class="text-sm text-red-600"></span>
+    </section>
+    <section class="flex flex-col mt-2">
+      <label asp-for="Password"></label>
+      <input asp-for="Password" type="password" class="p-1 rounded border border-zinc-400 focus:outline-none focus:ring focus:ring-sky-200 focus:border-sky-500" autocomplete="new-password" aria-required="true"/>
+      <span asp-validation-for="Password" class="text-sm text-red-600"></span>
+    </section>
+    <section class="flex flex-col mt-2">
+      <label asp-for="ConfirmPassword"></label>
+      <input asp-for="ConfirmPassword" type="password" class="p-1 rounded border border-zinc-400 focus:outline-none focus:ring focus:ring-sky-200 focus:border-sky-500" autocomplete="new-password" aria-required="true"/>
+      <span asp-validation-for="ConfirmPassword" class="text-sm text-red-600"></span>
+    </section>
+    <button class="mt-2 px-3 py-1 text-white rounded border border-sky-500 bg-sky-500 hover:border-sky-600 hover:bg-sky-600 focus:outline-none focus:ring focus:ring-sky-200" type="submit">Sign up</button>
+  </form>
+  <span>Already have an account? <a class="text-sky-600 hover:text-sky-400" asp-controller="Auth" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">Log in</a></span>
+</main>

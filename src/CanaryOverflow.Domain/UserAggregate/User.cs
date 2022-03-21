@@ -12,7 +12,7 @@ namespace CanaryOverflow.Domain.UserAggregate
 
             if (ReferenceEquals(this, other))
                 return true;
-            
+
             if (IsTransient() || other.IsTransient())
                 return false;
 
