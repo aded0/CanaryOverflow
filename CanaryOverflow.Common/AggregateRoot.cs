@@ -14,7 +14,7 @@ public abstract class AggregateRoot<TKey, TAggregate> : Entity<TKey>
         Constructor = lambdaExpression.Compile();
     }
 
-    public static TAggregate Create(IReadOnlyCollection<object> events)
+    public static TAggregate Create(IReadOnlyCollection<IDomainEvent> events)
     {
         if (events.Count < 1)
             throw new ArgumentException("Unable to create instance without events", nameof(events));
@@ -29,18 +29,18 @@ public abstract class AggregateRoot<TKey, TAggregate> : Entity<TKey>
     }
 
 
-    private readonly Queue<object> _events;
+    private readonly Queue<IDomainEvent> _events;
 
     protected AggregateRoot()
     {
-        _events = new Queue<object>();
+        _events = new Queue<IDomainEvent>();
     }
 
     public int Version { get; private set; }
 
-    protected abstract void When(object @event);
+    protected abstract void When(IDomainEvent @event);
 
-    protected void Append(object @event)
+    protected void Append(IDomainEvent @event)
     {
         _events.Enqueue(@event);
 
@@ -49,6 +49,6 @@ public abstract class AggregateRoot<TKey, TAggregate> : Entity<TKey>
         When(@event);
     }
 
-    public IReadOnlyCollection<object> GetUncommittedEvents() => _events;
+    public IReadOnlyCollection<IDomainEvent> GetUncommittedEvents() => _events;
     public void ClearUncommittedEvents() => _events.Clear();
 }

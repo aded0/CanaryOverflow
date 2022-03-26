@@ -11,7 +11,7 @@ public abstract class Entity<TKey> : IEquatable<Entity<TKey>>
         Id = id;
     }
 
-    public TKey? Id { get; protected set; }
+    public TKey Id { get; protected set; }
 
     public bool Equals(Entity<TKey>? other)
     {
