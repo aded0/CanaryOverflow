@@ -11,7 +11,7 @@ public abstract class Entity<TKey> : IEquatable<Entity<TKey>>
         Id = id;
     }
 
-    public TKey Id { get; protected set; }
+    public TKey? Id { get; protected set; }
 
     public bool Equals(Entity<TKey>? other)
     {
@@ -24,7 +24,7 @@ public abstract class Entity<TKey> : IEquatable<Entity<TKey>>
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((Entity<TKey>) obj);
     }
 

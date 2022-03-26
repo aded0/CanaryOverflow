@@ -12,7 +12,8 @@ public class DomainEventTypesCache : IDomainEventTypesCache
         var domainEventType = typeof(IDomainEvent);
         _types = assemblies
             .SelectMany(a => a.GetTypes())
-            .Where(t => t.IsAssignableFrom(domainEventType))
+            .Where(t => !t.IsInterface)
+            .Where(t => domainEventType.IsAssignableFrom(t))
             .ToDictionary(t => t.Name);
     }
 

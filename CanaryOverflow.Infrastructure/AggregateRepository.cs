@@ -24,6 +24,7 @@ public class AggregateRepository<TKey, TAggregate> : IAggregateRepository<TKey, 
     public async Task SaveAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
     {
         if (aggregate is null) throw new ArgumentNullException(nameof(aggregate));
+        if (aggregate.Id is null) throw new ArgumentException("Invalid aggregate without Id");
 
         var events = aggregate.GetUncommittedEvents();
 
@@ -39,7 +40,7 @@ public class AggregateRepository<TKey, TAggregate> : IAggregateRepository<TKey, 
         aggregate.ClearUncommittedEvents();
     }
 
-    private static EventData AsEventData(IDomainEvent @event)
+    private static EventData AsEventData(object @event)
     {
         var data = JsonSerializer.SerializeToUtf8Bytes(@event);
 
