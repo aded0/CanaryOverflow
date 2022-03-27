@@ -1,53 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
-using CanaryOverflow.Domain.UserAggregate;
-using CSharpFunctionalExtensions;
+using System.Diagnostics;
+using CanaryOverflow.Common;
 
-namespace CanaryOverflow.Domain.QuestionAggregate
+namespace CanaryOverflow.Domain.QuestionAggregate;
+
+[DebuggerDisplay("{Id}")]
+public class Answer : Entity<Guid>
 {
-    public sealed class Answer : Entity
+    public static Answer Create(Guid id, string text, Guid createdByUserId)
     {
-        public static Result<Answer> Create(string text, Guid createdByUserId)
-        {
-            var (success, _, error) = Result.Combine(
-                Result.SuccessIf(() => !string.IsNullOrWhiteSpace(text), "Text is null or whitespace."),
-                Result.SuccessIf(() => createdByUserId != Guid.Empty, "Identifier of user is empty.")
-            );
+        if (id == Guid.Empty) throw new ArgumentException("Identifier is empty.", nameof(id));
+        if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(nameof(text));
+        if (createdByUserId == Guid.Empty)
+            throw new ArgumentException("Identifier of user is empty.", nameof(createdByUserId));
 
-            return Result.SuccessIf(success, new Answer(text, createdByUserId), error);
-        }
+        return new Answer(id, text, createdByUserId);
+    }
 
-        private Answer()
-        {
-        }
+    private Answer(Guid id, string text, Guid answeredByUserId)
+    {
+        Id = id;
+        Text = text;
+        AnsweredById = answeredByUserId;
+        CreatedAt = DateTime.Now;
+//      _comments = new HashSet<AnswerComment>();
+    }
 
-        private Answer(string text, Guid answeredByUserId)
-        {
-            Text = text;
-            AnsweredById = answeredByUserId;
-            CreatedAt = DateTime.Now;
-            _comments = new HashSet<AnswerComment>();
-        }
+    public string Text { get; private set; }
 
-        public string Text { get; private set; }
-        public DateTime CreatedAt { get; private set; }
+    public Guid AnsweredById { get; private set; }
 
-        public Guid AnsweredById { get; private set; }
-        private User AnsweredBy { get; set; }
+    // private User AnsweredBy { get; set; }
+    public DateTime CreatedAt { get; private set; }
 
-        private readonly HashSet<AnswerComment> _comments;
-        public IReadOnlyCollection<AnswerComment> Comments => _comments;
 
-        public Result<Answer> AddComment(string text, Guid commentedByUserId)
-        {
-            return AnswerComment.Create(text, commentedByUserId)
-                .Bind(c => Result.SuccessIf(_comments.Add(c), this, "Comment does not added."));
-        }
+//         private readonly HashSet<AnswerComment> _comments;
+//         public IReadOnlyCollection<AnswerComment> Comments => _comments;
 
-        public Result<Answer> UpdateText(string text)
-        {
-            return Result.SuccessIf(!string.IsNullOrWhiteSpace(text), this, "Text is empty or whitespace.")
-                .Tap(() => Text = text);
-        }
+//         public Result<Answer> AddComment(string text, Guid commentedByUserId)
+//         {
+//             return AnswerComment.Create(text, commentedByUserId)
+//                 .Bind(c => Result.SuccessIf(_comments.Add(c), this, "Comment does not added."));
+//         }
+//
+    public void UpdateText(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(nameof(text));
+        Text = text;
     }
 }

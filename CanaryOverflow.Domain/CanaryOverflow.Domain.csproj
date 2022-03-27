@@ -5,9 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CSharpFunctionalExtensions" Version="2.24.4" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
       <PackageReference Include="stateless" Version="5.11.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CanaryOverflow.Common\CanaryOverflow.Common.csproj" />
     </ItemGroup>
 
 </Project>
