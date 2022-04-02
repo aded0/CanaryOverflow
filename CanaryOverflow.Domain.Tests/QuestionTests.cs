@@ -115,32 +115,29 @@ public class QuestionTests
     }
 
     [Fact]
-    [Trait("Category", "Question/State")]
+    [Trait("Category", "Question/Transition/Invalid")]
     public void Change_state_from_unapproved_to_answered()
     {
         var question = Question.Create(Title, Text, Guid.NewGuid());
-        question.AddAnswer("answer1", Guid.NewGuid());
-        var answerId = question.Answers.First().Id;
+        var answer = question.AddAnswer("answer1", Guid.NewGuid());
 
-        var act = () => question.SetAnswered(answerId);
+        var act = () => question.SetAnswered(answer);
 
         act.Should().Throw<InvalidOperationException>()
             .WithMessage("No valid leaving transitions are permitted from state*");
     }
-    
-    
+
+
     [Fact]
-    [Trait("Category", "Question/State")]
+    [Trait("Category", "Question/Transition/Valid")]
     public void Change_state_from_approved_to_answered()
     {
         var question = Question.Create(Title, Text, Guid.NewGuid());
-        question.AddAnswer("answer1Text", Guid.NewGuid());
-        var answer = question.Answers.First();
-        
+        var answer = question.AddAnswer("answer1Text", Guid.NewGuid());
+
         question.SetApproved();
-        question.SetAnswered(answer.Id);
+        question.SetAnswered(answer);
 
         question.Answer.Should().Be(answer);
     }
-
 }

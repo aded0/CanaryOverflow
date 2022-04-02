@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using CanaryOverflow.Common;
 
 namespace CanaryOverflow.Domain.QuestionAggregate;
@@ -16,6 +15,12 @@ public record TitleUpdated(string Title) : IDomainEvent;
 public record TextUpdated(string Text) : IDomainEvent;
 
 public record AnswerAdded(Answer Answer) : IDomainEvent;
+
+public record QuestionCommentAdded(Comment Comment) : IDomainEvent;
+
+public record QuestionApproved : IDomainEvent;
+
+public record QuestionAnswered(Answer Answer) : IDomainEvent;
 
 #endregion
 
@@ -39,6 +44,7 @@ public class Question : AggregateRoot<Guid, Question>
     }
 
     private readonly IQuestionStateMachine _stateMachine;
+    private readonly HashSet<Comment> _comments;
 
     private Question() : this(QuestionState.Unapproved)
     {
@@ -48,7 +54,7 @@ public class Question : AggregateRoot<Guid, Question>
     {
         _stateMachine = new QuestionStateMachine(questionState);
         _answers = new HashSet<Answer>();
-        // _comments = new HashSet<QuestionComment>();
+        _comments = new HashSet<Comment>();
         // _votes = new List<QuestionVote>();
         // _tags = new HashSet<string>();
     }
@@ -62,18 +68,13 @@ public class Question : AggregateRoot<Guid, Question>
     public IEnumerable<Answer> Answers => _answers;
 
     public Answer Answer { get; private set; }
-    // public DateTime LastAnswer => Answers.Max(a => a.CreatedAt);
+
+    public IReadOnlyCollection<Comment> Comments => _comments;
 
     // public long ViewsCount { get; private set; }
 
-    // private User AskedBy { get; set; }
-
     // private readonly HashSet<string> _tags;
     // public IReadOnlyCollection<string> Tags => _tags;
-
-    // private readonly HashSet<QuestionComment> _comments;
-    // public IReadOnlyCollection<QuestionComment> Comments => _comments;
-
 
     // private readonly List<QuestionVote> _votes;
     // public IReadOnlyList<QuestionVote> Votes => _votes;
@@ -98,29 +99,29 @@ public class Question : AggregateRoot<Guid, Question>
 
     public void SetApproved()
     {
-        _stateMachine.SetApproved();
+        Append(new QuestionApproved());
     }
 
-    public void AddAnswer(string text, Guid createdByUserId)
+    public Answer AddAnswer(string text, Guid answeredById)
     {
-        var answer = Answer.Create(Guid.NewGuid(), text, createdByUserId);
+        var answer = Answer.Create(Guid.NewGuid(), text, answeredById, DateTime.Now);
         Append(new AnswerAdded(answer));
+        return answer;
     }
 
-    // public Result<Question> RemoveAnswer(long answerId)
-    // {
-    //     var numRemoved = _answers.RemoveWhere(a => a.Id == answerId);
-    //     return Result.SuccessIf(numRemoved > 0, this, "Answer does not removed.");
-    // }
-
-    public void SetAnswered(Guid answerId)
+    public void SetAnswered(Answer answer)
     {
-        var answer = Answers.FirstOrDefault(a => a.Id == answerId);
-        if (answer is null) throw new NullReferenceException("Answer not found in answers.");
-        _stateMachine.SetAnswered();
-        Answer = answer;
+        var notContains = !_answers.Contains(answer);
+        if (notContains) throw new NullReferenceException("Answer not found in answers.");
+
+        Append(new QuestionAnswered(answer));
     }
 
+    public void AddComment(string text, Guid commentedByUserId)
+    {
+        var comment = Comment.Create(Guid.NewGuid(), text, commentedByUserId, DateTime.Now);
+        Append(new QuestionCommentAdded(comment));
+    }
 
     // public void IncrementViews()
     // {
@@ -135,18 +136,6 @@ public class Question : AggregateRoot<Guid, Question>
     // public Result<Question> RemoveTag(string tag)
     // {
     //     return Result.SuccessIf(_tags.Remove(tag), this, "Tag does not removed.");
-    // }
-
-    // public Result<Question> AddComment(string text, Guid commentedByUserId)
-    // {
-    //     return QuestionComment.Create(text, commentedByUserId).Bind(c =>
-    //         Result.SuccessIf(_comments.Add(c), this, "Comment does not added."));
-    // }
-
-    // public Result<Question> RemoveComment(long commentId)
-    // {
-    //     var numRemoved = _comments.RemoveWhere(c => c.Id == commentId);
-    //     return Result.SuccessIf(numRemoved > 0, this, "Comment does not removed.");
     // }
 
     // public Result<QuestionVote> Upvote(Guid userId)
@@ -220,8 +209,24 @@ public class Question : AggregateRoot<Guid, Question>
             case AnswerAdded answerAdded:
                 Apply(answerAdded);
                 break;
+
+            case QuestionCommentAdded questionCommentAdded:
+                Apply(questionCommentAdded);
+                break;
+
+            case QuestionApproved questionApproved:
+                Apply(questionApproved);
+                break;
+
+            case QuestionAnswered questionAnswered:
+                Apply(questionAnswered);
+                break;
+
+            default:
+                throw new NotSupportedException($"Question does not support '{@event.GetType().Name}' event.");
         }
     }
+
 
     #region Event appliers
 
@@ -245,9 +250,25 @@ public class Question : AggregateRoot<Guid, Question>
     }
 
 
-    private void Apply(AnswerAdded questionCreated)
+    private void Apply(AnswerAdded answerAdded)
     {
-        _answers.Add(questionCreated.Answer);
+        _answers.Add(answerAdded.Answer);
+    }
+
+    private void Apply(QuestionCommentAdded questionCommentAdded)
+    {
+        _comments.Add(questionCommentAdded.Comment);
+    }
+
+    private void Apply(QuestionApproved _)
+    {
+        _stateMachine.SetApproved();
+    }
+
+    private void Apply(QuestionAnswered questionAnswered)
+    {
+        _stateMachine.SetAnswered();
+        Answer = questionAnswered.Answer;
     }
 
     #endregion

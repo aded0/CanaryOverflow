@@ -7,11 +7,13 @@ namespace CanaryOverflow.Domain.Tests;
 
 public class AnswerTests
 {
+    private const string AnswerText = "Test text";
+
     [Fact]
     [Trait("Category", "Answer/Create")]
     public void Create_answer_with_empty_id()
     {
-        var act = () => Answer.Create(Guid.Empty, "Test text", Guid.NewGuid());
+        var act = () => Answer.Create(Guid.Empty, AnswerText, Guid.NewGuid(), DateTime.Now);
         act.Should().Throw<ArgumentException>();
     }
 
@@ -19,7 +21,7 @@ public class AnswerTests
     [Trait("Category", "Answer/Create")]
     public void Create_answer_with_invalid_user_id()
     {
-        var act = () => Answer.Create(Guid.NewGuid(), "Test text", Guid.Empty);
+        var act = () => Answer.Create(Guid.NewGuid(), AnswerText, Guid.Empty, DateTime.Now);
         act.Should().Throw<ArgumentException>();
     }
 
@@ -27,7 +29,7 @@ public class AnswerTests
     [Trait("Category", "Answer/Create")]
     public void Create_answer_with_invalid_text()
     {
-        var act = () => Answer.Create(Guid.NewGuid(), "", Guid.NewGuid());
+        var act = () => Answer.Create(Guid.NewGuid(), "", Guid.NewGuid(), DateTime.Now);
         act.Should().Throw<ArgumentNullException>();
     }
 
@@ -38,7 +40,7 @@ public class AnswerTests
         const string text = "Test";
         var createdByUserId = Guid.NewGuid();
 
-        var answer = Answer.Create(Guid.NewGuid(), text, createdByUserId);
+        var answer = Answer.Create(Guid.NewGuid(), text, createdByUserId, DateTime.Now);
 
         answer.Text.Should().Be(text);
         answer.AnsweredById.Should().Be(createdByUserId);
@@ -48,7 +50,7 @@ public class AnswerTests
     [Trait("Category", "Answer/Update")]
     public void Update_to_empty_text()
     {
-        var answer = Answer.Create(Guid.NewGuid(), "Test", Guid.NewGuid());
+        var answer = Answer.Create(Guid.NewGuid(), AnswerText, Guid.NewGuid(), DateTime.Now);
 
         var act = () => answer.UpdateText(null);
 
@@ -60,7 +62,7 @@ public class AnswerTests
     public void Update_to_new_text()
     {
         const string newText = "new text";
-        var answer = Answer.Create(Guid.NewGuid(), "Test", Guid.NewGuid());
+        var answer = Answer.Create(Guid.NewGuid(), AnswerText, Guid.NewGuid(), DateTime.Now);
 
         answer.UpdateText(newText);
 
