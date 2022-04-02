@@ -1,4 +1,4 @@
-﻿namespace CanaryOverflow.Infrastructure;
+﻿namespace CanaryOverflow.Persistence;
 
 public interface IDomainEventTypesCache
 {

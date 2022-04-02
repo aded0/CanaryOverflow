@@ -1,6 +1,6 @@
 ﻿using CanaryOverflow.Common;
 
-namespace CanaryOverflow.Infrastructure;
+namespace CanaryOverflow.Persistence;
 
 public interface IAggregateRepository<in TKey, TAggregate>
     where TAggregate : AggregateRoot<TKey, TAggregate>

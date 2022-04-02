@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace CanaryOverflow.Infrastructure;
+namespace CanaryOverflow.Persistence;
 
 // ReSharper disable once InconsistentNaming
 public static class IServiceCollectionExtensions

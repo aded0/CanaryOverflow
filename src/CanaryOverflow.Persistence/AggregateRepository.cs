@@ -3,7 +3,7 @@ using CanaryOverflow.Common;
 using EventStore.Client;
 using Microsoft.Toolkit.HighPerformance;
 
-namespace CanaryOverflow.Infrastructure;
+namespace CanaryOverflow.Persistence;
 
 public class AggregateRepository<TKey, TAggregate> : IAggregateRepository<TKey, TAggregate>
     where TAggregate : AggregateRoot<TKey, TAggregate>

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using CanaryOverflow.Common;
 
-namespace CanaryOverflow.Infrastructure;
+namespace CanaryOverflow.Persistence;
 
 public class DomainEventTypesCache : IDomainEventTypesCache
 {

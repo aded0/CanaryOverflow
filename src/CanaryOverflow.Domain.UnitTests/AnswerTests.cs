@@ -3,7 +3,7 @@ using CanaryOverflow.Domain.QuestionAggregate;
 using FluentAssertions;
 using Xunit;
 
-namespace CanaryOverflow.Domain.Tests;
+namespace CanaryOverflow.Domain.UnitTests;
 
 public class AnswerTests
 {
