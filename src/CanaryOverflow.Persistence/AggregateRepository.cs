@@ -11,7 +11,6 @@ public class AggregateRepository<TKey, TAggregate> : IAggregateRepository<TKey, 
     private static readonly string StreamPrefix = typeof(TAggregate).Name;
     private static string GetStreamName(TKey key) => $"{StreamPrefix}-{key}";
 
-
     private readonly EventStoreClient _eventStoreClient;
     private readonly IDomainEventTypesCache _domainEventTypesCache;
 
@@ -21,7 +20,7 @@ public class AggregateRepository<TKey, TAggregate> : IAggregateRepository<TKey, 
         _domainEventTypesCache = domainEventTypesCache;
     }
 
-    public async Task SaveAsync(TAggregate aggregate, CancellationToken cancellationToken = default)
+    public async Task SaveAsync(TAggregate? aggregate, CancellationToken cancellationToken = default)
     {
         if (aggregate is null) throw new ArgumentNullException(nameof(aggregate));
         if (aggregate.Id is null) throw new ArgumentException("Invalid aggregate without Id");
@@ -57,14 +56,14 @@ public class AggregateRepository<TKey, TAggregate> : IAggregateRepository<TKey, 
 
         var events = await _eventStoreClient
             .ReadStreamAsync(Direction.Forwards, streamName, StreamPosition.Start, cancellationToken: cancellationToken)
-            .Select(AsDomainEventAsync)
+            .Select(AsDomainEvent)
             .NotNull()
             .ToListAsync(cancellationToken);
 
         return AggregateRoot<TKey, TAggregate>.Create(events);
     }
 
-    private IDomainEvent? AsDomainEventAsync(ResolvedEvent @event)
+    private IDomainEvent? AsDomainEvent(ResolvedEvent @event)
     {
         var data = @event.Event.Data.AsStream();
         var type = _domainEventTypesCache[@event.Event.EventType];

@@ -8,7 +8,7 @@ namespace CanaryOverflow.Domain.QuestionAggregate;
 [DebuggerDisplay("{Id}")]
 public class Answer : Entity<Guid>
 {
-    public static Answer Create(Guid id, string text, Guid answeredById, DateTime createdAt)
+    public static Answer Create(Guid id, string? text, Guid answeredById, DateTime createdAt)
     {
         if (id == Guid.Empty) throw new ArgumentException("Identifier is empty.", nameof(id));
         if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(nameof(text));
@@ -20,21 +20,13 @@ public class Answer : Entity<Guid>
 
     private readonly HashSet<Comment> _comments;
 
-    private Answer(Guid id, string text, Guid answeredByUserId, DateTime createdAt) : base(id)
-    {
-        Text = text;
-        AnsweredById = answeredByUserId;
-        CreatedAt = createdAt;
-        _comments = new HashSet<Comment>();
-    }
+    private Answer(Guid id, string text, Guid answeredById, DateTime createdAt) : base(id) =>
+        (Text, AnsweredById, CreatedAt, _comments) = (text, answeredById, createdAt, new HashSet<Comment>());
 
     public string Text { get; private set; }
-
     public Guid AnsweredById { get; private set; }
-
     public DateTime CreatedAt { get; private set; }
-
-    public IReadOnlyCollection<Comment> Comments => _comments;
+    public IEnumerable<Comment> Comments => _comments;
 
     public void AddComment(string text, Guid commentedById)
     {

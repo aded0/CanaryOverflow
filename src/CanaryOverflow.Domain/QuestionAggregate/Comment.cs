@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using CanaryOverflow.Common;
 
 namespace CanaryOverflow.Domain.QuestionAggregate;
 
+[DebuggerDisplay("{Id}")]
 public class Comment : Entity<Guid>
 {
     public static Comment Create(Guid id, string text, Guid userId, DateTime createdAt)
@@ -14,16 +16,14 @@ public class Comment : Entity<Guid>
         return new Comment(id, text, userId, createdAt);
     }
 
-    private Comment(Guid id, string text, Guid userId, DateTime createdAt) : base(id)
+    private Comment(Guid id, string text, Guid commentedById, DateTime createdAt) : base(id)
     {
         Text = text;
-        CommentedById = userId;
+        CommentedById = commentedById;
         CreatedAt = createdAt;
     }
 
     public string Text { get; private set; }
-
     public Guid CommentedById { get; private set; }
-
     public DateTime CreatedAt { get; private set; }
 }
