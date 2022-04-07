@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using CanaryOverflow.Common;
 
 namespace CanaryOverflow.Domain.QuestionAggregate;
 
 [DebuggerDisplay("{Id}")]
+[JsonConverter(typeof(CommentJsonConverter))]
 public class Comment : Entity<Guid>
 {
     public static Comment Create(Guid id, string text, Guid userId, DateTime createdAt)
@@ -26,4 +29,24 @@ public class Comment : Entity<Guid>
     public string Text { get; private set; }
     public Guid CommentedById { get; private set; }
     public DateTime CreatedAt { get; private set; }
+}
+
+internal class CommentJsonConverter : JsonConverter<Comment>
+{
+    public override Comment? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override void Write(Utf8JsonWriter writer, Comment value, JsonSerializerOptions options)
+    {
+        writer.WriteStartObject();
+
+        writer.WriteString(nameof(Comment.Id), value.Id);
+        writer.WriteString(nameof(Comment.Text), value.Text);
+        writer.WriteString(nameof(Comment.CommentedById), value.CommentedById);
+        writer.WriteString(nameof(Comment.CreatedAt), value.CreatedAt);
+
+        writer.WriteEndObject();
+    }
 }
