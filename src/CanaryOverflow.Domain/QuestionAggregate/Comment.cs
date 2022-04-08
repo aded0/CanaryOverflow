@@ -10,13 +10,73 @@ namespace CanaryOverflow.Domain.QuestionAggregate;
 [JsonConverter(typeof(CommentJsonConverter))]
 public class Comment : Entity<Guid>
 {
-    public static Comment Create(Guid id, string text, Guid userId, DateTime createdAt)
+    #region JsonConverter
+    private class CommentJsonConverter : JsonConverter<Comment>
+    {
+        public override Comment Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            if (reader.TokenType is not JsonTokenType.StartObject)
+                throw new JsonException();
+
+            var comment = new Comment();
+
+            while (reader.Read())
+            {
+                if (reader.TokenType is JsonTokenType.EndObject)
+                    return comment;
+
+                if (reader.TokenType is not JsonTokenType.PropertyName)
+                    throw new JsonException();
+
+                var propName = reader.GetString();
+                reader.Read();
+
+                switch (propName)
+                {
+                    case nameof(Id):
+                        comment.Id = reader.GetGuid();
+                        break;
+                    case nameof(Text):
+                        comment.Text = reader.GetString();
+                        break;
+                    case nameof(CommentedById):
+                        comment.CommentedById = reader.GetGuid();
+                        break;
+                    case nameof(CreatedAt):
+                        comment.CreatedAt = reader.GetDateTime();
+                        break;
+                }
+            }
+
+            throw new JsonException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, Comment value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+
+            writer.WriteString(nameof(Id), value.Id);
+            writer.WriteString(nameof(Text), value.Text);
+            writer.WriteString(nameof(CommentedById), value.CommentedById);
+            writer.WriteString(nameof(CreatedAt), value.CreatedAt);
+
+            writer.WriteEndObject();
+        }
+    }
+
+    #endregion
+
+    public static Comment Create(Guid id, string? text, Guid userId, DateTime createdAt)
     {
         if (id == Guid.Empty) throw new ArgumentException("Identifier is empty.", nameof(id));
         if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(text);
         if (userId == Guid.Empty) throw new ArgumentException("User's identifier is empty.", nameof(userId));
 
         return new Comment(id, text, userId, createdAt);
+    }
+
+    private Comment()
+    {
     }
 
     private Comment(Guid id, string text, Guid commentedById, DateTime createdAt) : base(id)
@@ -26,27 +86,7 @@ public class Comment : Entity<Guid>
         CreatedAt = createdAt;
     }
 
-    public string Text { get; private set; }
+    public string? Text { get; private set; }
     public Guid CommentedById { get; private set; }
     public DateTime CreatedAt { get; private set; }
-}
-
-internal class CommentJsonConverter : JsonConverter<Comment>
-{
-    public override Comment? Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
-    {
-        throw new NotImplementedException();
-    }
-
-    public override void Write(Utf8JsonWriter writer, Comment value, JsonSerializerOptions options)
-    {
-        writer.WriteStartObject();
-
-        writer.WriteString(nameof(Comment.Id), value.Id);
-        writer.WriteString(nameof(Comment.Text), value.Text);
-        writer.WriteString(nameof(Comment.CommentedById), value.CommentedById);
-        writer.WriteString(nameof(Comment.CreatedAt), value.CreatedAt);
-
-        writer.WriteEndObject();
-    }
 }
