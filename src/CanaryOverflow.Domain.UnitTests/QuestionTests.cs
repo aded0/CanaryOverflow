@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using CanaryOverflow.Domain.QuestionAggregate;
 using FluentAssertions;
 using Xunit;
@@ -121,7 +120,7 @@ public class QuestionTests
         var question = Question.Create(Title, Text, Guid.NewGuid());
         var answer = question.AddAnswer("answer1", Guid.NewGuid());
 
-        var act = () => question.SetAnswered(answer);
+        var act = () => question.SetAnswered(answer.Id);
 
         act.Should().Throw<InvalidOperationException>()
             .WithMessage("No valid leaving transitions are permitted from state*");
@@ -136,8 +135,8 @@ public class QuestionTests
         var answer = question.AddAnswer("answer1Text", Guid.NewGuid());
 
         question.SetApproved();
-        question.SetAnswered(answer);
+        question.SetAnswered(answer.Id);
 
-        question.Answer.Should().Be(answer);
+        question.Answer.Should().Be(answer.Id);
     }
 }

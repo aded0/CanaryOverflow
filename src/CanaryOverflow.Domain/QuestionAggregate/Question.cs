@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using CanaryOverflow.Common;
 
 namespace CanaryOverflow.Domain.QuestionAggregate;
@@ -20,14 +23,48 @@ public record QuestionCommentAdded(Comment Comment) : IDomainEvent;
 
 public record QuestionApproved : IDomainEvent;
 
-public record QuestionAnswered(Answer Answer) : IDomainEvent;
+public record QuestionAnswered(Guid Answer) : IDomainEvent;
 
 #endregion
 
 [DebuggerDisplay("{Id}")]
+[JsonConverter(typeof(QuestionJsonConverter))]
 public class Question : AggregateRoot<Guid, Question>
 {
-    public static Question Create(string title, string text, Guid askedByUserId)
+    #region JsonConverter
+
+    private class QuestionJsonConverter : JsonConverter<Question>
+    {
+        public override Question Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, Question value, JsonSerializerOptions options)
+        {
+            writer.WriteStartObject();
+
+            writer.WriteString(nameof(Id), value.Id);
+            writer.WriteString(nameof(Title), value.Title);
+            writer.WriteString(nameof(Text), value.Text);
+            writer.WriteString(nameof(AskedById), value.AskedById);
+            writer.WriteString(nameof(CreatedAt), value.CreatedAt);
+
+            writer.WritePropertyName(nameof(Answers));
+            JsonSerializer.Serialize(writer, value.Answers, options);
+
+            writer.WriteString(nameof(Answer), value.Answer);
+
+            writer.WritePropertyName(nameof(Comments));
+            JsonSerializer.Serialize(writer, value.Comments, options);
+
+            writer.WriteEndObject();
+        }
+    }
+
+    #endregion
+
+    public static Question Create(string? title, string? text, Guid askedByUserId)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new ArgumentNullException(nameof(title), "Title is empty or whitespace.");
@@ -59,15 +96,15 @@ public class Question : AggregateRoot<Guid, Question>
         // _tags = new HashSet<string>();
     }
 
-    public string Title { get; private set; }
-    public string Text { get; private set; }
+    public string? Title { get; private set; }
+    public string? Text { get; private set; }
     public Guid AskedById { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
     private readonly HashSet<Answer> _answers;
     public IEnumerable<Answer> Answers => _answers;
 
-    public Answer Answer { get; private set; }
+    public Guid Answer { get; private set; }
 
     public IReadOnlyCollection<Comment> Comments => _comments;
 
@@ -81,7 +118,7 @@ public class Question : AggregateRoot<Guid, Question>
     // public int Rating => Votes.Sum(v => v.Vote);
 
 
-    public void UpdateTitle(string title)
+    public void UpdateTitle(string? title)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new ArgumentNullException(nameof(title), "Title is empty or whitespace.");
@@ -89,7 +126,7 @@ public class Question : AggregateRoot<Guid, Question>
         Append(new TitleUpdated(title));
     }
 
-    public void UpdateText(string text)
+    public void UpdateText(string? text)
     {
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentNullException(nameof(text), "Text is empty or whitespace.");
@@ -102,19 +139,19 @@ public class Question : AggregateRoot<Guid, Question>
         Append(new QuestionApproved());
     }
 
-    public Answer AddAnswer(string text, Guid answeredById)
+    public Answer AddAnswer(string? text, Guid answeredById)
     {
-        var answer = Answer.Create(Guid.NewGuid(), text, answeredById, DateTime.Now);
+        var answer = QuestionAggregate.Answer.Create(Guid.NewGuid(), text, answeredById, DateTime.Now);
         Append(new AnswerAdded(answer));
         return answer;
     }
 
-    public void SetAnswered(Answer answer)
+    public void SetAnswered(Guid answerId)
     {
-        var notContains = !_answers.Contains(answer);
+        var notContains = !_answers.Select(a => a.Id).Contains(answerId);
         if (notContains) throw new NullReferenceException("Answer not found in answers.");
 
-        Append(new QuestionAnswered(answer));
+        Append(new QuestionAnswered(answerId));
     }
 
     public void AddComment(string text, Guid commentedByUserId)
