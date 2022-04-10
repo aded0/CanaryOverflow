@@ -39,9 +39,9 @@ public class AggregateRepository<TKey, TAggregate> : IAggregateRepository<TKey, 
         aggregate.ClearUncommittedEvents();
     }
 
-    private static EventData AsEventData(object @event)
+    private static EventData AsEventData(IDomainEvent @event)
     {
-        var data = JsonSerializer.SerializeToUtf8Bytes(@event);
+        var data = JsonSerializer.SerializeToUtf8Bytes(@event as object);
 
         return new EventData(
             eventId: Uuid.NewUuid(),
