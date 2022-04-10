@@ -1,6 +1,8 @@
 ﻿using System;
 using CanaryOverflow.Common;
 using CanaryOverflow.Domain.QuestionAggregate;
+using CanaryOverflow.Domain.Services;
+using CanaryOverflow.Domain.TagAggregate;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,7 +20,9 @@ public sealed class AggregateRepositoryProvider<TKey, TAggregate> : IDisposable
         serviceCollection
             .AddEventStoreClient(EventStoreDbConnectionString)
             .AddDomainEventTypesCache()
-            .AddScoped(typeof(AggregateRepository<TKey, TAggregate>), typeof(AggregateRepository<Guid, Question>));
+            .AddScoped<IAggregateRepository<Guid, Question>, AggregateRepository<Guid, Question>>()
+            .AddScoped<IAggregateRepository<Guid, Tag>, AggregateRepository<Guid, Tag>>()
+            .AddScoped<ITagService, DummyTagService>();
 
         Services = serviceCollection.BuildServiceProvider();
     }
