@@ -11,6 +11,7 @@ namespace CanaryOverflow.Domain.QuestionAggregate;
 public class Comment : Entity<Guid>
 {
     #region JsonConverter
+
     private class CommentJsonConverter : JsonConverter<Comment>
     {
         public override Comment Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
@@ -66,21 +67,17 @@ public class Comment : Entity<Guid>
 
     #endregion
 
-    public static Comment Create(Guid id, string? text, Guid userId, DateTime createdAt)
-    {
-        if (id == Guid.Empty) throw new ArgumentException("Identifier is empty.", nameof(id));
-        if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(text);
-        if (userId == Guid.Empty) throw new ArgumentException("User's identifier is empty.", nameof(userId));
-
-        return new Comment(id, text, userId, createdAt);
-    }
-
     private Comment()
     {
     }
 
-    private Comment(Guid id, string text, Guid commentedById, DateTime createdAt) : base(id)
+    internal Comment(Guid id, string text, Guid commentedById, DateTime createdAt) : base(id)
     {
+        if (id == Guid.Empty) throw new ArgumentException("Identifier is empty.", nameof(id));
+        if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(text);
+        if (commentedById == Guid.Empty)
+            throw new ArgumentException("User's identifier is empty.", nameof(commentedById));
+
         Text = text;
         CommentedById = commentedById;
         CreatedAt = createdAt;

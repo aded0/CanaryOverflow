@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 using CanaryOverflow.Common;
+using CanaryOverflow.Domain.Services;
 
 namespace CanaryOverflow.Domain.QuestionAggregate;
 
@@ -17,13 +19,21 @@ public record TitleUpdated(string Title) : IDomainEvent;
 
 public record TextUpdated(string Text) : IDomainEvent;
 
-public record AnswerAdded(Answer Answer) : IDomainEvent;
-
-public record QuestionCommentAdded(Comment Comment) : IDomainEvent;
-
 public record QuestionApproved : IDomainEvent;
 
-public record QuestionAnswered(Guid Answer) : IDomainEvent;
+public record AnswerAdded(Answer Answer) : IDomainEvent;
+
+public record CommentAdded(Comment Comment) : IDomainEvent;
+
+public record QuestionAnswered(Guid AnswerId) : IDomainEvent;
+
+public record CommentAddedToAnswer(Guid AnswerId, Comment Comment) : IDomainEvent;
+
+public record AnswerTextUpdated(Guid AnswerId, string Text) : IDomainEvent;
+
+public record TagAdded(Guid TagId) : IDomainEvent;
+
+public record TagRemoved(Guid TagId) : IDomainEvent;
 
 #endregion
 
@@ -37,7 +47,55 @@ public class Question : AggregateRoot<Guid, Question>
     {
         public override Question Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            throw new NotImplementedException();
+            if (reader.TokenType is not JsonTokenType.StartObject)
+                throw new JsonException();
+
+            var question = new Question();
+
+            while (reader.Read())
+            {
+                if (reader.TokenType is JsonTokenType.EndObject)
+                    return question;
+
+                if (reader.TokenType is not JsonTokenType.PropertyName)
+                    throw new JsonException();
+
+                var propName = reader.GetString();
+                reader.Read();
+
+                switch (propName)
+                {
+                    case nameof(Id):
+                        question.Id = reader.GetGuid();
+                        break;
+                    case nameof(Title):
+                        question.Title = reader.GetString();
+                        break;
+                    case nameof(Text):
+                        question.Text = reader.GetString();
+                        break;
+                    case nameof(AskedById):
+                        question.AskedById = reader.GetGuid();
+                        break;
+                    case nameof(CreatedAt):
+                        question.CreatedAt = reader.GetDateTime();
+                        break;
+                    case nameof(SelectedAnswerId):
+                        question.SelectedAnswerId = reader.GetGuid();
+                        break;
+                    case nameof(Answers):
+                        question._answers = JsonSerializer.Deserialize<HashSet<Answer>>(ref reader, options);
+                        break;
+                    case nameof(Comments):
+                        question._comments = JsonSerializer.Deserialize<HashSet<Comment>>(ref reader, options);
+                        break;
+                    case nameof(Tags):
+                        question._tags = JsonSerializer.Deserialize<HashSet<Guid>>(ref reader, options);
+                        break;
+                }
+            }
+
+            throw new JsonException();
         }
 
         public override void Write(Utf8JsonWriter writer, Question value, JsonSerializerOptions options)
@@ -49,14 +107,16 @@ public class Question : AggregateRoot<Guid, Question>
             writer.WriteString(nameof(Text), value.Text);
             writer.WriteString(nameof(AskedById), value.AskedById);
             writer.WriteString(nameof(CreatedAt), value.CreatedAt);
+            writer.WriteString(nameof(SelectedAnswerId), value.SelectedAnswerId);
 
             writer.WritePropertyName(nameof(Answers));
             JsonSerializer.Serialize(writer, value.Answers, options);
 
-            writer.WriteString(nameof(Answer), value.Answer);
-
             writer.WritePropertyName(nameof(Comments));
             JsonSerializer.Serialize(writer, value.Comments, options);
+
+            writer.WritePropertyName(nameof(Tags));
+            JsonSerializer.Serialize(writer, value._tags, options);
 
             writer.WriteEndObject();
         }
@@ -64,7 +124,16 @@ public class Question : AggregateRoot<Guid, Question>
 
     #endregion
 
-    public static Question Create(string? title, string? text, Guid askedByUserId)
+    private readonly IQuestionStateMachine _stateMachine;
+    private HashSet<Answer>? _answers;
+    private HashSet<Comment>? _comments;
+    private HashSet<Guid>? _tags;
+
+    private Question() : this(QuestionState.Unapproved)
+    {
+    }
+
+    public Question(string? title, string? text, Guid askedByUserId) : this(QuestionState.Unapproved)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new ArgumentNullException(nameof(title), "Title is empty or whitespace.");
@@ -73,18 +142,7 @@ public class Question : AggregateRoot<Guid, Question>
         if (askedByUserId == Guid.Empty)
             throw new ArgumentException("User's identifier is empty.", nameof(askedByUserId));
 
-        var question = new Question();
-
-        question.Append(new QuestionCreated(Guid.NewGuid(), title, text, askedByUserId, DateTime.Now));
-
-        return question;
-    }
-
-    private readonly IQuestionStateMachine _stateMachine;
-    private readonly HashSet<Comment> _comments;
-
-    private Question() : this(QuestionState.Unapproved)
-    {
+        Append(new QuestionCreated(Guid.NewGuid(), title, text, askedByUserId, DateTime.Now));
     }
 
     private Question(QuestionState questionState)
@@ -92,8 +150,7 @@ public class Question : AggregateRoot<Guid, Question>
         _stateMachine = new QuestionStateMachine(questionState);
         _answers = new HashSet<Answer>();
         _comments = new HashSet<Comment>();
-        // _votes = new List<QuestionVote>();
-        // _tags = new HashSet<string>();
+        _tags = new HashSet<Guid>();
     }
 
     public string? Title { get; private set; }
@@ -101,22 +158,10 @@ public class Question : AggregateRoot<Guid, Question>
     public Guid AskedById { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
-    private readonly HashSet<Answer> _answers;
-    public IEnumerable<Answer> Answers => _answers;
-
-    public Guid Answer { get; private set; }
-
-    public IReadOnlyCollection<Comment> Comments => _comments;
-
-    // public long ViewsCount { get; private set; }
-
-    // private readonly HashSet<string> _tags;
-    // public IReadOnlyCollection<string> Tags => _tags;
-
-    // private readonly List<QuestionVote> _votes;
-    // public IReadOnlyList<QuestionVote> Votes => _votes;
-    // public int Rating => Votes.Sum(v => v.Vote);
-
+    public Guid SelectedAnswerId { get; private set; }
+    public IEnumerable<Answer>? Answers => _answers;
+    public IEnumerable<Comment>? Comments => _comments;
+    public IEnumerable<Guid>? Tags => _tags;
 
     public void UpdateTitle(string? title)
     {
@@ -139,93 +184,63 @@ public class Question : AggregateRoot<Guid, Question>
         Append(new QuestionApproved());
     }
 
-    public Answer AddAnswer(string? text, Guid answeredById)
+    public void AddAnswer(string? text, Guid answeredById)
     {
-        var answer = QuestionAggregate.Answer.Create(Guid.NewGuid(), text, answeredById, DateTime.Now);
+        var answer = new Answer(Guid.NewGuid(), text, answeredById, DateTime.Now);
+
         Append(new AnswerAdded(answer));
-        return answer;
     }
 
     public void SetAnswered(Guid answerId)
     {
-        var notContains = !_answers.Select(a => a.Id).Contains(answerId);
-        if (notContains) throw new NullReferenceException("Answer not found in answers.");
+        var containsAnswer = _answers?.Select(a => a.Id).Contains(answerId);
+        if (containsAnswer is false) throw new NullReferenceException("Answer not found in answers.");
 
         Append(new QuestionAnswered(answerId));
     }
 
     public void AddComment(string text, Guid commentedByUserId)
     {
-        var comment = Comment.Create(Guid.NewGuid(), text, commentedByUserId, DateTime.Now);
-        Append(new QuestionCommentAdded(comment));
+        var comment = new Comment(Guid.NewGuid(), text, commentedByUserId, DateTime.Now);
+
+        Append(new CommentAdded(comment));
     }
 
-    // public void IncrementViews()
-    // {
-    // ViewsCount++;
-    // }
+    public void AddCommentToAnswer(Guid answerId, string text, Guid commentedById)
+    {
+        var containsAnswer = _answers?.Select(a => a.Id).Contains(answerId);
+        if (containsAnswer is false) throw new ArgumentException("Answer not found in answers", nameof(answerId));
 
-    // public Result<Question> AddTag(string tag)
-    // {
-    //     return Result.SuccessIf(_tags.Add(tag), this, "Tag does not added.");
-    // }
+        var comment = new Comment(Guid.NewGuid(), text, commentedById, DateTime.Now);
 
-    // public Result<Question> RemoveTag(string tag)
-    // {
-    //     return Result.SuccessIf(_tags.Remove(tag), this, "Tag does not removed.");
-    // }
+        Append(new CommentAddedToAnswer(answerId, comment));
+    }
 
-    // public Result<QuestionVote> Upvote(Guid userId)
-    // {
-    //     return QuestionVote.CreateUpvote(this, userId)
-    //         .Tap(v =>
-    //         {
-    //             var foundIndex = _votes.FindIndex(qv => qv.VotedById == userId);
-    //             if (foundIndex != -1)
-    //             {
-    //                 switch (_votes[foundIndex].Vote)
-    //                 {
-    //                     case -1:
-    //                         _votes[foundIndex].ToggleVote();
-    //                         break;
-    //
-    //                     case 1:
-    //                         _votes.RemoveAt(foundIndex);
-    //                         break;
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 _votes.Add(v);
-    //             }
-    //         });
-    // }
+    public void UpdateAnswerText(Guid answerId, string text)
+    {
+        var containsAnswer = _answers?.Select(a => a.Id).Contains(answerId);
+        if (containsAnswer is false) throw new ArgumentException("Answer not found in answers", nameof(answerId));
+        if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(nameof(text));
 
-    // public Result<QuestionVote> Downvote(Guid userId)
-    // {
-    //     return QuestionVote.CreateDownvote(this, userId)
-    //         .Tap(v =>
-    //         {
-    //             var foundIndex = _votes.FindIndex(qv => qv.VotedById == userId);
-    //             if (foundIndex != -1)
-    //             {
-    //                 switch (_votes[foundIndex].Vote)
-    //                 {
-    //                     case -1:
-    //                         _votes.RemoveAt(foundIndex);
-    //                         break;
-    //
-    //                     case 1:
-    //                         _votes[foundIndex].ToggleVote();
-    //                         break;
-    //                 }
-    //             }
-    //             else
-    //             {
-    //                 _votes.Add(v);
-    //             }
-    //         });
-    // }
+        Append(new AnswerTextUpdated(answerId, text));
+    }
+
+    public async Task AddTag(Guid tagId, ITagService tagService)
+    {
+        var isExists = await tagService.IsExistsAsync(tagId);
+        if (!isExists) throw new ArgumentException("Tag does not exists", nameof(tagId));
+
+        Append(new TagAdded(tagId));
+    }
+
+    public void RemoveTag(Guid tagId)
+    {
+        if (_tags?.Contains(tagId) is false)
+            throw new ArgumentException("Tag was not added to question", nameof(tagId));
+
+        Append(new TagRemoved(tagId));
+    }
+
 
     protected override void When(IDomainEvent @event)
     {
@@ -247,7 +262,7 @@ public class Question : AggregateRoot<Guid, Question>
                 Apply(answerAdded);
                 break;
 
-            case QuestionCommentAdded questionCommentAdded:
+            case CommentAdded questionCommentAdded:
                 Apply(questionCommentAdded);
                 break;
 
@@ -257,6 +272,22 @@ public class Question : AggregateRoot<Guid, Question>
 
             case QuestionAnswered questionAnswered:
                 Apply(questionAnswered);
+                break;
+
+            case CommentAddedToAnswer commentAddedToAnswer:
+                Apply(commentAddedToAnswer);
+                break;
+
+            case AnswerTextUpdated answerTextUpdated:
+                Apply(answerTextUpdated);
+                break;
+
+            case TagAdded tagAdded:
+                Apply(tagAdded);
+                break;
+
+            case TagRemoved tagRemoved:
+                Apply(tagRemoved);
                 break;
 
             default:
@@ -286,17 +317,17 @@ public class Question : AggregateRoot<Guid, Question>
         Text = textUpdated.Text;
     }
 
-
     private void Apply(AnswerAdded answerAdded)
     {
-        _answers.Add(answerAdded.Answer);
+        _answers!.Add(new Answer(answerAdded.Answer));
     }
 
-    private void Apply(QuestionCommentAdded questionCommentAdded)
+    private void Apply(CommentAdded commentAdded)
     {
-        _comments.Add(questionCommentAdded.Comment);
+        _comments!.Add(commentAdded.Comment);
     }
 
+    // ReSharper disable once UnusedParameter.Local
     private void Apply(QuestionApproved _)
     {
         _stateMachine.SetApproved();
@@ -305,7 +336,29 @@ public class Question : AggregateRoot<Guid, Question>
     private void Apply(QuestionAnswered questionAnswered)
     {
         _stateMachine.SetAnswered();
-        Answer = questionAnswered.Answer;
+        SelectedAnswerId = questionAnswered.AnswerId;
+    }
+
+    private void Apply(CommentAddedToAnswer commentAddedToAnswer)
+    {
+        var answer = _answers!.Single(a => a.Id == commentAddedToAnswer.AnswerId);
+        answer.AddComment(commentAddedToAnswer.Comment);
+    }
+
+    private void Apply(AnswerTextUpdated answerTextUpdated)
+    {
+        var answer = _answers!.Single(a => a.Id == answerTextUpdated.AnswerId);
+        answer.Text = answerTextUpdated.Text;
+    }
+
+    private void Apply(TagAdded tagAdded)
+    {
+        _tags!.Add(tagAdded.TagId);
+    }
+
+    private void Apply(TagRemoved tagRemoved)
+    {
+        _tags!.Remove(tagRemoved.TagId);
     }
 
     #endregion

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CanaryOverflow.Common;
@@ -48,7 +49,8 @@ public class Answer : Entity<Guid>
                         answer.CreatedAt = reader.GetDateTime();
                         break;
                     case nameof(Comments):
-                        answer._comments = JsonSerializer.Deserialize<HashSet<Comment>>(ref reader, options);
+                        answer._comments =
+                            JsonSerializer.Deserialize<HashSet<Comment>>(ref reader, options) ?? new HashSet<Comment>();
                         break;
                 }
             }
@@ -74,39 +76,40 @@ public class Answer : Entity<Guid>
 
     #endregion
 
-    public static Answer Create(Guid id, string? text, Guid answeredById, DateTime createdAt)
+    private Answer()
+    {
+    }
+
+    internal Answer(Guid id, string? text, Guid answeredById, DateTime createdAt) : base(id)
     {
         if (id == Guid.Empty) throw new ArgumentException("Identifier is empty.", nameof(id));
         if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(nameof(text));
         if (answeredById == Guid.Empty)
             throw new ArgumentException("Identifier of user is empty.", nameof(answeredById));
 
-        return new Answer(id, text, answeredById, createdAt);
+        Text = text;
+        AnsweredById = answeredById;
+        CreatedAt = createdAt;
+        _comments = new HashSet<Comment>();
     }
 
-    private HashSet<Comment>? _comments;
+    private HashSet<Comment> _comments;
 
-    private Answer()
+    internal Answer(Answer answer) : base(answer.Id)
     {
+        Text = answer.Text;
+        AnsweredById = answer.AnsweredById;
+        CreatedAt = answer.CreatedAt;
+        _comments = answer.Comments.Select(c => c).ToHashSet();
     }
 
-    private Answer(Guid id, string text, Guid answeredById, DateTime createdAt) : base(id) =>
-        (Text, AnsweredById, CreatedAt, _comments) = (text, answeredById, createdAt, new HashSet<Comment>());
-
-    public string? Text { get; private set; }
+    public string? Text { get; internal set; }
     public Guid AnsweredById { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    public IEnumerable<Comment>? Comments => _comments;
+    public IEnumerable<Comment> Comments => _comments;
 
-    public void AddComment(string text, Guid commentedById)
+    internal void AddComment(Comment comment)
     {
-        var comment = Comment.Create(Guid.NewGuid(), text, commentedById, DateTime.Now);
-        _comments?.Add(comment);
-    }
-
-    public void UpdateText(string text)
-    {
-        if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(nameof(text));
-        Text = text;
+        _comments.Add(comment);
     }
 }
