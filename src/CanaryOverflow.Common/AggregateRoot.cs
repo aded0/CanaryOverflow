@@ -22,9 +22,11 @@ public abstract class AggregateRoot<TKey, TAggregate> : Entity<TKey>
         var aggregate = Constructor.Invoke();
 
         foreach (var @event in events)
+        {
             aggregate.When(@event);
+            aggregate.Version++;
+        }
 
-        aggregate.Version = events.Count;
         return aggregate;
     }
 
@@ -36,7 +38,7 @@ public abstract class AggregateRoot<TKey, TAggregate> : Entity<TKey>
         _events = new Queue<IDomainEvent>();
     }
 
-    public int Version { get; private set; }
+    public int Version { get; protected set; }
 
     protected abstract void When(IDomainEvent @event);
 
