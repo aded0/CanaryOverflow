@@ -93,7 +93,7 @@ public class Answer : Entity<Guid>
         _comments = new HashSet<Comment>();
     }
 
-    private HashSet<Comment> _comments;
+    private HashSet<Comment> _comments = null!;
 
     internal Answer(Answer answer) : base(answer.Id)
     {
