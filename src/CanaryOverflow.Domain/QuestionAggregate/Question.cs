@@ -35,6 +35,10 @@ public record TagAdded(Guid TagId) : IDomainEvent;
 
 public record TagRemoved(Guid TagId) : IDomainEvent;
 
+public record UpvotedBy(Guid UserId) : IDomainEvent;
+
+public record DownvotedBy(Guid UserId) : IDomainEvent;
+
 #endregion
 
 [DebuggerDisplay("{Id}")]
@@ -68,29 +72,41 @@ public class Question : AggregateRoot<Guid, Question>
                     case nameof(Id):
                         question.Id = reader.GetGuid();
                         break;
+
                     case nameof(Title):
                         question.Title = reader.GetString();
                         break;
+
                     case nameof(Text):
                         question.Text = reader.GetString();
                         break;
+
                     case nameof(AskedById):
                         question.AskedById = reader.GetGuid();
                         break;
+
                     case nameof(CreatedAt):
                         question.CreatedAt = reader.GetDateTime();
                         break;
+
                     case nameof(SelectedAnswerId):
                         question.SelectedAnswerId = reader.GetGuid();
                         break;
+
                     case nameof(Answers):
                         question._answers = JsonSerializer.Deserialize<HashSet<Answer>>(ref reader, options);
                         break;
+
                     case nameof(Comments):
                         question._comments = JsonSerializer.Deserialize<HashSet<Comment>>(ref reader, options);
                         break;
+
                     case nameof(Tags):
                         question._tags = JsonSerializer.Deserialize<HashSet<Guid>>(ref reader, options);
+                        break;
+
+                    case nameof(Rating):
+                        question._rating = JsonSerializer.Deserialize<Dictionary<Guid, int>>(ref reader, options);
                         break;
                 }
             }
@@ -118,6 +134,9 @@ public class Question : AggregateRoot<Guid, Question>
             writer.WritePropertyName(nameof(Tags));
             JsonSerializer.Serialize(writer, value._tags, options);
 
+            writer.WritePropertyName(nameof(Rating));
+            JsonSerializer.Serialize(writer, value._rating, options);
+
             writer.WriteEndObject();
         }
     }
@@ -128,6 +147,7 @@ public class Question : AggregateRoot<Guid, Question>
     private HashSet<Answer>? _answers;
     private HashSet<Comment>? _comments;
     private HashSet<Guid>? _tags;
+    private Dictionary<Guid, int>? _rating;
 
     private Question() : this(QuestionState.Unapproved)
     {
@@ -151,6 +171,7 @@ public class Question : AggregateRoot<Guid, Question>
         _answers = new HashSet<Answer>();
         _comments = new HashSet<Comment>();
         _tags = new HashSet<Guid>();
+        _rating = new Dictionary<Guid, int>();
     }
 
     public string? Title { get; private set; }
@@ -162,6 +183,7 @@ public class Question : AggregateRoot<Guid, Question>
     public IEnumerable<Answer>? Answers => _answers;
     public IEnumerable<Comment>? Comments => _comments;
     public IEnumerable<Guid>? Tags => _tags;
+    public IReadOnlyDictionary<Guid, int>? Rating => _rating;
 
     public void UpdateTitle(string? title)
     {
@@ -194,7 +216,7 @@ public class Question : AggregateRoot<Guid, Question>
     public void SetAnswered(Guid answerId)
     {
         var containsAnswer = _answers?.Select(a => a.Id).Contains(answerId);
-        if (containsAnswer is false) throw new NullReferenceException("Answer not found in answers.");
+        if (containsAnswer is not true) throw new NullReferenceException("Answer not found in answers.");
 
         Append(new QuestionAnswered(answerId));
     }
@@ -209,17 +231,17 @@ public class Question : AggregateRoot<Guid, Question>
     public void AddCommentToAnswer(Guid answerId, string text, Guid commentedById)
     {
         var containsAnswer = _answers?.Select(a => a.Id).Contains(answerId);
-        if (containsAnswer is false) throw new ArgumentException("Answer not found in answers", nameof(answerId));
+        if (containsAnswer is not true) throw new ArgumentException("Answer not found in answers", nameof(answerId));
 
         var comment = new Comment(Guid.NewGuid(), text, commentedById, DateTime.Now);
 
         Append(new CommentAddedToAnswer(answerId, comment));
     }
 
-    public void UpdateAnswerText(Guid answerId, string text)
+    public void UpdateAnswerText(Guid answerId, string? text)
     {
         var containsAnswer = _answers?.Select(a => a.Id).Contains(answerId);
-        if (containsAnswer is false) throw new ArgumentException("Answer not found in answers", nameof(answerId));
+        if (containsAnswer is not true) throw new ArgumentException("Answer not found in answers", nameof(answerId));
         if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(nameof(text));
 
         Append(new AnswerTextUpdated(answerId, text));
@@ -227,20 +249,35 @@ public class Question : AggregateRoot<Guid, Question>
 
     public async Task AddTag(Guid tagId, ITagService tagService)
     {
-        var isExists = await tagService.IsExistsAsync(tagId);
-        if (!isExists) throw new ArgumentException("Tag does not exists", nameof(tagId));
+        var exists = await tagService.IsExistsAsync(tagId);
+        if (!exists) throw new ArgumentException("Tag does not exists", nameof(tagId));
 
         Append(new TagAdded(tagId));
     }
 
     public void RemoveTag(Guid tagId)
     {
-        if (_tags?.Contains(tagId) is false)
+        if (_tags?.Contains(tagId) is not true)
             throw new ArgumentException("Tag was not added to question", nameof(tagId));
 
         Append(new TagRemoved(tagId));
     }
 
+    public async Task Upvote(Guid userId, IProfileService profileService)
+    {
+        var exists = await profileService.IsExistsAsync(userId);
+        if (!exists) throw new ArgumentException("User does not exists", nameof(userId));
+
+        Append(new UpvotedBy(userId));
+    }
+
+    public async Task Downvote(Guid userId, IProfileService profileService)
+    {
+        var exists = await profileService.IsExistsAsync(userId);
+        if (!exists) throw new ArgumentException("User does not exists", nameof(userId));
+
+        Append(new DownvotedBy(userId));
+    }
 
     protected override void When(IDomainEvent @event)
     {
@@ -290,11 +327,18 @@ public class Question : AggregateRoot<Guid, Question>
                 Apply(tagRemoved);
                 break;
 
+            case UpvotedBy upvotedBy:
+                Apply(upvotedBy);
+                break;
+
+            case DownvotedBy downvotedBy:
+                Apply(downvotedBy);
+                break;
+
             default:
                 throw new NotSupportedException($"Question does not support '{@event.GetType().Name}' event.");
         }
     }
-
 
     #region Event appliers
 
@@ -359,6 +403,34 @@ public class Question : AggregateRoot<Guid, Question>
     private void Apply(TagRemoved tagRemoved)
     {
         _tags!.Remove(tagRemoved.TagId);
+    }
+
+    private void Apply(UpvotedBy upvotedBy)
+    {
+        if (_rating!.TryGetValue(upvotedBy.UserId, out var userRating))
+        {
+            if (userRating == 1)
+            {
+                _rating.Remove(upvotedBy.UserId);
+                return;
+            }
+        }
+
+        _rating[upvotedBy.UserId] = 1;
+    }
+
+    private void Apply(DownvotedBy downvotedBy)
+    {
+        if (_rating!.TryGetValue(downvotedBy.UserId, out var userRating))
+        {
+            if (userRating == -1)
+            {
+                _rating.Remove(downvotedBy.UserId);
+                return;
+            }
+        }
+
+        _rating[downvotedBy.UserId] = -1;
     }
 
     #endregion
