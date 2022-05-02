@@ -12,32 +12,32 @@ namespace CanaryOverflow.Domain.QuestionAggregate;
 
 #region Question domain events
 
-public record QuestionCreated
+internal record QuestionCreated
     (Guid Id, string Title, string Text, Guid AskedByUserId, DateTime CreatedAt) : IDomainEvent;
 
-public record TitleUpdated(string Title) : IDomainEvent;
+internal record TitleUpdated(string Title) : IDomainEvent;
 
-public record TextUpdated(string Text) : IDomainEvent;
+internal record TextUpdated(string Text) : IDomainEvent;
 
-public record QuestionApproved : IDomainEvent;
+internal record QuestionApproved : IDomainEvent;
 
-public record AnswerAdded(Answer Answer) : IDomainEvent;
+internal record AnswerAdded(Answer Answer) : IDomainEvent;
 
-public record CommentAdded(Comment Comment) : IDomainEvent;
+internal record CommentAdded(Comment Comment) : IDomainEvent;
 
-public record QuestionAnswered(Guid AnswerId) : IDomainEvent;
+internal record QuestionAnswered(Guid AnswerId) : IDomainEvent;
 
-public record CommentAddedToAnswer(Guid AnswerId, Comment Comment) : IDomainEvent;
+internal record CommentAddedToAnswer(Guid AnswerId, Comment Comment) : IDomainEvent;
 
-public record AnswerTextUpdated(Guid AnswerId, string Text) : IDomainEvent;
+internal record AnswerTextUpdated(Guid AnswerId, string Text) : IDomainEvent;
 
-public record TagAdded(Guid TagId) : IDomainEvent;
+internal record TagAdded(Guid TagId) : IDomainEvent;
 
-public record TagRemoved(Guid TagId) : IDomainEvent;
+internal record TagRemoved(Guid TagId) : IDomainEvent;
 
-public record UpvotedBy(Guid UserId) : IDomainEvent;
+internal record UpvotedBy(Guid UserId) : IDomainEvent;
 
-public record DownvotedBy(Guid UserId) : IDomainEvent;
+internal record DownvotedBy(Guid UserId) : IDomainEvent;
 
 #endregion
 
@@ -221,7 +221,7 @@ public class Question : AggregateRoot<Guid, Question>
         Append(new QuestionAnswered(answerId));
     }
 
-    public void AddComment(string text, Guid commentedByUserId)
+    public void AddComment(string? text, Guid commentedByUserId)
     {
         var comment = new Comment(Guid.NewGuid(), text, commentedByUserId, DateTime.Now);
 

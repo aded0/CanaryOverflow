@@ -71,7 +71,7 @@ public class Comment : Entity<Guid>
     {
     }
 
-    internal Comment(Guid id, string text, Guid commentedById, DateTime createdAt) : base(id)
+    internal Comment(Guid id, string? text, Guid commentedById, DateTime createdAt) : base(id)
     {
         if (id == Guid.Empty) throw new ArgumentException("Identifier is empty.", nameof(id));
         if (string.IsNullOrWhiteSpace(text)) throw new ArgumentNullException(text);

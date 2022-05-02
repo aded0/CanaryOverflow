@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using CanaryOverflow.Domain.QuestionAggregate;
+using CanaryOverflow.Domain.UnitTests.Services;
 using FluentAssertions;
 using Xunit;
 
@@ -11,6 +13,7 @@ public class QuestionTests
     private const string Title = "test title";
     private const string Text = "test text";
     private const string AnswerText = "test answer";
+    private const string CommentText = "test comment";
 
     [Fact]
     [Trait("Category", "Question/Create/Valid")]
@@ -171,5 +174,111 @@ public class QuestionTests
 
         answer.Text.Should().Be(newText);
     }
-    //TODO: add tests tests for AddComment, AddCommentToAnswer, AddTag, RemoveTag, Upvote, Downvote
+
+    [Fact]
+    [Trait("Category", "Question/Comment/Valid")]
+    public void Add_comment_to_question()
+    {
+        var question = new Question(Title, Text, Guid.NewGuid());
+        question.AddComment(CommentText, Guid.NewGuid());
+
+        question.Comments.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    [Trait("Category", "Question/Comment/Invalid")]
+    public void Add_invalid_comment_to_question()
+    {
+        var question = new Question(Title, Text, Guid.NewGuid());
+        var act = () => question.AddComment(null, Guid.NewGuid());
+
+        act.Should().Throw<ArgumentNullException>();
+    }
+
+    [Fact]
+    [Trait("Category", "Question/Answer/Comment/Valid")]
+    public void Add_valid_comment_to_answer()
+    {
+        var question = new Question(Title, Text, Guid.NewGuid());
+        question.AddAnswer(AnswerText, Guid.NewGuid());
+        var answer = question.Answers!.First();
+
+        question.AddCommentToAnswer(answer.Id, "test comment", Guid.NewGuid());
+
+        answer.Comments.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    [Trait("Category", "Question/Answer/Comment/Invalid")]
+    public void Add_comment_with_empty_text_to_answer()
+    {
+        var question = new Question(Title, Text, Guid.NewGuid());
+        question.AddAnswer(AnswerText, Guid.NewGuid());
+        var answer = question.Answers!.First();
+
+        var act = () => question.AddCommentToAnswer(answer.Id, "", Guid.NewGuid());
+
+        act.Should().Throw<ArgumentNullException>();
+    }
+
+    [Fact]
+    [Trait("Category", "Question/Answer/Comment/Invalid")]
+    public void Add_comment_with_invalid_answer_to_answer()
+    {
+        var question = new Question(Title, Text, Guid.NewGuid());
+
+        var act = () => question.AddCommentToAnswer(Guid.NewGuid(), "test comment", Guid.NewGuid());
+
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    [Trait("Category", "Question/Tag/Add/Valid")]
+    public async Task Add_tag()
+    {
+        var question = new Question(Title, Text, Guid.NewGuid());
+
+        await question.AddTag(Guid.NewGuid(), new TrueTagService());
+
+        question.Tags.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    [Trait("Category", "Question/Tag/Add/Invalid")]
+    public void Add_exists_tag()
+    {
+        var question = new Question(Title, Text, Guid.NewGuid());
+
+        var act = async () => await question.AddTag(Guid.NewGuid(), new FalseTagService());
+
+        act.Should().ThrowAsync<ArgumentException>();
+    }
+
+    [Fact]
+    [Trait("Category", "Question/Tag/Remove/Valid")]
+    public async Task Remove_tag()
+    {
+        var question = new Question(Title, Text, Guid.NewGuid());
+
+        await question.AddTag(Guid.NewGuid(), new TrueTagService());
+
+        question.Tags.Should().NotBeEmpty();
+
+        var tagId = question.Tags!.First();
+
+        question.RemoveTag(tagId);
+
+        question.Tags.Should().BeEmpty();
+    }
+
+    [Fact]
+    [Trait("Category", "Question/Tag/Remove/Invalid")]
+    public void Remove_unexists_tag()
+    {
+        var question = new Question(Title, Text, Guid.NewGuid());
+
+        var act = () => question.RemoveTag(Guid.NewGuid());
+        act.Should().Throw<ArgumentException>();
+    }
+    //TODO: add tests tests for Upvote, Downvote
 }
