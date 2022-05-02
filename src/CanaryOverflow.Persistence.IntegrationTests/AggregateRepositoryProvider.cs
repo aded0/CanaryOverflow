@@ -1,5 +1,6 @@
 ﻿using System;
 using CanaryOverflow.Common;
+using CanaryOverflow.Domain.ProfileAggregate;
 using CanaryOverflow.Domain.QuestionAggregate;
 using CanaryOverflow.Domain.Services;
 using CanaryOverflow.Domain.TagAggregate;
@@ -22,7 +23,9 @@ public sealed class AggregateRepositoryProvider<TKey, TAggregate> : IDisposable
             .AddDomainEventTypesCache()
             .AddScoped<IAggregateRepository<Guid, Question>, AggregateRepository<Guid, Question>>()
             .AddScoped<IAggregateRepository<Guid, Tag>, AggregateRepository<Guid, Tag>>()
-            .AddScoped<ITagService, DummyTagService>();
+            .AddScoped<IAggregateRepository<Guid, Profile>, AggregateRepository<Guid, Profile>>()
+            .AddScoped<ITagService, DummyTagService>()
+            .AddScoped<IAssetsService, DummyAssetsService>();
 
         Services = serviceCollection.BuildServiceProvider();
     }
