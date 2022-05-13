@@ -1,8 +1,10 @@
-name: Build, test and security scan
+name: Build, test coverage and security scan
 on: [ push ]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
     steps:
       - uses: actions/checkout@v3
 
@@ -12,11 +14,17 @@ jobs:
           dotnet-version: '6.0'
 
       - name: Build
-        run: dotnet build ./src
+        run: |
+          dotnet restore ./src --locked-mode
+          dotnet build ./src --configuration Release --no-restore
 
       - name: Test
-        run: dotnet test ./src
+        run: dotnet test ./src --no-restore /p:CollectCoverage=true
 
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      
       - name: Run Snyk to check for vulnerabilities
         uses: snyk/actions/dotnet@master
         continue-on-error: true # To make sure that SARIF upload gets called
