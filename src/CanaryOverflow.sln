@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanaryOverflow.Common", "CanaryOverflow.Common\CanaryOverflow.Common.csproj", "{1C2287F8-6D6A-49E7-B052-9B37E536F358}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanaryOverflow.Persistence", "CanaryOverflow.Persistence\CanaryOverflow.Persistence.csproj", "{CA9FB94F-666D-4054-AA4A-C05F76E5A26B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{D82D2414-E462-4246-9494-B1EF116CC259}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanaryOverflow.Domain", "CanaryOverflow.Domain\CanaryOverflow.Domain.csproj", "{3B5CA913-4076-42D1-A25C-8A05F73E7F03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanaryOverflow.Domain.UnitTests", "CanaryOverflow.Domain.UnitTests\CanaryOverflow.Domain.UnitTests.csproj", "{CB788DED-BDDF-4F9F-AF8C-77E059E772E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{23F82C83-3ACA-4F39-BE2A-29E09B9AC7D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C2287F8-6D6A-49E7-B052-9B37E536F358}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C2287F8-6D6A-49E7-B052-9B37E536F358}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C2287F8-6D6A-49E7-B052-9B37E536F358}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C2287F8-6D6A-49E7-B052-9B37E536F358}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA9FB94F-666D-4054-AA4A-C05F76E5A26B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA9FB94F-666D-4054-AA4A-C05F76E5A26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA9FB94F-666D-4054-AA4A-C05F76E5A26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA9FB94F-666D-4054-AA4A-C05F76E5A26B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B5CA913-4076-42D1-A25C-8A05F73E7F03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B5CA913-4076-42D1-A25C-8A05F73E7F03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B5CA913-4076-42D1-A25C-8A05F73E7F03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B5CA913-4076-42D1-A25C-8A05F73E7F03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB788DED-BDDF-4F9F-AF8C-77E059E772E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB788DED-BDDF-4F9F-AF8C-77E059E772E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB788DED-BDDF-4F9F-AF8C-77E059E772E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB788DED-BDDF-4F9F-AF8C-77E059E772E8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1C2287F8-6D6A-49E7-B052-9B37E536F358} = {D82D2414-E462-4246-9494-B1EF116CC259}
+		{3B5CA913-4076-42D1-A25C-8A05F73E7F03} = {D82D2414-E462-4246-9494-B1EF116CC259}
+		{CB788DED-BDDF-4F9F-AF8C-77E059E772E8} = {D82D2414-E462-4246-9494-B1EF116CC259}
+		{CA9FB94F-666D-4054-AA4A-C05F76E5A26B} = {23F82C83-3ACA-4F39-BE2A-29E09B9AC7D1}
+	EndGlobalSection
+EndGlobal
