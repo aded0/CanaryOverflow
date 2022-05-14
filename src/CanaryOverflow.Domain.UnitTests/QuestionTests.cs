@@ -2,8 +2,9 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CanaryOverflow.Domain.QuestionAggregate;
-using CanaryOverflow.Domain.UnitTests.Services;
+using CanaryOverflow.Domain.Services;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace CanaryOverflow.Domain.UnitTests;
@@ -236,39 +237,51 @@ public class QuestionTests
     [Trait("Category", "Question/Tag/Add/Valid")]
     public async Task Add_tag()
     {
+        var mock = new Mock<ITagService>();
+        mock.Setup(svc => svc.IsExistsAsync(It.IsAny<Guid>())).ReturnsAsync(true);
+
         var question = new Question(Title, Text, Guid.NewGuid());
 
-        await question.AddTag(Guid.NewGuid(), new TrueTagService());
-
+        await question.AddTag(Guid.NewGuid(), mock.Object);
+        
         question.Tags.Should().NotBeEmpty();
+        mock.Verify(svc => svc.IsExistsAsync(It.IsAny<Guid>()), Times.Once);
     }
 
     [Fact]
     [Trait("Category", "Question/Tag/Add/Invalid")]
     public void Add_exists_tag()
     {
+        var mock = new Mock<ITagService>();
+        mock.Setup(svc => svc.IsExistsAsync(It.IsAny<Guid>())).ReturnsAsync(false);
+
         var question = new Question(Title, Text, Guid.NewGuid());
 
-        var act = async () => await question.AddTag(Guid.NewGuid(), new FalseTagService());
+        var act = async () => await question.AddTag(Guid.NewGuid(), mock.Object);
 
         act.Should().ThrowAsync<ArgumentException>();
+        mock.Verify(svc => svc.IsExistsAsync(Guid.NewGuid()), Times.Never);
     }
 
     [Fact]
     [Trait("Category", "Question/Tag/Remove/Valid")]
     public async Task Remove_tag()
     {
+        var mock = new Mock<ITagService>();
+        mock.Setup(svc => svc.IsExistsAsync(It.IsAny<Guid>())).ReturnsAsync(true);
+
         var question = new Question(Title, Text, Guid.NewGuid());
 
-        await question.AddTag(Guid.NewGuid(), new TrueTagService());
+        await question.AddTag(Guid.NewGuid(), mock.Object);
 
         question.Tags.Should().NotBeEmpty();
 
-        var tagId = question.Tags!.First();
+        var foundTagId = question.Tags!.First();
 
-        question.RemoveTag(tagId);
+        question.RemoveTag(foundTagId);
 
         question.Tags.Should().BeEmpty();
+        mock.Verify(svc => svc.IsExistsAsync(It.IsAny<Guid>()), Times.Once);
     }
 
     [Fact]
