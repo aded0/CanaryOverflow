@@ -31,9 +31,9 @@ internal record CommentAddedToAnswer(Guid AnswerId, Comment Comment) : IDomainEv
 
 internal record AnswerTextUpdated(Guid AnswerId, string Text) : IDomainEvent;
 
-internal record TagAdded(Guid TagId) : IDomainEvent;
+internal record TagAdded(string TagId) : IDomainEvent;
 
-internal record TagRemoved(Guid TagId) : IDomainEvent;
+internal record TagRemoved(string TagId) : IDomainEvent;
 
 internal record UpvotedBy(Guid UserId) : IDomainEvent;
 
@@ -102,7 +102,7 @@ public class Question : AggregateRoot<Guid, Question>
                         break;
 
                     case nameof(Tags):
-                        question._tags = JsonSerializer.Deserialize<HashSet<Guid>>(ref reader, options);
+                        question._tags = JsonSerializer.Deserialize<HashSet<string>>(ref reader, options);
                         break;
 
                     case nameof(Rating):
@@ -146,7 +146,7 @@ public class Question : AggregateRoot<Guid, Question>
     private readonly IQuestionStateMachine _stateMachine;
     private HashSet<Answer>? _answers;
     private HashSet<Comment>? _comments;
-    private HashSet<Guid>? _tags;
+    private HashSet<string>? _tags;
     private Dictionary<Guid, int>? _rating;
 
     private Question() : this(QuestionState.Unapproved)
@@ -170,7 +170,7 @@ public class Question : AggregateRoot<Guid, Question>
         _stateMachine = new QuestionStateMachine(questionState);
         _answers = new HashSet<Answer>();
         _comments = new HashSet<Comment>();
-        _tags = new HashSet<Guid>();
+        _tags = new HashSet<string>();
         _rating = new Dictionary<Guid, int>();
     }
 
@@ -182,7 +182,7 @@ public class Question : AggregateRoot<Guid, Question>
     public Guid SelectedAnswerId { get; private set; }
     public IEnumerable<Answer>? Answers => _answers;
     public IEnumerable<Comment>? Comments => _comments;
-    public IEnumerable<Guid>? Tags => _tags;
+    public IEnumerable<string>? Tags => _tags;
     public IReadOnlyDictionary<Guid, int>? Rating => _rating;
 
     public void UpdateTitle(string? title)
@@ -247,20 +247,20 @@ public class Question : AggregateRoot<Guid, Question>
         Append(new AnswerTextUpdated(answerId, text));
     }
 
-    public async Task AddTag(Guid tagId, ITagService tagService)
+    public async Task AddTag(string tagName, ITagService tagService)
     {
-        var exists = await tagService.IsExistsAsync(tagId);
-        if (!exists) throw new ArgumentException("Tag does not exists", nameof(tagId));
+        var exists = await tagService.IsExistsAsync(tagName);
+        if (!exists) throw new ArgumentException("Tag does not exists", nameof(tagName));
 
-        Append(new TagAdded(tagId));
+        Append(new TagAdded(tagName));
     }
 
-    public void RemoveTag(Guid tagId)
+    public void RemoveTag(string tagName)
     {
-        if (_tags?.Contains(tagId) is not true)
-            throw new ArgumentException("Tag was not added to question", nameof(tagId));
+        if (_tags?.Contains(tagName) is not true)
+            throw new ArgumentException("Tag was not added to question", nameof(tagName));
 
-        Append(new TagRemoved(tagId));
+        Append(new TagRemoved(tagName));
     }
 
     public async Task Upvote(Guid userId, IProfileService profileService)
