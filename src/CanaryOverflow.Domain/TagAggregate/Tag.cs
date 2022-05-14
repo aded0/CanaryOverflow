@@ -20,15 +20,16 @@ public record DescriptionUpdated(string Description) : IDomainEvent;
 [DebuggerDisplay("{Name}", Name = "{Id}")]
 public class Tag : AggregateRoot<Guid, Tag>
 {
-    public static async Task<Tag> Create(string? name, string? description, ITagService tagService)
+    public static async Task<Tag> Create(Guid id, string? name, string? description, ITagService tagService)
     {
+        if (id == Guid.Empty) throw new ArgumentException("Tag id is empty", nameof(id));
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name), "Tag name is empty");
         if (string.IsNullOrWhiteSpace(description))
             throw new ArgumentNullException(nameof(description), "Tag description is empty");
         var isExists = await tagService.IsExistsAsync(name);
         if (isExists) throw new ArgumentException($"Name already exists", nameof(name));
 
-        return new Tag(name, description);
+        return new Tag(id, name, description);
     }
 
     [UsedImplicitly]
@@ -36,9 +37,9 @@ public class Tag : AggregateRoot<Guid, Tag>
     {
     }
 
-    private Tag(string name, string description)
+    private Tag(Guid id, string name, string description)
     {
-        Append(new TagCreated(Guid.NewGuid(), name, description));
+        Append(new TagCreated(id, name, description));
     }
 
     public string? Name { get; private set; }
