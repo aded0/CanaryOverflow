@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 
-namespace CanaryOverflow.Domain.Services;
+namespace CanaryOverflow.Domain.Avatar;
 
+[SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы")]
 public static class AvatarHelper
 {
     private static readonly Brush DarkSolidBrush = new SolidBrush(Color.FromArgb(30, 30, 30));
-    private static readonly Brush LightSolidBrush = new SolidBrush(Color.FromArgb(245, 245, 245));
+    private static readonly Brush LightSolidBrush = new SolidBrush(Color.FromArgb(230, 230, 230));
 
     public static Bitmap Create(Guid guid, string firstName, string lastName)
     {
@@ -18,9 +20,9 @@ public static class AvatarHelper
         return Create(avatarString, backgroundColor, textColor);
     }
 
-    private static Color GetColor(Guid guid)
+    private static Color GetColor(object obj)
     {
-        return Color.FromArgb(guid.GetHashCode() | (0xff << 24));
+        return Color.FromArgb(obj.GetHashCode() | (0xff << 24));
     }
 
     private static Brush GetContrastBrush(Color color)
@@ -51,20 +53,20 @@ public static class AvatarHelper
     private static Bitmap Create(string text, Color backgroundColor, Brush textColor)
     {
         var bitmap = new Bitmap(128, 128);
+
+        var font = new Font("Roboto", 64, GraphicsUnit.Pixel);
+        var rectangle = new RectangleF(0, 0, 128, 128);
         var stringFormat = new StringFormat
         {
             Alignment = StringAlignment.Center,
             LineAlignment = StringAlignment.Center
         };
-        var font = new Font("Roboto", 64, GraphicsUnit.Pixel);
-        var rectangle = new RectangleF(0, 0, 128, 128);
 
-        var graphics = Graphics.FromImage(bitmap);
+        using var graphics = Graphics.FromImage(bitmap);
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
         graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
         graphics.Clear(backgroundColor);
         graphics.DrawString(text, font, textColor, rectangle, stringFormat);
-        graphics.Flush();
 
         return bitmap;
     }

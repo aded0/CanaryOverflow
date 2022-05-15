@@ -5,5 +5,5 @@ namespace CanaryOverflow.Domain.Services;
 
 public interface IAssetsService
 {
-    Task<bool> IsAvatarExists(Guid id);
+    Task<bool> IsAvatarExistsAsync(Guid id);
 }
