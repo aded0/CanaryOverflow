@@ -238,14 +238,14 @@ public class QuestionTests
     public async Task Add_tag()
     {
         var mock = new Mock<ITagService>();
-        mock.Setup(svc => svc.IsExistsAsync(It.IsAny<Guid>())).ReturnsAsync(true);
+        mock.Setup(svc => svc.IsExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
 
         var question = new Question(Title, Text, Guid.NewGuid());
 
-        await question.AddTag(Guid.NewGuid(), mock.Object);
+        await question.AddTag("javascript", mock.Object);
         
         question.Tags.Should().NotBeEmpty();
-        mock.Verify(svc => svc.IsExistsAsync(It.IsAny<Guid>()), Times.Once);
+        mock.Verify(svc => svc.IsExistsAsync(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -253,14 +253,14 @@ public class QuestionTests
     public void Add_exists_tag()
     {
         var mock = new Mock<ITagService>();
-        mock.Setup(svc => svc.IsExistsAsync(It.IsAny<Guid>())).ReturnsAsync(false);
+        mock.Setup(svc => svc.IsExistsAsync(It.IsAny<string>())).ReturnsAsync(false);
 
         var question = new Question(Title, Text, Guid.NewGuid());
 
-        var act = async () => await question.AddTag(Guid.NewGuid(), mock.Object);
+        var act = async () => await question.AddTag("javascript", mock.Object);
 
         act.Should().ThrowAsync<ArgumentException>();
-        mock.Verify(svc => svc.IsExistsAsync(Guid.NewGuid()), Times.Never);
+        mock.Verify(svc => svc.IsExistsAsync(It.IsAny<string>()), Times.Never);
     }
 
     [Fact]
@@ -268,11 +268,11 @@ public class QuestionTests
     public async Task Remove_tag()
     {
         var mock = new Mock<ITagService>();
-        mock.Setup(svc => svc.IsExistsAsync(It.IsAny<Guid>())).ReturnsAsync(true);
+        mock.Setup(svc => svc.IsExistsAsync(It.IsAny<string>())).ReturnsAsync(true);
 
         var question = new Question(Title, Text, Guid.NewGuid());
 
-        await question.AddTag(Guid.NewGuid(), mock.Object);
+        await question.AddTag("javascript", mock.Object);
 
         question.Tags.Should().NotBeEmpty();
 
@@ -281,7 +281,7 @@ public class QuestionTests
         question.RemoveTag(foundTagId);
 
         question.Tags.Should().BeEmpty();
-        mock.Verify(svc => svc.IsExistsAsync(It.IsAny<Guid>()), Times.Once);
+        mock.Verify(svc => svc.IsExistsAsync(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -290,7 +290,7 @@ public class QuestionTests
     {
         var question = new Question(Title, Text, Guid.NewGuid());
 
-        var act = () => question.RemoveTag(Guid.NewGuid());
+        var act = () => question.RemoveTag("javascript");
         act.Should().Throw<ArgumentException>();
     }
     //TODO: add tests tests for Upvote, Downvote
