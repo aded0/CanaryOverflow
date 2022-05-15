@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using CanaryOverflow.Common;
 using CanaryOverflow.Domain.Services;
@@ -8,12 +9,11 @@ namespace CanaryOverflow.Domain.ProfileAggregate;
 
 #region Profile domain events
 
-internal record ProfileCreated
-    (Guid Id, string DisplayName, DateTime CreatedAt, Guid AvatarId, string? Summary) : IDomainEvent;
+internal record ProfileCreated(Guid Id, string DisplayName, DateTime CreatedAt, Guid AvatarId) : IDomainEvent;
 
-internal record DisplayNameChanged(string NewDisplayName) : IDomainEvent;
+internal record DisplayNameChanged(string DisplayName) : IDomainEvent;
 
-internal record AvatarChanged(Guid NewAvatarId) : IDomainEvent;
+internal record AvatarChanged(Guid AvatarId) : IDomainEvent;
 
 internal record SummaryChanged(string? Summary) : IDomainEvent;
 
@@ -22,18 +22,18 @@ internal record SummaryChanged(string? Summary) : IDomainEvent;
 public class Profile : AggregateRoot<Guid, Profile>
 {
     private const string DisplayNameEmpty = "Display name is empty.";
-    private const string AvatarIdEmpty = "AvatarId is empty.";
 
-    public static async Task<Profile> Create(Guid id, string? displayName, DateTime createdAt, Guid avatarId,
-        string? summary, IAssetsService assetsService)
+    public static async Task<Profile> Create(Guid id, string? displayName, IAvatarService avatarService,
+        DateTime createdAt)
     {
         if (id == Guid.Empty) throw new ArgumentException("Profile id is empty.", nameof(id));
         if (string.IsNullOrWhiteSpace(displayName))
             throw new ArgumentNullException(nameof(displayName), DisplayNameEmpty);
-        var exists = await assetsService.IsAvatarExistsAsync(avatarId);
-        if (exists is false) throw new ArgumentException(AvatarIdEmpty, nameof(avatarId));
 
-        return new Profile(id, displayName, createdAt, avatarId, summary);
+        await using var stream = avatarService.Create(id, displayName);
+        var uploadedAvatarId = await avatarService.UploadAsync(stream);
+
+        return new Profile(id, displayName, createdAt, uploadedAvatarId);
     }
 
     [UsedImplicitly]
@@ -41,9 +41,9 @@ public class Profile : AggregateRoot<Guid, Profile>
     {
     }
 
-    private Profile(Guid id, string displayName, DateTime createdAt, Guid avatarId, string? summary)
+    private Profile(Guid id, string displayName, DateTime createdAt, Guid avatarId)
     {
-        Append(new ProfileCreated(id, displayName, createdAt, avatarId, summary));
+        Append(new ProfileCreated(id, displayName, createdAt, avatarId));
     }
 
     public string? DisplayName { get; private set; }
@@ -59,12 +59,13 @@ public class Profile : AggregateRoot<Guid, Profile>
         Append(new DisplayNameChanged(displayName));
     }
 
-    public async Task ChangeAvatar(Guid avatarId, IAssetsService assetsService)
+    public async Task ChangeAvatar(IAvatarService avatarService, Guid previousAvatarId, Stream newAvatarData)
     {
-        var exists = await assetsService.IsAvatarExistsAsync(avatarId);
-        if (exists is false) throw new ArgumentException(AvatarIdEmpty, nameof(avatarId));
+        //todo: handle restore previous img if not loaded/deleted
+        var uploadedAvatarId = await avatarService.UploadAsync(newAvatarData);
+        await avatarService.DeleteAsync(previousAvatarId);
 
-        Append(new AvatarChanged(avatarId));
+        Append(new AvatarChanged(uploadedAvatarId));
     }
 
     public void ChangeSummary(string? summary)
@@ -103,17 +104,16 @@ public class Profile : AggregateRoot<Guid, Profile>
         DisplayName = profileCreated.DisplayName;
         CreatedAt = profileCreated.CreatedAt;
         AvatarId = profileCreated.AvatarId;
-        Summary = profileCreated.Summary;
     }
 
     private void Apply(DisplayNameChanged displayNameChanged)
     {
-        DisplayName = displayNameChanged.NewDisplayName;
+        DisplayName = displayNameChanged.DisplayName;
     }
 
     private void Apply(AvatarChanged avatarChanged)
     {
-        AvatarId = avatarChanged.NewAvatarId;
+        AvatarId = avatarChanged.AvatarId;
     }
 
     private void Apply(SummaryChanged summaryChanged)

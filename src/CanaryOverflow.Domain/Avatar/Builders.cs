@@ -6,7 +6,7 @@ using System.Drawing.Text;
 
 namespace CanaryOverflow.Domain.Avatar;
 
-[SuppressMessage("Interoperability", "CA1416:Проверка совместимости платформы")]
+[SuppressMessage("Interoperability", "CA1416")]
 public class AvatarBuilder
 {
     private readonly Avatar _avatar;
