@@ -22,6 +22,6 @@ public class CreateTagHandler : INotificationHandler<CreateTag>
     public async Task Handle(CreateTag notification, CancellationToken cancellationToken)
     {
         var tag = await Tag.Create(notification.Name, notification.Summary, notification.Description, _tagService);
-        await _tagRepository.SaveAsync(tag, cancellationToken);
+        await _tagRepository.SaveAsync(tag, CancellationToken.None);
     }
 }

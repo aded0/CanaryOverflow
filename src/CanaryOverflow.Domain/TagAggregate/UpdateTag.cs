@@ -18,13 +18,13 @@ public class UpdateTagHandler : INotificationHandler<UpdateTag>
 
     public async Task Handle(UpdateTag notification, CancellationToken cancellationToken)
     {
-        var tag = await _tagRepository.FindAsync(notification.Name, cancellationToken);
+        var tag = await _tagRepository.FindAsync(notification.Name, CancellationToken.None);
 
         if (tag.Summary != notification.Summary)
             tag.UpdateSummary(notification.Summary);
         if (tag.Description != notification.Description)
             tag.UpdateDescription(notification.Description);
 
-        await _tagRepository.SaveAsync(tag, cancellationToken);
+        await _tagRepository.SaveAsync(tag, CancellationToken.None);
     }
 }
