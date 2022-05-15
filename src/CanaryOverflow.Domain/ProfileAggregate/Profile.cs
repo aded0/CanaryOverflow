@@ -21,16 +21,19 @@ internal record SummaryChanged(string? Summary) : IDomainEvent;
 
 public class Profile : AggregateRoot<Guid, Profile>
 {
-    public static async Task<Profile> Create(string? displayName, Guid avatarId, string? summary,
-        IAssetsService assetsService)
+    private const string DisplayNameEmpty = "Display name is empty.";
+    private const string AvatarIdEmpty = "AvatarId is empty.";
+
+    public static async Task<Profile> Create(Guid id, string? displayName, DateTime createdAt, Guid avatarId,
+        string? summary, IAssetsService assetsService)
     {
+        if (id == Guid.Empty) throw new ArgumentException("Profile id is empty.", nameof(id));
         if (string.IsNullOrWhiteSpace(displayName))
-            throw new ArgumentNullException(nameof(displayName), "Display name can not be empty.");
+            throw new ArgumentNullException(nameof(displayName), DisplayNameEmpty);
+        var exists = await assetsService.IsAvatarExistsAsync(avatarId);
+        if (exists is false) throw new ArgumentException(AvatarIdEmpty, nameof(avatarId));
 
-        var exists = await assetsService.IsAvatarExists(avatarId);
-        if (exists is false) throw new ArgumentException("AvatarId can not be empty.", nameof(avatarId));
-
-        return new Profile(displayName, avatarId, summary);
+        return new Profile(id, displayName, createdAt, avatarId, summary);
     }
 
     [UsedImplicitly]
@@ -38,9 +41,9 @@ public class Profile : AggregateRoot<Guid, Profile>
     {
     }
 
-    private Profile(string displayName, Guid avatarId, string? summary)
+    private Profile(Guid id, string displayName, DateTime createdAt, Guid avatarId, string? summary)
     {
-        Append(new ProfileCreated(Guid.NewGuid(), displayName, DateTime.Now, avatarId, summary));
+        Append(new ProfileCreated(id, displayName, createdAt, avatarId, summary));
     }
 
     public string? DisplayName { get; private set; }
@@ -51,15 +54,15 @@ public class Profile : AggregateRoot<Guid, Profile>
     public void ChangeDisplayName(string displayName)
     {
         if (string.IsNullOrWhiteSpace(displayName))
-            throw new ArgumentNullException(nameof(displayName), "Display name can not be empty.");
+            throw new ArgumentNullException(nameof(displayName), DisplayNameEmpty);
 
         Append(new DisplayNameChanged(displayName));
     }
 
     public async Task ChangeAvatar(Guid avatarId, IAssetsService assetsService)
     {
-        var exists = await assetsService.IsAvatarExists(avatarId);
-        if (exists is false) throw new ArgumentException("AvatarId can not be empty.", nameof(avatarId));
+        var exists = await assetsService.IsAvatarExistsAsync(avatarId);
+        if (exists is false) throw new ArgumentException(AvatarIdEmpty, nameof(avatarId));
 
         Append(new AvatarChanged(avatarId));
     }
