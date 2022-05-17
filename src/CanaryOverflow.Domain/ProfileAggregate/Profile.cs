@@ -24,14 +24,13 @@ public class Profile : AggregateRoot<Guid, Profile>
     private const string DisplayNameEmpty = "Display name is empty.";
 
     public static async Task<Profile> Create(Guid id, string? displayName, DateTime createdAt,
-        IAvatarService avatarService)
+        ICreateAvatar createAvatar)
     {
         if (id == Guid.Empty) throw new ArgumentException("Profile id is empty.", nameof(id));
         if (string.IsNullOrWhiteSpace(displayName))
             throw new ArgumentNullException(nameof(displayName), DisplayNameEmpty);
 
-        await using var stream = avatarService.Create(id, displayName);
-        var uploadedAvatarId = await avatarService.UploadAsync(stream);
+        var uploadedAvatarId = await createAvatar.CreateAsync(id, displayName);
 
         return new Profile(id, displayName, createdAt, uploadedAvatarId);
     }
@@ -59,10 +58,9 @@ public class Profile : AggregateRoot<Guid, Profile>
         Append(new DisplayNameChanged(displayName));
     }
 
-    public async Task ChangeAvatarAsync(Stream newAvatarData, Guid previousAvatarId, IAvatarService avatarService)
+    public async Task ChangeAvatarAsync(Stream newAvatarData, Guid previousAvatarId, IChangeAvatar changeAvatar)
     {
-        var uploadedAvatarId = await avatarService.UploadAsync(newAvatarData);
-        await avatarService.DeleteAsync(previousAvatarId);
+        var uploadedAvatarId = await changeAvatar.ChangeAsync(newAvatarData, previousAvatarId);
 
         Append(new AvatarChanged(uploadedAvatarId));
     }
