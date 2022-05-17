@@ -259,6 +259,7 @@ public class Question : AggregateRoot<Guid, Question>
 
     public void AddTag(string tagName)
     {
+        if (_tags?.Contains(tagName) is true) throw new ArgumentException("Duplicated tag", nameof(tagName));
         Append(new TagAdded(tagName));
     }
 
