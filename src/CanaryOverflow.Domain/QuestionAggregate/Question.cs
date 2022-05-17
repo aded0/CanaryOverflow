@@ -17,7 +17,7 @@ internal record QuestionCreated
 
 internal record TitleUpdated(string Title) : IDomainEvent;
 
-internal record TextUpdated(string Text) : IDomainEvent;
+internal record BodyUpdated(string Body) : IDomainEvent;
 
 internal record QuestionApproved : IDomainEvent;
 
@@ -203,12 +203,12 @@ public class Question : AggregateRoot<Guid, Question>
         Append(new TitleUpdated(title));
     }
 
-    public void UpdateText(string? text)
+    public void UpdateBody(string? body)
     {
-        if (string.IsNullOrWhiteSpace(text))
-            throw new ArgumentNullException(nameof(text), "Text is empty or whitespace.");
+        if (string.IsNullOrWhiteSpace(body))
+            throw new ArgumentNullException(nameof(body), "Text is empty or whitespace.");
 
-        Append(new TextUpdated(text));
+        Append(new BodyUpdated(body));
     }
 
     public void SetApproved()
@@ -299,8 +299,8 @@ public class Question : AggregateRoot<Guid, Question>
                 Apply(titleUpdated);
                 break;
 
-            case TextUpdated textUpdated:
-                Apply(textUpdated);
+            case BodyUpdated bodyUpdated:
+                Apply(bodyUpdated);
                 break;
 
             case AnswerAdded answerAdded:
@@ -364,9 +364,9 @@ public class Question : AggregateRoot<Guid, Question>
         Title = titleUpdated.Title;
     }
 
-    private void Apply(TextUpdated textUpdated)
+    private void Apply(BodyUpdated bodyUpdated)
     {
-        Body = textUpdated.Text;
+        Body = bodyUpdated.Body;
     }
 
     private void Apply(AnswerAdded answerAdded)

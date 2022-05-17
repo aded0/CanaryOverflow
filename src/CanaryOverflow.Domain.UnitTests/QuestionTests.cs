@@ -66,7 +66,7 @@ public class QuestionTests
     {
         var question = Question.Create(Guid.NewGuid(), Title, Text, Guid.NewGuid(), DateTime.Now);
 
-        var act = () => question.UpdateText(null);
+        var act = () => question.UpdateBody(null);
 
         act.Should().Throw<ArgumentNullException>();
     }
@@ -88,7 +88,7 @@ public class QuestionTests
     {
         var question = Question.Create(Guid.NewGuid(), Title, Text, Guid.NewGuid(), DateTime.Now);
 
-        question.UpdateText("new");
+        question.UpdateBody("new");
 
         question.Body.Should().Be("new");
     }
