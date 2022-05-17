@@ -4,7 +4,7 @@ using CanaryOverflow.Common;
 using CanaryOverflow.Domain.Services;
 using MediatR;
 
-namespace CanaryOverflow.Domain.TagAggregate;
+namespace CanaryOverflow.Domain.TagAggregate.Commands;
 
 public record CreateTag(string Name, string Summary, string Description) : INotification;
 

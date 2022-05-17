@@ -5,7 +5,7 @@ using CanaryOverflow.Common;
 using CanaryOverflow.Domain.Services;
 using MediatR;
 
-namespace CanaryOverflow.Domain.ProfileAggregate;
+namespace CanaryOverflow.Domain.ProfileAggregate.Commands;
 
 public record CreateProfile(Guid Id, string DisplayName, DateTime CreatedAt) : INotification;
 

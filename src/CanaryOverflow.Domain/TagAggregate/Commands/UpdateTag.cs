@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using CanaryOverflow.Common;
 using MediatR;
 
-namespace CanaryOverflow.Domain.TagAggregate;
+namespace CanaryOverflow.Domain.TagAggregate.Commands;
 
 public record UpdateTag(string Name, string Summary, string Description) : INotification;
 

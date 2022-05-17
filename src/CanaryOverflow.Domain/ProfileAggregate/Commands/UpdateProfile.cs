@@ -6,7 +6,7 @@ using CanaryOverflow.Common;
 using CanaryOverflow.Domain.Services;
 using MediatR;
 
-namespace CanaryOverflow.Domain.ProfileAggregate;
+namespace CanaryOverflow.Domain.ProfileAggregate.Commands;
 
 public record UpdateProfile(Guid Id, string DisplayName, Stream? AvatarData, string? Summary) : INotification;
 
