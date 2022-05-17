@@ -30,8 +30,8 @@ public class UpdateProfileHandler : INotificationHandler<UpdateProfile>
         if (profile.Summary != notification.Summary)
             profile.ChangeSummary(notification.Summary);
         if (notification.AvatarData?.Length > 0)
-            await profile.ChangeAvatar(_avatarService, profile.AvatarId, notification.AvatarData);
-                
+            await profile.ChangeAvatarAsync(notification.AvatarData, profile.AvatarId, _avatarService);
+
         await _profileRepository.SaveAsync(profile, CancellationToken.None);
     }
 }

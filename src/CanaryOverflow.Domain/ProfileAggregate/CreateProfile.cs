@@ -22,8 +22,8 @@ public class CreateProfileHandler : INotificationHandler<CreateProfile>
 
     public async Task Handle(CreateProfile notification, CancellationToken cancellationToken)
     {
-        var profile = await Profile.Create(notification.Id, notification.DisplayName, _avatarService,
-            notification.CreatedAt);
+        var profile = await Profile.Create(notification.Id, notification.DisplayName, notification.CreatedAt,
+            _avatarService);
         await _profileRepository.SaveAsync(profile, CancellationToken.None);
     }
 }

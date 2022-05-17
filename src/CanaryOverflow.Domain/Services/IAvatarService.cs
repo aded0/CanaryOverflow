@@ -7,6 +7,6 @@ namespace CanaryOverflow.Domain.Services;
 public interface IAvatarService
 {
     Stream Create(Guid userId, string text);
-    Task<Guid> UploadAsync(Stream data);
+    Task<Guid> UploadAsync(Stream stream);
     Task DeleteAsync(Guid id);
 }
