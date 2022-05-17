@@ -260,7 +260,7 @@ public class QuestionTests
         var act = async () => await question.AddTag("javascript", mock.Object);
 
         act.Should().ThrowAsync<ArgumentException>();
-        mock.Verify(svc => svc.IsExistsAsync(It.IsAny<string>()), Times.Never);
+        mock.Verify(svc => svc.IsExistsAsync(It.IsAny<string>()), Times.Once());
     }
 
     [Fact]

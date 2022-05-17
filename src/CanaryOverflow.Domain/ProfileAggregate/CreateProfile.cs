@@ -12,18 +12,18 @@ public record CreateProfile(Guid Id, string DisplayName, DateTime CreatedAt) : I
 public class CreateProfileHandler : INotificationHandler<CreateProfile>
 {
     private readonly IAggregateRepository<Guid, Profile> _profileRepository;
-    private readonly IAvatarService _avatarService;
+    private readonly ICreateAvatar _createAvatar;
 
-    public CreateProfileHandler(IAggregateRepository<Guid, Profile> profileRepository, IAvatarService avatarService)
+    public CreateProfileHandler(IAggregateRepository<Guid, Profile> profileRepository, ICreateAvatar createAvatar)
     {
         _profileRepository = profileRepository;
-        _avatarService = avatarService;
+        _createAvatar = createAvatar;
     }
 
     public async Task Handle(CreateProfile notification, CancellationToken cancellationToken)
     {
         var profile = await Profile.Create(notification.Id, notification.DisplayName, notification.CreatedAt,
-            _avatarService);
+            _createAvatar);
         await _profileRepository.SaveAsync(profile, CancellationToken.None);
     }
 }
