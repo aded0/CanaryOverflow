@@ -1,0 +1,23 @@
+name: coverage
+on: [ push, pull_request ]
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_NOLOGO: true
+    steps:
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: '6.0'
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Test
+        working-directory: ./src
+        run: dotnet test --configuration Release /p:ContinuousIntegrationBuild=true /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+
+      - name: Upload cover report to codecov
+        uses: codecov/codecov-action@v2

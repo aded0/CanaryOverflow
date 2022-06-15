@@ -1,27 +1,8 @@
-﻿using System;
-using Stateless;
+﻿using Stateless;
 
 namespace CanaryOverflow.Domain.QuestionAggregate
 {
-    public enum QuestionState
-    {
-        /// <summary>
-        /// Initial state. Does not allowed to show.
-        /// </summary>
-        Unapproved,
-
-        /// <summary>
-        /// Approved by moderator. Allowed to show. Currently no answer.
-        /// </summary>
-        Approved,
-
-        /// <summary>
-        /// Author set question as answered.
-        /// </summary>
-        Answered
-    }
-
-    public class QuestionStateMachine
+    public class QuestionStateMachine : IQuestionStateMachine
     {
         private enum Trigger
         {
@@ -51,55 +32,21 @@ namespace CanaryOverflow.Domain.QuestionAggregate
             _stateMachine.Configure(QuestionState.Answered).Permit(Trigger.CancelAnswer, QuestionState.Approved);
         }
 
-        /// <summary>
-        /// SetApproved transfer state to approved.
-        /// </summary>
-        /// <returns>True if transfer success, otherwise false.</returns>
-        public bool SetApproved()
+        public QuestionState State => _stateMachine.State;
+
+        public void SetApproved()
         {
-            try
-            {
-                _stateMachine.Fire(Trigger.Approve);
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
+            _stateMachine.Fire(Trigger.Approve);
         }
 
-        /// <summary>
-        /// SetAnswered transfer state to answered.
-        /// </summary>
-        /// <returns>True if transfer success, otherwise false.</returns>
-        public bool SetAnswered()
+        public void SetAnswered()
         {
-            try
-            {
-                _stateMachine.Fire(Trigger.Answer);
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
+            _stateMachine.Fire(Trigger.Answer);
         }
 
-        /// <summary>
-        /// SetUnanswered transfer state back to approved.
-        /// </summary>
-        /// <returns>True if transfer success, otherwise false.</returns>
-        public bool SetUnanswered()
+        public void SetUnanswered()
         {
-            try
-            {
-                _stateMachine.Fire(Trigger.CancelAnswer);
-                return true;
-            }
-            catch (InvalidOperationException)
-            {
-                return false;
-            }
+            _stateMachine.Fire(Trigger.CancelAnswer);
         }
     }
 }
