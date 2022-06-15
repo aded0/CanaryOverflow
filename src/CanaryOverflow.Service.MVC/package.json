@@ -1,0 +1,22 @@
+{
+  "name": "canary-overflow",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aded0/CanaryOverflow.git"
+  },
+  "author": "Ivan Kozelskikh",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/aded0/CanaryOverflow/issues"
+  },
+  "homepage": "https://github.com/aded0/CanaryOverflow#readme",
+  "private": true,
+  "devDependencies": {
+    "@types/gulp": "^4.0.9",
+    "@types/gulp-concat": "^0.0.33",
+    "del": "^6.1.1",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1"
+  }
+}
