@@ -15,7 +15,7 @@ internal record DisplayNameChanged(string DisplayName) : IDomainEvent;
 
 internal record AvatarChanged(Guid AvatarId) : IDomainEvent;
 
-internal record SummaryChanged(string? Summary) : IDomainEvent;
+internal record ProfileSummaryChanged(string? Summary) : IDomainEvent;
 
 #endregion
 
@@ -67,7 +67,7 @@ public class Profile : AggregateRoot<Guid, Profile>
 
     public void ChangeSummary(string? summary)
     {
-        Append(new SummaryChanged(summary));
+        Append(new ProfileSummaryChanged(summary));
     }
 
     protected override void When(IDomainEvent @event)
@@ -86,8 +86,8 @@ public class Profile : AggregateRoot<Guid, Profile>
                 Apply(avatarChanged);
                 break;
 
-            case SummaryChanged summaryChanged:
-                Apply(summaryChanged);
+            case ProfileSummaryChanged profileSummaryChanged:
+                Apply(profileSummaryChanged);
                 break;
         }
     }
@@ -113,9 +113,9 @@ public class Profile : AggregateRoot<Guid, Profile>
         AvatarId = avatarChanged.AvatarId;
     }
 
-    private void Apply(SummaryChanged summaryChanged)
+    private void Apply(ProfileSummaryChanged profileSummaryChanged)
     {
-        Summary = summaryChanged.Summary;
+        Summary = profileSummaryChanged.Summary;
     }
 
     #endregion

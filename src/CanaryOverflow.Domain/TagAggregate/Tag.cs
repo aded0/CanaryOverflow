@@ -11,7 +11,7 @@ namespace CanaryOverflow.Domain.TagAggregate;
 
 public record TagCreated(string Name, string Summary, string Description) : IDomainEvent;
 
-public record SummaryChanged(string Text) : IDomainEvent;
+public record TagSummaryChanged(string Text) : IDomainEvent;
 
 public record DescriptionUpdated(string Text) : IDomainEvent;
 
@@ -57,7 +57,7 @@ public class Tag : AggregateRoot<string, Tag>
         if (string.IsNullOrWhiteSpace(text))
             throw new ArgumentNullException(nameof(text), SummaryEmpty);
 
-        Append(new SummaryChanged(text));
+        Append(new TagSummaryChanged(text));
     }
 
     public void UpdateDescription(string? text)
@@ -76,7 +76,7 @@ public class Tag : AggregateRoot<string, Tag>
                 Apply(tagCreated);
                 break;
 
-            case SummaryChanged summaryChanged:
+            case TagSummaryChanged summaryChanged:
                 Apply(summaryChanged);
                 break;
 
@@ -99,9 +99,9 @@ public class Tag : AggregateRoot<string, Tag>
         Description = tagCreated.Description;
     }
 
-    private void Apply(SummaryChanged summaryChanged)
+    private void Apply(TagSummaryChanged tagSummaryChanged)
     {
-        Summary = summaryChanged.Text;
+        Summary = tagSummaryChanged.Text;
     }
 
     private void Apply(DescriptionUpdated descriptionUpdated)
