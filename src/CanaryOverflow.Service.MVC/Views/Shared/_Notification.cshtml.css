@@ -4,6 +4,10 @@
   background-color: var(--amber-400);
 }
 
+.notification_hidden {
+  display: none;
+}
+
 .notification__text {
   flex-grow: 1;
   color: var(--zinc-800);
