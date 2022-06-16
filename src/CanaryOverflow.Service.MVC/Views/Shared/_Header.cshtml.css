@@ -19,8 +19,7 @@
 }
 
 .header__text_xlarge {
-  font-size: 1.25rem;
-  line-height: 1.75rem;
+  font-size: 20px;
 }
 
 .header__text_bold {
@@ -58,7 +57,6 @@
   align-items: center;
   position: relative;
   color: var(--zinc-800);
-  flex-grow: 1;
 }
 
 .search-box__icon {
@@ -87,6 +85,7 @@
   flex-shrink: 0;
   display: flex;
   gap: 4px;
+  padding: 0 0.6em;
 }
 
 .button {
