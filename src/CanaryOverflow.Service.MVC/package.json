@@ -13,11 +13,14 @@
   "homepage": "https://github.com/aded0/CanaryOverflow#readme",
   "private": true,
   "devDependencies": {
+    "@hotwired/stimulus": "^3.0.1",
     "@types/gulp": "^4.0.9",
     "@types/gulp-concat": "^0.0.33",
     "del": "^6.1.1",
+    "esbuild": "^0.14.44",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
+    "gulp-esbuild": "^0.10.3",
     "normalize.css": "^8.0.1"
   }
 }
