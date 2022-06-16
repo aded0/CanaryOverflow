@@ -6,10 +6,10 @@ function cleanWwwroot(done) {
   return del("wwwroot/*", done);
 }
 
-function cssBundle() {
-  return src("Views/**/*.css")
+function bundleCss() {
+  return src(["node_modules\\normalize.css\\normalize.css", "Views\\**\\*.css"])
     .pipe(concat("styles.css"))
     .pipe(dest("wwwroot"));
 }
 
-exports.default = series(cleanWwwroot, cssBundle)
+exports.default = series(cleanWwwroot, bundleCss)
