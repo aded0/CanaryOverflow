@@ -1,0 +1,52 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>@ViewData["Title"]</title>
+  <link asp-append-version="true" href="~/styles.css" rel="stylesheet"/>
+  <script asp-append-version="true" defer src="~/bundle.js"></script>
+</head>
+
+<body>
+<div class="app">
+  <partial name="_Notification.cshtml"/>
+  <partial name="_Header.cshtml"/>
+
+  <div class="app__body">
+
+    <aside class="sidebar">
+      <div class="sidebar__menu">
+        <h5 class="group__title">public</h5>
+        <ul class="group">
+          <li>
+            <a asp-action="Index" asp-active-class="group__link_active" asp-controller="Home" class="group__link">Questions</a>
+          </li>
+          <li>
+            <a class="group__link" href="">Tags</a>
+          </li>
+          <li>
+            <a class="group__link" href="">Users</a>
+          </li>
+        </ul>
+        <h5 class="group__title">find a job</h5>
+        <ul class="group">
+          <li>
+            <a class="group__link" href="">Jobs</a>
+          </li>
+          <li>
+            <a class="group__link" href="">Companies</a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="content">@RenderBody()</main>
+
+  </div>
+
+  <partial name="_Footer.cshtml"/>
+</div>
+
+</body>
+</html>
