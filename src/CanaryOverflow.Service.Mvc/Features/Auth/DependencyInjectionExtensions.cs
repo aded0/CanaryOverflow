@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace CanaryOverflow.MVC.Features.Auth;
+namespace CanaryOverflow.Service.Mvc.Features.Auth;
 
 public static class ValidatorsServiceCollectionExtensions
 {

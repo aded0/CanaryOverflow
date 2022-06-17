@@ -1,25 +1,24 @@
 ﻿using System.Net;
-using CanaryOverflow.Domain.UserAggregate;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace CanaryOverflow.MVC.Features.Auth;
+namespace CanaryOverflow.Service.Mvc.Features.Auth;
 
 [AllowAnonymous]
 [AutoValidateAntiforgeryToken]
 public class AuthController : Controller
 {
     private readonly ILogger<AuthController> _logger;
-    private readonly SignInManager<User> _signInManager;
-    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<IdentityUser<Guid>> _signInManager;
+    private readonly UserManager<IdentityUser<Guid>> _userManager;
     private readonly IEmailSender _emailSender;
 
     public AuthController(
         ILogger<AuthController> logger,
-        SignInManager<User> signInManager,
-        UserManager<User> userManager,
+        SignInManager<IdentityUser<Guid>> signInManager,
+        UserManager<IdentityUser<Guid>> userManager,
         IEmailSender emailSender)
     {
         _logger = logger;
@@ -48,7 +47,7 @@ public class AuthController : Controller
     {
         if (!ModelState.IsValid) return View("/Features/Auth/Signup.cshtml", vm);
 
-        var user = new User();
+        var user = new IdentityUser<Guid>();
         await _userManager.SetUserNameAsync(user, vm.Email);
         await _userManager.SetEmailAsync(user, vm.Email);
         var result = await _userManager.CreateAsync(user, vm.Password);

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CanaryOverflow.MVC.Features.Auth;
+namespace CanaryOverflow.Service.Mvc.Features.Auth;
 
 public class SignupViewModel
 {

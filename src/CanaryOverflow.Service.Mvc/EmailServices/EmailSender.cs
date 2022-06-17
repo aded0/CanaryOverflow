@@ -1,7 +1,7 @@
 ﻿using FluentEmail.Core;
 using Microsoft.AspNetCore.Identity.UI.Services;
 
-namespace CanaryOverflow.MVC.EmailServices;
+namespace CanaryOverflow.Service.Mvc.EmailServices;
 
 public class EmailSender : IEmailSender
 {

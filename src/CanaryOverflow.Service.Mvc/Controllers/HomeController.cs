@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace CanaryOverflow.MVC.Controllers;
+namespace CanaryOverflow.Service.Mvc.Controllers;
 
 public class HomeController : Controller
 {
