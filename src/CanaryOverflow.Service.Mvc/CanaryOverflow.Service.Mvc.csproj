@@ -10,7 +10,6 @@
 
     <ItemGroup>
       <PackageReference Include="FluentEmail.Smtp" Version="3.0.0" />
-      <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
       <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
       <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.1" />
@@ -24,5 +23,29 @@
 
     <ItemGroup>
       <Folder Include="wwwroot" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\Features\Auth\SignupViewModel.resx">
+        <Generator>PublicResXFileCodeGenerator</Generator>
+        <LastGenOutput>SignupViewModel.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\Features\Auth\SignupViewModel.ru.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>SignupViewModel.ru.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Resources\Features\Auth\SignupViewModel.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SignupViewModel.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Resources\Features\Auth\SignupViewModel.ru.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>SignupViewModel.ru.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>

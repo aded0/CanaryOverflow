@@ -4,10 +4,31 @@ namespace CanaryOverflow.Service.Mvc.Features.Auth;
 
 public class SignupViewModel
 {
+    [Required(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
+        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.EmailRequired))]
+    [EmailAddress(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
+        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.EmailInvalid))]
+    [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.Email),
+        ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
+    [DataType(DataType.EmailAddress)]
     public string? Email { get; init; }
 
+    [Required(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
+        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.PasswordRequired))]
+    [StringLength(50, MinimumLength = 6, ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
+        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.PasswordShort))]
+    [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.Password),
+        ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
+    [DataType(DataType.Password)]
     public string? Password { get; init; }
 
+    [Required(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
+        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.PasswordRequired))]
+    [Compare(nameof(Password), ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
+        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.PasswordsMismatch))]
+    [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.ConfirmPassword),
+        ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
+    [DataType(DataType.Password)]
     public string? ConfirmPassword { get; init; }
 }
 
@@ -29,9 +50,7 @@ public class ConfirmEmailViewModel
 
 public class ForgotPasswordViewModel
 {
-    [Required]
-    [EmailAddress]
-    public string? Email { get; set; }
+    [Required] [EmailAddress] public string? Email { get; set; }
 }
 
 public class ResetPasswordViewModel
@@ -54,7 +73,5 @@ public class ResetPasswordViewModel
 
 public class ResendEmailConfirmationViewModel
 {
-    [Required]
-    [EmailAddress]
-    public string? Email { get; set; }
+    [Required] [EmailAddress] public string? Email { get; set; }
 }
