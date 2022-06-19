@@ -48,4 +48,37 @@
         <DependentUpon>SignupViewModel.ru.resx</DependentUpon>
       </Compile>
     </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="Views\Shared\Notification.css">
+        <DependentUpon>_Notification.cshtml</DependentUpon>
+      </Content>
+      <Content Update="Views\Shared\LayoutSlim.css">
+        <DependentUpon>_LayoutSlim.cshtml</DependentUpon>
+      </Content>
+      <Content Update="Views\Shared\Layout.css">
+        <DependentUpon>_Layout.cshtml</DependentUpon>
+      </Content>
+      <Content Update="Views\Shared\Header.css">
+        <DependentUpon>_Header.cshtml</DependentUpon>
+      </Content>
+      <Content Update="Views\Shared\Footer.css">
+        <DependentUpon>_Footer.cshtml</DependentUpon>
+      </Content>
+      <Content Update="package-lock.json">
+        <DependentUpon>package.json</DependentUpon>
+      </Content>
+      <Content Update="appsettings.Development.json">
+        <DependentUpon>appsettings.json</DependentUpon>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Views\Shared\notification_controller.js">
+        <DependentUpon>_Notification.cshtml</DependentUpon>
+      </None>
+      <None Update="Features\Auth\Signup.css">
+        <DependentUpon>Signup.cshtml</DependentUpon>
+      </None>
+    </ItemGroup>
 </Project>
