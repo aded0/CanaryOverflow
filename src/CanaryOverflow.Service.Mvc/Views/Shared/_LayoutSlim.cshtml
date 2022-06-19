@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>@ViewData["Title"]</title>
+  <link asp-append-version="true" href="~/styles.css" rel="stylesheet"/>
+  <script asp-append-version="true" defer src="~/bundle.js"></script>
+</head>
+
+<body>
+
+<div class="app app-slim">
+  <partial name="_Header.cshtml"/>
+
+  <div class="app-slim__container">
+    <div>
+      @RenderBody()
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

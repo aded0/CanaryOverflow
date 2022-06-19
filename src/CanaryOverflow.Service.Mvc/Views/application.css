@@ -3,3 +3,5 @@
 @import url("Shared/_Layout.cshtml.css");
 @import url("Shared/_Notification.cshtml.css");
 @import url("Shared/_Footer.cshtml.css");
+@import url("Shared/_LayoutSlim.cshtml.css");
+@import url("../Features/Auth/Signup.css");

@@ -69,16 +69,7 @@
 
 .search-box__input {
   padding: 0.5rem 0.5rem 0.5rem 2rem;
-  border-radius: 0.25rem;
   width: 100%;
-  border: 1px solid var(--zinc-400);
-  font-size: 13px;
-}
-
-.search-box__input:focus {
-  outline: none;
-  border-color: var(--sky-500);
-  box-shadow: 0 0 0 4px var(--sky-200);
 }
 
 .header__controls {
@@ -89,12 +80,15 @@
 }
 
 .button {
-  padding: 0.4rem 0.8rem;
+  padding: 0.25rem 0.75rem;
   border-radius: 0.25rem;
-  border-width: 1px;
-  border-style: solid;
+  border: 1px solid;
   text-decoration: none;
   font-size: 13px;
+}
+
+.button:hover {
+  cursor: pointer;
 }
 
 .button:focus {
