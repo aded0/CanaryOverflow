@@ -1,5 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc.Localization
+@using CanaryOverflow.Service.Mvc.Resources.Features.Auth
 @model CanaryOverflow.Service.Mvc.Features.Auth.SignupViewModel
+@inject IViewLocalizer Localizer
 @{
   Layout = "_LayoutSlim";
   ViewData["Title"] = "Signup";
@@ -9,21 +12,23 @@
   <div asp-validation-summary="ModelOnly"></div>
   <section class="form__section">
     <label asp-for="Email" class="label"></label>
-    <input aria-required="true" asp-for="Email" autocomplete="email" class="input form__input" type="text"/>
+    <input aria-required="true" asp-for="Email" autocomplete="email" class="input form__input"/>
     <span asp-validation-for="Email" class="error"></span>
   </section>
   <section class="form__section">
     <label asp-for="Password" class="label"></label>
-    <input aria-required="true" asp-for="Password" autocomplete="new-password" class="input form__input" type="password"/>
+    <input aria-required="true" asp-for="Password" autocomplete="new-password" class="input form__input"/>
     <span asp-validation-for="Password" class="error"></span>
   </section>
   <section class="form__section">
     <label asp-for="ConfirmPassword" class="label"></label>
-    <input aria-required="true" asp-for="ConfirmPassword" autocomplete="new-password" class="input form__input" type="password"/>
+    <input aria-required="true" asp-for="ConfirmPassword" autocomplete="new-password" class="input form__input"/>
     <span asp-validation-for="ConfirmPassword" class="error"></span>
   </section>
-  <button class="button button_primary form__commit" type="submit">Sign up</button>
+  <button class="button button_primary form__commit" type="submit">@Localizer[Signup.SignUp]</button>
 </form>
 <div class="form__links">
-  <span>Already have an account? <a class="form__link" asp-controller="Auth" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">Log in</a></span>
+  <span>
+    @Localizer[Signup.HaveAccountQuestion] <a class="form__link" asp-controller="Auth" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">@Localizer[Signup.LogIn]</a>
+  </span>
 </div>

@@ -1,10 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-
 <root>
     <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
-        <xsd:element name="root" msdata:IsDataSet="true">
-            
-        </xsd:element>
+        <xsd:element name="root" msdata:IsDataSet="true"></xsd:element>
     </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
@@ -31,15 +28,15 @@
         <value>Пароль</value>
     </data>
     <data name="EmailRequired" xml:space="preserve">
-        <value>Email обязателен!</value>
+        <value>Почта обязательна!</value>
     </data>
     <data name="EmailInvalid" xml:space="preserve">
-        <value>Email неправильный!</value>
-    </data>
-    <data name="Email" xml:space="preserve">
-        <value>Email</value>
+        <value>Почта неправильная!</value>
     </data>
     <data name="ConfirmPassword" xml:space="preserve">
         <value>Подтвердите пароль</value>
+    </data>
+    <data name="Email" xml:space="preserve">
+        <value>Почта</value>
     </data>
 </root>

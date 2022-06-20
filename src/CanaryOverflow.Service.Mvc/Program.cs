@@ -27,6 +27,7 @@ builder.Services.Configure<RequestLocalizationOptions>(opts =>
 });
 
 var mvcBuilder = builder.Services.AddControllersWithViews()
+    .AddViewLocalization()
     .AddDataAnnotationsLocalization();
 if (builder.Environment.IsDevelopment())
 {

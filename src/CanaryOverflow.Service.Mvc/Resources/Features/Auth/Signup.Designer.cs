@@ -22,24 +22,24 @@ namespace CanaryOverflow.Service.Mvc.Resources.Features.Auth {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class SignupViewModel_ru {
+    public class Signup {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal SignupViewModel_ru() {
+        internal Signup() {
         }
         
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CanaryOverflow.Service.Mvc.Resources.Features.Auth.SignupViewModel.ru", typeof(SignupViewModel_ru).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("CanaryOverflow.Service.Mvc.Resources.Features.Auth.Signup", typeof(Signup).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -51,7 +51,7 @@ namespace CanaryOverflow.Service.Mvc.Resources.Features.Auth {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,74 +61,29 @@ namespace CanaryOverflow.Service.Mvc.Resources.Features.Auth {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Подтвердите пароль.
+        ///   Looks up a localized string similar to Already have an account?.
         /// </summary>
-        internal static string ConfirmPassword {
+        public static string HaveAccountQuestion {
             get {
-                return ResourceManager.GetString("ConfirmPassword", resourceCulture);
+                return ResourceManager.GetString("HaveAccountQuestion", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email.
+        ///   Looks up a localized string similar to Log in.
         /// </summary>
-        internal static string Email {
+        public static string LogIn {
             get {
-                return ResourceManager.GetString("Email", resourceCulture);
+                return ResourceManager.GetString("LogIn", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Email неправильный!.
+        ///   Looks up a localized string similar to Sign up.
         /// </summary>
-        internal static string EmailInvalid {
+        public static string SignUp {
             get {
-                return ResourceManager.GetString("EmailInvalid", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Email обязателен!.
-        /// </summary>
-        internal static string EmailRequired {
-            get {
-                return ResourceManager.GetString("EmailRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Пароль.
-        /// </summary>
-        internal static string Password {
-            get {
-                return ResourceManager.GetString("Password", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Пароль обязателен!.
-        /// </summary>
-        internal static string PasswordRequired {
-            get {
-                return ResourceManager.GetString("PasswordRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Пароль короткий!.
-        /// </summary>
-        internal static string PasswordShort {
-            get {
-                return ResourceManager.GetString("PasswordShort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Пароли не совпадают!.
-        /// </summary>
-        internal static string PasswordsMismatch {
-            get {
-                return ResourceManager.GetString("PasswordsMismatch", resourceCulture);
+                return ResourceManager.GetString("SignUp", resourceCulture);
             }
         }
     }

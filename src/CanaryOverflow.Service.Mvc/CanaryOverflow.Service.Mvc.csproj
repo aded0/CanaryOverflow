@@ -1,84 +1,92 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <AssemblyName>CanaryOverflow.Service.Mvc</AssemblyName>
-        <RootNamespace>CanaryOverflow.Service.Mvc</RootNamespace>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>CanaryOverflow.Service.Mvc</AssemblyName>
+    <RootNamespace>CanaryOverflow.Service.Mvc</RootNamespace>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="FluentEmail.Smtp" Version="3.0.0" />
-      <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.1" />
-      <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.1" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" />
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentEmail.Smtp" Version="3.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.1" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="wwwroot" />
-    </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot" />
+  </ItemGroup>
 
-    <ItemGroup>
-      <EmbeddedResource Update="Resources\Features\Auth\SignupViewModel.resx">
-        <Generator>PublicResXFileCodeGenerator</Generator>
-        <LastGenOutput>SignupViewModel.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Features\Auth\SignupViewModel.ru.resx">
-        <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>SignupViewModel.ru.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-    </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Features\Auth\SignupViewModel.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SignupViewModel.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Features\Auth\SignupViewModel.ru.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>SignupViewModel.ru.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Features\Auth\Signup.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Signup.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Features\Auth\Signup.ru.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Signup.Designer.ru.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="Resources\Features\Auth\SignupViewModel.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>SignupViewModel.resx</DependentUpon>
-      </Compile>
-      <Compile Update="Resources\Features\Auth\SignupViewModel.ru.Designer.cs">
-        <DesignTime>True</DesignTime>
-        <AutoGen>True</AutoGen>
-        <DependentUpon>SignupViewModel.ru.resx</DependentUpon>
-      </Compile>
-    </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\Features\Auth\SignupViewModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SignupViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Features\Auth\Signup.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Signup.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
-    <ItemGroup>
-      <Content Update="Views\Shared\Notification.css">
-        <DependentUpon>_Notification.cshtml</DependentUpon>
-      </Content>
-      <Content Update="Views\Shared\LayoutSlim.css">
-        <DependentUpon>_LayoutSlim.cshtml</DependentUpon>
-      </Content>
-      <Content Update="Views\Shared\Layout.css">
-        <DependentUpon>_Layout.cshtml</DependentUpon>
-      </Content>
-      <Content Update="Views\Shared\Header.css">
-        <DependentUpon>_Header.cshtml</DependentUpon>
-      </Content>
-      <Content Update="Views\Shared\Footer.css">
-        <DependentUpon>_Footer.cshtml</DependentUpon>
-      </Content>
-      <Content Update="package-lock.json">
-        <DependentUpon>package.json</DependentUpon>
-      </Content>
-      <Content Update="appsettings.Development.json">
-        <DependentUpon>appsettings.json</DependentUpon>
-      </Content>
-    </ItemGroup>
+  <ItemGroup>
+    <Content Update="Views\Shared\Notification.css">
+      <DependentUpon>_Notification.cshtml</DependentUpon>
+    </Content>
+    <Content Update="Views\Shared\LayoutSlim.css">
+      <DependentUpon>_LayoutSlim.cshtml</DependentUpon>
+    </Content>
+    <Content Update="Views\Shared\Layout.css">
+      <DependentUpon>_Layout.cshtml</DependentUpon>
+    </Content>
+    <Content Update="Views\Shared\Header.css">
+      <DependentUpon>_Header.cshtml</DependentUpon>
+    </Content>
+    <Content Update="Views\Shared\Footer.css">
+      <DependentUpon>_Footer.cshtml</DependentUpon>
+    </Content>
+    <Content Update="package-lock.json">
+      <DependentUpon>package.json</DependentUpon>
+    </Content>
+    <Content Update="appsettings.Development.json">
+      <DependentUpon>appsettings.json</DependentUpon>
+    </Content>
+  </ItemGroup>
 
-    <ItemGroup>
-      <None Update="Views\Shared\notification_controller.js">
-        <DependentUpon>_Notification.cshtml</DependentUpon>
-      </None>
-      <None Update="Features\Auth\Signup.css">
-        <DependentUpon>Signup.cshtml</DependentUpon>
-      </None>
-    </ItemGroup>
+  <ItemGroup>
+    <None Update="Views\Shared\notification_controller.js">
+      <DependentUpon>_Notification.cshtml</DependentUpon>
+    </None>
+    <None Update="Features\Auth\Signup.css">
+      <DependentUpon>Signup.cshtml</DependentUpon>
+    </None>
+  </ItemGroup>
 </Project>
