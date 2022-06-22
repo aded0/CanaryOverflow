@@ -32,7 +32,7 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Features\Auth\SignupViewModel.ru.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>SignupViewModel.ru.Designer.cs</LastGenOutput>
+      <LastGenOutput>SignupViewModel.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Features\Auth\Signup.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
@@ -40,7 +40,15 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Features\Auth\Signup.ru.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Signup.Designer.ru.cs</LastGenOutput>
+      <LastGenOutput>Signup.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\IdentityErrors.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IdentityErrors.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\IdentityErrors.ru.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>IdentityErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 
@@ -54,6 +62,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Signup.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\IdentityErrors.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IdentityErrors.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 
