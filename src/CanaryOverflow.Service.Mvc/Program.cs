@@ -1,15 +1,19 @@
+using CanaryOverflow.Infrastructure.Data;
+using CanaryOverflow.Infrastructure.Models;
+using CanaryOverflow.Service.Mvc;
+using CanaryOverflow.Service.Mvc.EmailServices;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// var connectionString = builder.Configuration.GetConnectionString("CanaryDbContextConnection");
-// builder.Services.AddDbContext<CanaryDbContext>(options => options.UseNpgsql(connectionString));
+var connectionString = builder.Configuration.GetConnectionString("CanaryDb");
+builder.Services.AddDbContext<CanaryDbContext>(options => options.UseNpgsql(connectionString));
 
-// builder.Services.AddIdentity<User, IdentityRole<Guid>>(options =>
-// {
-// options.Password.RequireNonAlphanumeric = false;
-// options.SignIn.RequireConfirmedAccount = true;
-// })
-// .AddEntityFrameworkStores<CanaryDbContext>()
-// .AddDefaultTokenProviders();
+builder.Services.AddIdentity<User, Role>()
+    .AddEntityFrameworkStores<CanaryDbContext>()
+    .AddDefaultTokenProviders()
+    .AddErrorDescriber<MultilanguageIdentityErrorDescriber>();
 
 // builder.Services.ConfigureApplicationCookie(options =>
 // {
@@ -38,7 +42,7 @@ if (builder.Environment.IsDevelopment())
 // {
 // fv.DisableDataAnnotationsValidation = true;
 // });
-// builder.Services.AddEmailSender("no-reply@canaryoverflow.com", "CanaryOverflow");
+builder.Services.AddEmailSender("no-reply@canaryoverflow.com", "CanaryOverflow", "mx1.canaryoverflow.com");
 
 var app = builder.Build();
 
@@ -58,6 +62,6 @@ app.UseRouting();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{userId?}");
 
 app.Run();
