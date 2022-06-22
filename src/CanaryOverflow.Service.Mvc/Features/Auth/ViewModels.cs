@@ -15,8 +15,6 @@ public class SignupViewModel
 
     [Required(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
         ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.PasswordRequired))]
-    [StringLength(50, MinimumLength = 6, ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
-        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.PasswordShort))]
     [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.Password),
         ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
     [DataType(DataType.Password)]
