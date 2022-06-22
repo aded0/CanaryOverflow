@@ -14,7 +14,8 @@
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7135;http://localhost:5135",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ConnectionStrings:CanaryDb": "Host=192.168.1.6;Database=Canary;Username=canary;Password=P@ssw0rd"
       }
     }
   }
