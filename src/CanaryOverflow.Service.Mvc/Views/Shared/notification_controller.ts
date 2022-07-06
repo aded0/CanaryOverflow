@@ -2,9 +2,12 @@
 
 export default class extends Controller {
   static classes = ["hidden"];
+  declare private readonly hiddenClass: string;
+
   static values = {
     isHidden: {type: Boolean, default: true}
   };
+  declare private isHiddenValue: boolean;
 
   connect() {
     if (this.isHiddenValue) {
@@ -22,5 +25,9 @@ export default class extends Controller {
 
   close() {
     this.isHiddenValue = true;
+  }
+
+  open() {
+    this.isHiddenValue = false;
   }
 }
