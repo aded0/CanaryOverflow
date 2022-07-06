@@ -1,8 +1,9 @@
 ﻿import {Controller} from "@hotwired/stimulus";
 
-export default class extends Controller {
+class NotificationController extends Controller {
   static classes = ["hidden"];
   declare private readonly hiddenClass: string;
+//todo: add has* and check existence
 
   static values = {
     isHidden: {type: Boolean, default: true}
@@ -15,7 +16,7 @@ export default class extends Controller {
     }
   }
 
-  isHiddenValueChanged(value) {
+  isHiddenValueChanged(value: boolean) {
     if (value) {
       this.element.classList.add(this.hiddenClass);
     } else {
@@ -31,3 +32,5 @@ export default class extends Controller {
     this.isHiddenValue = false;
   }
 }
+
+export default NotificationController;

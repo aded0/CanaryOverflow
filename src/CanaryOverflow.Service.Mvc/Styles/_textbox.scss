@@ -1,0 +1,14 @@
+﻿@use './colors';
+
+.textbox {
+  border-radius: 0.25rem;
+  border: 1px solid colors.$color-zinc-400;
+  color: colors.$color-zinc-800;
+  padding: 0.25rem;
+
+  &:focus {
+    outline: none;
+    border-color: colors.$color-sky-500;
+    box-shadow: 0 0 0 4px colors.$color-sky-200;
+  }
+}

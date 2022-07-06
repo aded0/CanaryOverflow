@@ -1,0 +1,43 @@
+﻿@use 'colors';
+
+@mixin border($color) {
+  border-left: 1px solid $color;
+  border-top: 1px solid $color;
+  border-right: 1px solid $color;
+}
+
+.tab-control {
+  &__tabs {
+    border-bottom: 1px solid colors.$color-zinc-400;
+  }
+
+  &__link {
+    @include border(colors.$color-zinc-400);
+    border-radius: 0.25rem 0.25rem 0 0;
+    padding: 0.15rem 0.5rem;
+    display: block;
+    transition: 0.3s background-color;
+    
+    &:hover {
+      background-color: colors.$color-zinc-100;
+      transition: 0.3s background-color;
+    }
+  }
+
+  &__link--active {
+    @include border(colors.$color-sky-500);
+    background-color: colors.$color-sky-500;
+    transition: 0.3s background-color, 0.3s border-left-color, 0.3s border-top-color, 0.3s border-right-color;
+
+    &:hover {
+      @include border(colors.$color-sky-400);
+      background-color: colors.$color-sky-400;
+      transition: 0.3s background-color, 0.3s border-left-color, 0.3s border-top-color, 0.3s border-right-color;
+    }
+  }
+
+  &__content {
+    display: block;
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,26 @@
+﻿@use './colors';
+
+.button {
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  border: 1px solid;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 4px colors.$color-sky-200;
+  }
+
+  &--primary {
+    color: colors.$color-sky-50;
+    border-color: colors.$color-sky-500;
+    background-color: colors.$color-sky-500;
+    transition: 0.3s border-color, 0.3s background-color;
+  }
+
+  &--primary:hover {
+    border-color: colors.$color-sky-600;
+    background-color: colors.$color-sky-600;
+    transition: 0.3s border-color, 0.3s background-color;
+  }
+}

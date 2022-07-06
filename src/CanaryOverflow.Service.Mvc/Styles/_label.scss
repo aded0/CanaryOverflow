@@ -1,0 +1,12 @@
+﻿@use './colors';
+
+.label {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: colors.$color-zinc-800;
+
+  &--pointer {
+    cursor: pointer;
+  }
+}
+

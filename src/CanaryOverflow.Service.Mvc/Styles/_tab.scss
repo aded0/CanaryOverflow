@@ -1,0 +1,36 @@
+﻿@use './colors';
+
+.tab {
+  display: flex;
+  gap: 2rem;
+
+  &__column20 {
+    flex-basis: 20%;
+  }
+
+  &__column80 {
+    flex-basis: 80%;
+  }
+
+  &__link {
+    padding: 0.25rem 0.5rem;
+    display: block;
+    border-radius: 0.25rem;
+    transition: 0.3s background-color;
+
+    &:hover {
+      background-color: colors.$color-zinc-100;
+      transition: 0.3s background-color;
+    }
+  }
+
+  &__link--active {
+    background-color: colors.$color-sky-500;
+    transition: 0.3s background-color, 0.3s border-left-color, 0.3s border-top-color, 0.3s border-right-color;
+
+    &:hover {
+      background-color: colors.$color-sky-400;
+      transition: 0.3s background-color, 0.3s border-left-color, 0.3s border-top-color, 0.3s border-right-color;
+    }
+  }
+}

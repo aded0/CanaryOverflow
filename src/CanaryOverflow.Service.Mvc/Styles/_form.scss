@@ -1,0 +1,14 @@
+﻿.form {
+  display: flex;
+  flex-direction: column;
+
+  &__section {
+    margin: 0.25rem 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__button {
+    width: fit-content;
+  }
+}
