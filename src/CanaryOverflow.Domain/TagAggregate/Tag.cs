@@ -9,26 +9,30 @@ namespace CanaryOverflow.Domain.TagAggregate;
 
 #region Tag domain events
 
-public record TagCreated(Guid Id, string Name, string Description) : IDomainEvent;
+public record TagCreated(string Name, string Summary, string Description) : IDomainEvent;
 
-public record NameUpdated(string Name) : IDomainEvent;
+public record TagSummaryChanged(string Text) : IDomainEvent;
 
-public record DescriptionUpdated(string Description) : IDomainEvent;
+public record DescriptionUpdated(string Text) : IDomainEvent;
 
 #endregion
 
-[DebuggerDisplay("{Name}", Name = "{Id}")]
-public class Tag : AggregateRoot<Guid, Tag>
+[DebuggerDisplay("{Id}", Name = "{Id}")]
+public class Tag : AggregateRoot<string, Tag>
 {
-    public static async Task<Tag> Create(string? name, string? description, ITagService tagService)
+    private const string SummaryEmpty = "Summary is empty";
+    private const string DescriptionEmpty = "Description is empty";
+
+    public static async Task<Tag> Create(string? name, string? summary, string? description, ITagService tagService)
     {
         if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name), "Tag name is empty");
+        if (string.IsNullOrWhiteSpace(summary)) throw new ArgumentNullException(nameof(summary), SummaryEmpty);
         if (string.IsNullOrWhiteSpace(description))
-            throw new ArgumentNullException(nameof(description), "Tag description is empty");
+            throw new ArgumentNullException(nameof(description), DescriptionEmpty);
         var isExists = await tagService.IsExistsAsync(name);
-        if (isExists) throw new ArgumentException($"Name already exists", nameof(name));
+        if (isExists) throw new ArgumentException("Tag already exists", nameof(name));
 
-        return new Tag(name, description);
+        return new Tag(name, summary, description);
     }
 
     [UsedImplicitly]
@@ -36,28 +40,32 @@ public class Tag : AggregateRoot<Guid, Tag>
     {
     }
 
-    private Tag(string name, string description)
+    private Tag(string name, string shortDescription, string description)
     {
-        Append(new TagCreated(Guid.NewGuid(), name, description));
+        Append(new TagCreated(name, shortDescription, description));
     }
 
-    public string? Name { get; private set; }
-    public string? Description { get; private set; }
+    public string Summary { get; private set; } = null!;
 
-    public void UpdateName(string name)
+    /// <summary>
+    /// Long description in markdown.
+    /// </summary>
+    public string Description { get; private set; } = null!;
+
+    public void UpdateSummary(string? text)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            throw new ArgumentNullException(nameof(name), "Name is null or whitespace");
+        if (string.IsNullOrWhiteSpace(text))
+            throw new ArgumentNullException(nameof(text), SummaryEmpty);
 
-        Append(new NameUpdated(name));
+        Append(new TagSummaryChanged(text));
     }
 
-    public void UpdateDescription(string? description)
+    public void UpdateDescription(string? text)
     {
-        if (string.IsNullOrWhiteSpace(description))
-            throw new ArgumentNullException(nameof(description), "Description is null or whitespace");
+        if (string.IsNullOrWhiteSpace(text))
+            throw new ArgumentNullException(nameof(text), DescriptionEmpty);
 
-        Append(new DescriptionUpdated(description));
+        Append(new DescriptionUpdated(text));
     }
 
     protected override void When(IDomainEvent @event)
@@ -68,8 +76,8 @@ public class Tag : AggregateRoot<Guid, Tag>
                 Apply(tagCreated);
                 break;
 
-            case NameUpdated nameUpdated:
-                Apply(nameUpdated);
+            case TagSummaryChanged summaryChanged:
+                Apply(summaryChanged);
                 break;
 
             case DescriptionUpdated descriptionUpdated:
@@ -81,23 +89,24 @@ public class Tag : AggregateRoot<Guid, Tag>
         }
     }
 
+
     #region Event appliers
 
     private void Apply(TagCreated tagCreated)
     {
-        Id = tagCreated.Id;
-        Name = tagCreated.Name;
+        Id = tagCreated.Name;
+        Summary = tagCreated.Summary;
         Description = tagCreated.Description;
     }
 
-    private void Apply(NameUpdated nameUpdated)
+    private void Apply(TagSummaryChanged tagSummaryChanged)
     {
-        Name = nameUpdated.Name;
+        Summary = tagSummaryChanged.Text;
     }
 
     private void Apply(DescriptionUpdated descriptionUpdated)
     {
-        Description = descriptionUpdated.Description;
+        Description = descriptionUpdated.Text;
     }
 
     #endregion

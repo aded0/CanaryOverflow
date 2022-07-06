@@ -13,11 +13,11 @@ namespace CanaryOverflow.Domain.QuestionAggregate;
 #region Question domain events
 
 internal record QuestionCreated
-    (Guid Id, string Title, string Text, Guid AskedByUserId, DateTime CreatedAt) : IDomainEvent;
+    (Guid Id, string Title, string Body, Guid AskedByUserId, DateTime CreatedAt) : IDomainEvent;
 
 internal record TitleUpdated(string Title) : IDomainEvent;
 
-internal record TextUpdated(string Text) : IDomainEvent;
+internal record BodyUpdated(string Body) : IDomainEvent;
 
 internal record QuestionApproved : IDomainEvent;
 
@@ -31,9 +31,9 @@ internal record CommentAddedToAnswer(Guid AnswerId, Comment Comment) : IDomainEv
 
 internal record AnswerTextUpdated(Guid AnswerId, string Text) : IDomainEvent;
 
-internal record TagAdded(Guid TagId) : IDomainEvent;
+internal record TagAdded(string TagId) : IDomainEvent;
 
-internal record TagRemoved(Guid TagId) : IDomainEvent;
+internal record TagRemoved(string TagId) : IDomainEvent;
 
 internal record UpvotedBy(Guid UserId) : IDomainEvent;
 
@@ -77,8 +77,8 @@ public class Question : AggregateRoot<Guid, Question>
                         question.Title = reader.GetString();
                         break;
 
-                    case nameof(Text):
-                        question.Text = reader.GetString();
+                    case nameof(Body):
+                        question.Body = reader.GetString();
                         break;
 
                     case nameof(AskedById):
@@ -102,7 +102,7 @@ public class Question : AggregateRoot<Guid, Question>
                         break;
 
                     case nameof(Tags):
-                        question._tags = JsonSerializer.Deserialize<HashSet<Guid>>(ref reader, options);
+                        question._tags = JsonSerializer.Deserialize<HashSet<string>>(ref reader, options);
                         break;
 
                     case nameof(Rating):
@@ -120,7 +120,7 @@ public class Question : AggregateRoot<Guid, Question>
 
             writer.WriteString(nameof(Id), value.Id);
             writer.WriteString(nameof(Title), value.Title);
-            writer.WriteString(nameof(Text), value.Text);
+            writer.WriteString(nameof(Body), value.Body);
             writer.WriteString(nameof(AskedById), value.AskedById);
             writer.WriteString(nameof(CreatedAt), value.CreatedAt);
             writer.WriteString(nameof(SelectedAnswerId), value.SelectedAnswerId);
@@ -146,23 +146,28 @@ public class Question : AggregateRoot<Guid, Question>
     private readonly IQuestionStateMachine _stateMachine;
     private HashSet<Answer>? _answers;
     private HashSet<Comment>? _comments;
-    private HashSet<Guid>? _tags;
+    private HashSet<string>? _tags;
     private Dictionary<Guid, int>? _rating;
 
-    private Question() : this(QuestionState.Unapproved)
+    public static Question Create(Guid id, string? title, string? body, Guid askedByUserId, DateTime createdAt)
     {
-    }
-
-    public Question(string? title, string? text, Guid askedByUserId) : this(QuestionState.Unapproved)
-    {
+        if (Guid.Empty == id) throw new ArgumentException("Id is empty", nameof(id));
         if (string.IsNullOrWhiteSpace(title))
             throw new ArgumentNullException(nameof(title), "Title is empty or whitespace.");
-        if (string.IsNullOrWhiteSpace(text))
-            throw new ArgumentNullException(nameof(text), "Text is empty or whitespace.");
+        if (string.IsNullOrWhiteSpace(body))
+            throw new ArgumentNullException(nameof(body), "Text is empty or whitespace.");
         if (askedByUserId == Guid.Empty)
             throw new ArgumentException("User's identifier is empty.", nameof(askedByUserId));
 
-        Append(new QuestionCreated(Guid.NewGuid(), title, text, askedByUserId, DateTime.Now));
+        var question = new Question();
+
+        question.Append(new QuestionCreated(id, title, body, askedByUserId, createdAt));
+
+        return question;
+    }
+
+    private Question() : this(QuestionState.Unapproved)
+    {
     }
 
     private Question(QuestionState questionState)
@@ -170,19 +175,24 @@ public class Question : AggregateRoot<Guid, Question>
         _stateMachine = new QuestionStateMachine(questionState);
         _answers = new HashSet<Answer>();
         _comments = new HashSet<Comment>();
-        _tags = new HashSet<Guid>();
+        _tags = new HashSet<string>();
         _rating = new Dictionary<Guid, int>();
     }
 
     public string? Title { get; private set; }
-    public string? Text { get; private set; }
+
+    /// <summary>
+    /// Content formatted in markdown.
+    /// </summary>
+    public string? Body { get; private set; }
+
     public Guid AskedById { get; private set; }
     public DateTime CreatedAt { get; private set; }
 
     public Guid SelectedAnswerId { get; private set; }
     public IEnumerable<Answer>? Answers => _answers;
     public IEnumerable<Comment>? Comments => _comments;
-    public IEnumerable<Guid>? Tags => _tags;
+    public IEnumerable<string>? Tags => _tags;
     public IReadOnlyDictionary<Guid, int>? Rating => _rating;
 
     public void UpdateTitle(string? title)
@@ -193,12 +203,12 @@ public class Question : AggregateRoot<Guid, Question>
         Append(new TitleUpdated(title));
     }
 
-    public void UpdateText(string? text)
+    public void UpdateBody(string? body)
     {
-        if (string.IsNullOrWhiteSpace(text))
-            throw new ArgumentNullException(nameof(text), "Text is empty or whitespace.");
+        if (string.IsNullOrWhiteSpace(body))
+            throw new ArgumentNullException(nameof(body), "Text is empty or whitespace.");
 
-        Append(new TextUpdated(text));
+        Append(new BodyUpdated(body));
     }
 
     public void SetApproved()
@@ -247,20 +257,18 @@ public class Question : AggregateRoot<Guid, Question>
         Append(new AnswerTextUpdated(answerId, text));
     }
 
-    public async Task AddTag(Guid tagId, ITagService tagService)
+    public void AddTag(string tagName)
     {
-        var exists = await tagService.IsExistsAsync(tagId);
-        if (!exists) throw new ArgumentException("Tag does not exists", nameof(tagId));
-
-        Append(new TagAdded(tagId));
+        if (_tags?.Contains(tagName) is true) throw new ArgumentException("Duplicated tag", nameof(tagName));
+        Append(new TagAdded(tagName));
     }
 
-    public void RemoveTag(Guid tagId)
+    public void RemoveTag(string tagName)
     {
-        if (_tags?.Contains(tagId) is not true)
-            throw new ArgumentException("Tag was not added to question", nameof(tagId));
+        if (_tags?.Contains(tagName) is not true)
+            throw new ArgumentException("Tag was not added to question", nameof(tagName));
 
-        Append(new TagRemoved(tagId));
+        Append(new TagRemoved(tagName));
     }
 
     public async Task Upvote(Guid userId, IProfileService profileService)
@@ -291,8 +299,8 @@ public class Question : AggregateRoot<Guid, Question>
                 Apply(titleUpdated);
                 break;
 
-            case TextUpdated textUpdated:
-                Apply(textUpdated);
+            case BodyUpdated bodyUpdated:
+                Apply(bodyUpdated);
                 break;
 
             case AnswerAdded answerAdded:
@@ -346,7 +354,7 @@ public class Question : AggregateRoot<Guid, Question>
     {
         Id = questionCreated.Id;
         Title = questionCreated.Title;
-        Text = questionCreated.Text;
+        Body = questionCreated.Body;
         AskedById = questionCreated.AskedByUserId;
         CreatedAt = questionCreated.CreatedAt;
     }
@@ -356,9 +364,9 @@ public class Question : AggregateRoot<Guid, Question>
         Title = titleUpdated.Title;
     }
 
-    private void Apply(TextUpdated textUpdated)
+    private void Apply(BodyUpdated bodyUpdated)
     {
-        Text = textUpdated.Text;
+        Body = bodyUpdated.Body;
     }
 
     private void Apply(AnswerAdded answerAdded)
