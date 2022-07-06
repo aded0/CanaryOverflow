@@ -1,8 +1,9 @@
 ﻿using System.Web;
 using CanaryOverflow.Infrastructure.Models;
+using CanaryOverflow.Service.Mvc.Email;
+using CanaryOverflow.Service.Mvc.Features.Notification;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CanaryOverflow.Service.Mvc.Features.Auth;
@@ -14,10 +15,10 @@ public class AuthController : Controller
     private readonly ILogger<AuthController> _logger;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly IEmailSender _emailSender;
+    private readonly ConfirmationSender _emailSender;
 
     public AuthController(ILogger<AuthController> logger, SignInManager<User> signInManager,
-        UserManager<User> userManager, IEmailSender emailSender)
+        UserManager<User> userManager, ConfirmationSender emailSender)
     {
         _logger = logger;
         _signInManager = signInManager;
@@ -41,7 +42,7 @@ public class AuthController : Controller
             return View("/Features/Auth/Signup.cshtml", vm);
         }
 
-        var user = new User(vm.Email!, vm.Email!);
+        var user = vm.ToUser();
         var identityResult = await _userManager.CreateAsync(user, vm.Password);
 
         if (!identityResult.Succeeded)
@@ -56,29 +57,12 @@ public class AuthController : Controller
         }
 
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var callbackUrl = Url.Action("ConfirmEmail", "Auth", new {userId = user.Id, code}, Request.Scheme);
+        var callbackUrl = Url.Action("ConfirmEmail", "Auth", new {userId = user.Id, code}, Request.Scheme)!;
 
-        await _emailSender.SendEmailAsync(vm.Email, "Confirm your email",
-            $"Please confirm your account by <a href=\"{HttpUtility.HtmlEncode(callbackUrl)}\">clicking here</a>.");
+        await _emailSender.SendConfirmationEmailAsync(vm.Email, "Confirm your email", callbackUrl);
 
-        return RedirectToAction("RegisterConfirmation", "Auth", new {email = vm.Email});
-    }
-
-
-    public async Task<IActionResult> RegisterConfirmation(string? email)
-    {
-        if (email is null)
-        {
-            return RedirectToAction("Index", "Home");
-        }
-
-        var user = await _userManager.FindByEmailAsync(email);
-        if (user is null)
-        {
-            return NotFound($"Unable to load user with email '{email}'.");
-        }
-
-        return View("/Features/Auth/RegisterConfirmation.cshtml");
+        return PartialView("/Features/Notification/_Message.cshtml",
+            new MessageViewModel("You're almost done! Please check your email to confirm your account."));
     }
 
     public async Task<IActionResult> ConfirmEmail(string? userId, string? code)
@@ -162,11 +146,11 @@ public class AuthController : Controller
             new {code},
             Request.Scheme);
 
-        await _emailSender.SendEmailAsync(
+        await _emailSender.SendConfirmationEmailAsync(
             vm.Email,
             "Reset Password",
             $"Please reset your password by <a href='{HttpUtility.HtmlEncode(callbackUrl)}'>clicking here</a>.");
-    
+
         return RedirectToAction("ForgotPasswordConfirmation", "Auth");
     }
 
@@ -243,7 +227,7 @@ public class AuthController : Controller
             "Auth",
             new {userId, code},
             Request.Scheme);
-        await _emailSender.SendEmailAsync(
+        await _emailSender.SendConfirmationEmailAsync(
             vm.Email,
             "Confirm your email",
             $"Please confirm your account by <a href='{HttpUtility.HtmlEncode(callbackUrl)}'>clicking here</a>.");

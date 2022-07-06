@@ -1,7 +1,7 @@
 using CanaryOverflow.Infrastructure.Data;
 using CanaryOverflow.Infrastructure.Models;
 using CanaryOverflow.Service.Mvc;
-using CanaryOverflow.Service.Mvc.EmailServices;
+using CanaryOverflow.Service.Mvc.Email;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,7 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("CanaryDb");
 builder.Services.AddDbContext<CanaryDbContext>(options => options.UseNpgsql(connectionString));
 
-builder.Services.AddIdentity<User, Role>()
+builder.Services.AddIdentity<User, Role>(opts =>
+    {
+        opts.User.RequireUniqueEmail = true;
+        opts.Password.RequireNonAlphanumeric = false;
+    })
     .AddEntityFrameworkStores<CanaryDbContext>()
     .AddDefaultTokenProviders()
     .AddErrorDescriber<MultilanguageIdentityErrorDescriber>();
@@ -42,7 +46,10 @@ if (builder.Environment.IsDevelopment())
 // {
 // fv.DisableDataAnnotationsValidation = true;
 // });
-builder.Services.AddEmailSender("no-reply@canaryoverflow.com", "CanaryOverflow", "mx1.canaryoverflow.com");
+builder.Services.AddTransient<ConfirmationSender>()
+    .AddFluentEmail("no-reply@canaryoverflow.com", "CanaryOverflow")
+    .AddSmtpSender("mx1.canaryoverflow.com", 25)
+    .AddRazorRenderer();
 
 var app = builder.Build();
 

@@ -61,11 +61,20 @@ namespace CanaryOverflow.Service.Mvc.Resources.Features.Auth {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Confirm password.
+        ///   Looks up a localized string similar to Display name.
         /// </summary>
-        public static string ConfirmPassword {
+        public static string DisplayName {
             get {
-                return ResourceManager.GetString("ConfirmPassword", resourceCulture);
+                return ResourceManager.GetString("DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display name can not be empty!.
+        /// </summary>
+        public static string DisplayNameEmpty {
+            get {
+                return ResourceManager.GetString("DisplayNameEmpty", resourceCulture);
             }
         }
         
@@ -120,15 +129,6 @@ namespace CanaryOverflow.Service.Mvc.Resources.Features.Auth {
         public static string PasswordShort {
             get {
                 return ResourceManager.GetString("PasswordShort", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Passwords didn&apos;t match!.
-        /// </summary>
-        public static string PasswordsMismatch {
-            get {
-                return ResourceManager.GetString("PasswordsMismatch", resourceCulture);
             }
         }
     }

@@ -8,23 +8,22 @@
   ViewData["Title"] = "Signup";
 }
 
-<form asp-action="Signup" asp-controller="Auth" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form" method="post">
-  <div asp-validation-summary="ModelOnly"></div>
-  <section class="form__section">
+<form asp-action="Signup" asp-controller="Auth" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form" method="post" data-turbo-frame="notification-message">
+  <div class="form__section">
+    <label asp-for="DisplayName" class="label"></label>
+    <input aria-required="true" asp-for="DisplayName" autocomplete="username" class="input form__input">
+    <span asp-validation-for="DisplayName" class="error"></span>
+  </div>
+  <div class="form__section">
     <label asp-for="Email" class="label"></label>
     <input aria-required="true" asp-for="Email" autocomplete="email" class="input form__input"/>
     <span asp-validation-for="Email" class="error"></span>
-  </section>
-  <section class="form__section">
+  </div>
+  <div class="form__section">
     <label asp-for="Password" class="label"></label>
     <input aria-required="true" asp-for="Password" autocomplete="new-password" class="input form__input"/>
     <span asp-validation-for="Password" class="error"></span>
-  </section>
-  <section class="form__section">
-    <label asp-for="ConfirmPassword" class="label"></label>
-    <input aria-required="true" asp-for="ConfirmPassword" autocomplete="new-password" class="input form__input"/>
-    <span asp-validation-for="ConfirmPassword" class="error"></span>
-  </section>
+  </div>
   <button class="button button_primary form__commit" type="submit">@Localizer[Signup.SignUp]</button>
 </form>
 <div class="form__links">

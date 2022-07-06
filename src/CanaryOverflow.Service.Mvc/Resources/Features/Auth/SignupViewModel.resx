@@ -30,13 +30,13 @@
   <data name="PasswordRequired" xml:space="preserve">
     <value>Password required!</value>
   </data>
-  <data name="PasswordsMismatch" xml:space="preserve">
-    <value>Passwords didn't match!</value>
-  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
-  <data name="ConfirmPassword" xml:space="preserve">
-    <value>Confirm password</value>
+  <data name="DisplayNameEmpty" xml:space="preserve">
+    <value>Display name can not be empty!</value>
+  </data>
+  <data name="DisplayName" xml:space="preserve">
+    <value>Display name</value>
   </data>
 </root>

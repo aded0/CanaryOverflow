@@ -1,9 +1,17 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using CanaryOverflow.Infrastructure.Models;
 
 namespace CanaryOverflow.Service.Mvc.Features.Auth;
 
 public class SignupViewModel
 {
+    [Required(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
+        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.DisplayNameEmpty))]
+    [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.DisplayName),
+        ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
+    [DataType(DataType.Text)]
+    public string DisplayName { get; init; } = null!;
+
     [Required(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
         ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.EmailRequired))]
     [EmailAddress(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
@@ -11,23 +19,19 @@ public class SignupViewModel
     [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.Email),
         ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
     [DataType(DataType.EmailAddress)]
-    public string? Email { get; init; }
+    public string Email { get; init; } = null!;
 
     [Required(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
         ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.PasswordRequired))]
     [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.Password),
         ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
     [DataType(DataType.Password)]
-    public string? Password { get; init; }
+    public string Password { get; init; } = null!;
 
-    [Required(ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
-        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.PasswordRequired))]
-    [Compare(nameof(Password), ErrorMessageResourceType = typeof(Resources.Features.Auth.SignupViewModel),
-        ErrorMessageResourceName = nameof(Resources.Features.Auth.SignupViewModel.PasswordsMismatch))]
-    [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.ConfirmPassword),
-        ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
-    [DataType(DataType.Password)]
-    public string? ConfirmPassword { get; init; }
+    public User ToUser()
+    {
+        return new User(DisplayName, Email);
+    }
 }
 
 public class LoginViewModel

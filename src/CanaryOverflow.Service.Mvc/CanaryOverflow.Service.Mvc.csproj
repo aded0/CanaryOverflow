@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentEmail.Razor" Version="3.0.2" />
     <PackageReference Include="FluentEmail.Smtp" Version="3.0.2" />
     <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.6" />
@@ -50,6 +51,8 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IdentityErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <Content Remove="Email\ConfirmationEmail.cshtml" />
+    <EmbeddedResource Include="Email\ConfirmationEmail.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -95,11 +98,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Views\Shared\notification_controller.js">
+    <None Update="Views\Shared\notification_controller.ts">
       <DependentUpon>_Notification.cshtml</DependentUpon>
     </None>
     <None Update="Features\Auth\Signup.css">
       <DependentUpon>Signup.cshtml</DependentUpon>
+    </None>
+    <None Update="Views\Shared\Footer.css">
+      <DependentUpon>_Footer.cshtml</DependentUpon>
+    </None>
+    <None Update="Views\Shared\Header.css">
+      <DependentUpon>_Header.cshtml</DependentUpon>
+    </None>
+    <None Update="Views\Shared\Layout.css">
+      <DependentUpon>_Layout.cshtml</DependentUpon>
+    </None>
+    <None Update="Views\Shared\LayoutSlim.css">
+      <DependentUpon>_LayoutSlim.cshtml</DependentUpon>
+    </None>
+    <None Update="Views\Shared\Notification.css">
+      <DependentUpon>_Notification.cshtml</DependentUpon>
     </None>
   </ItemGroup>
 

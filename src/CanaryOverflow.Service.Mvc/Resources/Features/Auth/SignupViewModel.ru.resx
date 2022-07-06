@@ -15,9 +15,6 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="PasswordsMismatch" xml:space="preserve">
-        <value>Пароли не совпадают!</value>
-    </data>
     <data name="PasswordShort" xml:space="preserve">
         <value>Пароль короткий!</value>
     </data>
@@ -33,10 +30,13 @@
     <data name="EmailInvalid" xml:space="preserve">
         <value>Почта неправильная!</value>
     </data>
-    <data name="ConfirmPassword" xml:space="preserve">
-        <value>Подтвердите пароль</value>
-    </data>
     <data name="Email" xml:space="preserve">
         <value>Почта</value>
+    </data>
+    <data name="DisplayNameEmpty" xml:space="preserve">
+        <value>Отображаемое имя не может быть пусто!</value>
+    </data>
+    <data name="DisplayName" xml:space="preserve">
+        <value>Отображаемое имя</value>
     </data>
 </root>

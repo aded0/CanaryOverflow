@@ -2,7 +2,8 @@
   "name": "canary-overflow",
   "scripts": {
     "build:css": "node scripts/build-css.js",
-    "build:js": "node scripts/build-js.js"
+    "build:js": "node scripts/build-js.js",
+    "build:email": "node scripts/build-email.js"
   },
   "repository": {
     "type": "git",
@@ -16,7 +17,9 @@
   "homepage": "https://github.com/aded0/CanaryOverflow#readme",
   "private": true,
   "devDependencies": {
-    "esbuild": "^0.14.44"
+    "@types/inline-css": "^3.0.1",
+    "esbuild": "^0.14.44",
+    "inline-css": "^3.0.0"
   },
   "dependencies": {
     "@hotwired/stimulus": "^3.0.1",
