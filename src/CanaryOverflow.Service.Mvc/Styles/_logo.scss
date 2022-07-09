@@ -1,6 +1,7 @@
 ﻿.logo {
   width: 50px;
   height: 40px;
+  display: inline-block;
 
   &--lemon {
     fill: rgb(254, 227, 13);
@@ -18,4 +19,3 @@
     fill: rgb(49, 46, 46);
   }
 }
-

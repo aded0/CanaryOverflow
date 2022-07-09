@@ -1,0 +1,27 @@
+﻿.container {
+  margin-top: var(--header-height);
+  display: flex;
+
+  &__sidebar {
+    width: 17%;
+    position: sticky;
+    top: var(--header-height);
+    overflow-x: hidden;
+    align-self: start;
+    max-height: calc(100vh - var(--header-height));
+
+    &::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--zinc-300);
+      border-radius: 3px;
+    }
+  }
+
+  &__content {
+    width: 83%;
+    border-left: 1px solid var(--zinc-200);
+  }
+}

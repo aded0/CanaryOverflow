@@ -10,43 +10,42 @@
 </head>
 
 <body>
-<div class="app">
-  <partial name="_Header.cshtml"/>
+<partial name="_Header.cshtml"/>
 
-  <div class="app__body">
+<div class="container">
 
-    <aside class="sidebar">
-      <div class="sidebar__menu">
-        <h5 class="group__title">public</h5>
-        <ul class="group">
-          <li>
-            <a asp-action="Index" asp-active-class="group__link_active" asp-controller="Home" class="group__link">Questions</a>
-          </li>
-          <li>
-            <a class="group__link" href="">Tags</a>
-          </li>
-          <li>
-            <a class="group__link" href="">Users</a>
-          </li>
-        </ul>
-        <h5 class="group__title">find a job</h5>
-        <ul class="group">
-          <li>
-            <a class="group__link" href="">Jobs</a>
-          </li>
-          <li>
-            <a class="group__link" href="">Companies</a>
-          </li>
-        </ul>
-      </div>
-    </aside>
+  <aside class="container__sidebar">
 
-    <main class="content">@RenderBody()</main>
+    <div class="sidebar__menu">
+      <h5 class="group__title">public</h5>
+      <ul class="group">
+        <li>
+          <a asp-action="Index" asp-active-class="group__link_active" asp-controller="Home" class="group__link">Questions</a>
+        </li>
+        <li>
+          <a class="group__link" href="">Tags</a>
+        </li>
+        <li>
+          <a class="group__link" href="">Users</a>
+        </li>
+      </ul>
+      <h5 class="group__title">find a job</h5>
+      <ul class="group">
+        <li>
+          <a class="group__link" href="">Jobs</a>
+        </li>
+        <li>
+          <a class="group__link" href="">Companies</a>
+        </li>
+      </ul>
+    </div>
+  </aside>
 
-  </div>
+  <main class="container__content">@RenderBody()</main>
 
-  <partial name="_Footer.cshtml"/>
 </div>
+
+<partial name="_Footer.cshtml"/>
 
 </body>
 </html>

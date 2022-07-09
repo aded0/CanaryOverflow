@@ -96,9 +96,6 @@
     <None Update="Features\Auth\Signup.css">
       <DependentUpon>Signup.cshtml</DependentUpon>
     </None>
-    <None Update="Views\Shared\Footer.css">
-      <DependentUpon>_Footer.cshtml</DependentUpon>
-    </None>
     <None Update="Views\Shared\Layout.css">
       <DependentUpon>_Layout.cshtml</DependentUpon>
     </None>

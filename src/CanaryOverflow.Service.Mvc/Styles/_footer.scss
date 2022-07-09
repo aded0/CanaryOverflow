@@ -1,0 +1,17 @@
+﻿.footer {
+  display: flex;
+  background-color: var(--zinc-700);
+  color: var(--zinc-300);
+  padding: 1rem 2.5rem 2rem;
+
+  &__column {
+    margin-right: 3rem;
+  }
+
+  &__copyright {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+  }
+}
