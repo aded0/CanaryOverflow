@@ -16,29 +16,34 @@
 
   <aside class="container__sidebar">
 
-    <div class="sidebar__menu">
-      <h5 class="group__title">public</h5>
-      <ul class="group">
-        <li>
-          <a asp-action="Index" asp-active-class="group__link_active" asp-controller="Home" class="group__link">Questions</a>
-        </li>
-        <li>
-          <a class="group__link" href="">Tags</a>
-        </li>
-        <li>
-          <a class="group__link" href="">Users</a>
-        </li>
-      </ul>
-      <h5 class="group__title">find a job</h5>
-      <ul class="group">
-        <li>
-          <a class="group__link" href="">Jobs</a>
-        </li>
-        <li>
-          <a class="group__link" href="">Companies</a>
-        </li>
-      </ul>
-    </div>
+    <nav>
+      <section class="group">
+        <h5 class="group__title">public</h5>
+        <ul class="menu-list">
+          <li>
+            <a asp-action="Index" asp-controller="Home" class="group__link">Questions</a>
+          </li>
+          <li>
+            <a class="group__link" href="">Tags</a>
+          </li>
+          <li>
+            <a class="group__link" href="">Users</a>
+          </li>
+        </ul>
+      </section>
+      <section class="group">
+        <h5 class="group__title">find a job</h5>
+        <ul class="menu-list">
+          <li>
+            <a class="group__link" href="">Jobs</a>
+          </li>
+          <li>
+            <a class="group__link" href="">Companies</a>
+          </li>
+        </ul>
+      </section>
+    </nav>
+
   </aside>
 
   <main class="container__content">@RenderBody()</main>

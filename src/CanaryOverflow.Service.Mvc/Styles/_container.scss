@@ -1,6 +1,7 @@
 ﻿.container {
-  margin-top: var(--header-height);
   display: flex;
+  max-width: 1280px;
+  margin: var(--header-height) auto 0;
 
   &__sidebar {
     width: 17%;
