@@ -23,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Styles" />
     <Folder Include="wwwroot" />
   </ItemGroup>
 
@@ -99,9 +98,6 @@
     </None>
     <None Update="Views\Shared\Footer.css">
       <DependentUpon>_Footer.cshtml</DependentUpon>
-    </None>
-    <None Update="Views\Shared\Header.css">
-      <DependentUpon>_Header.cshtml</DependentUpon>
     </None>
     <None Update="Views\Shared\Layout.css">
       <DependentUpon>_Layout.cshtml</DependentUpon>

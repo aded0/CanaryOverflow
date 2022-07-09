@@ -1,10 +1,8 @@
-﻿@use './colors';
-
-.link {
-  color: colors.$color-zinc-700;
+﻿.link {
+  color: var(--zinc-700);
   text-decoration: none;
 
   &--active {
-    color: colors.$color-zinc-50;
+    color: var(--zinc-50);
   }
 }

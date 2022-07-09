@@ -1,0 +1,21 @@
+﻿.logo {
+  width: 50px;
+  height: 40px;
+
+  &--lemon {
+    fill: rgb(254, 227, 13);
+  }
+
+  &--macaroni-and-cheese {
+    fill: rgb(251, 177, 126);
+  }
+
+  &--black-haze {
+    fill: rgb(231, 236, 234);
+  }
+
+  &--mine-shaft {
+    fill: rgb(49, 46, 46);
+  }
+}
+

@@ -1,26 +1,38 @@
-﻿@use './colors';
-
-.button {
+﻿.button {
   padding: 0.25rem 0.75rem;
   border-radius: 0.25rem;
   border: 1px solid;
+  text-decoration: none;
   cursor: pointer;
+  display: block;
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 4px colors.$color-sky-200;
+    box-shadow: 0 0 0 4px var(--sky-200);
   }
 
   &--primary {
-    color: colors.$color-sky-50;
-    border-color: colors.$color-sky-500;
-    background-color: colors.$color-sky-500;
-    transition: 0.3s border-color, 0.3s background-color;
+    color: var(--sky-50);
+    border-color: var(--sky-500);
+    background-color: var(--sky-500);
+    transition: 0.2s border-color, 0.2s background-color;
   }
 
   &--primary:hover {
-    border-color: colors.$color-sky-600;
-    background-color: colors.$color-sky-600;
-    transition: 0.3s border-color, 0.3s background-color;
+    border-color: var(--sky-600);
+    background-color: var(--sky-600);
+    transition: 0.2s border-color, 0.2s background-color;
+  }
+
+  &--secondary {
+    color: var(--sky-900);
+    border-color: var(--sky-300);
+    background-color: var(--sky-100);
+    transition: 0.2s border-color, 0.2s background-color;
+  }
+
+  &--secondary:hover {
+    background-color: var(--sky-200);
+    transition: 0.2s border-color, 0.2s background-color;
   }
 }
