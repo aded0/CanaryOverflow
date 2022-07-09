@@ -1,6 +1,4 @@
-﻿@use './colors';
-
-%size--128 {
+﻿%size--128 {
   width: 128px;
   height: 128px;
 }
@@ -23,12 +21,12 @@
     text-align: center;
     padding: 0.25rem 0;
     cursor: pointer;
-    background-color: colors.$color-zinc-900--transparent50;
+    background-color: var(--zinc-900--alpha50);
     transition: 0.3s background-color;
-    color: colors.$color-zinc-50;
+    color: var(--zinc-50);
 
     &:hover {
-      background-color: colors.$color-zinc-900--transparent70;
+      background-color: var(--zinc-900--alpha70);
       transition: 0.3s background-color;
     }
   }

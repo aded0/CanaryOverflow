@@ -1,9 +1,7 @@
-﻿@use './colors';
-
-.label {
+﻿.label {
   font-weight: 600;
   margin-bottom: 0.25rem;
-  color: colors.$color-zinc-800;
+  color: var(--zinc-800);
 
   &--pointer {
     cursor: pointer;
