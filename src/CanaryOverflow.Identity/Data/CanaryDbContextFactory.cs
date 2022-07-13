@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 
-namespace CanaryOverflow.Infrastructure.Data;
+namespace CanaryOverflow.Identity.Data;
 
 public class CanaryDbContextFactory : IDesignTimeDbContextFactory<CanaryDbContext>
 {

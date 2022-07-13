@@ -93,15 +93,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Features\Auth\Signup.css">
-      <DependentUpon>Signup.cshtml</DependentUpon>
-    </None>
     <None Update="Views\Shared\Notification.css">
       <DependentUpon>_Notification.cshtml</DependentUpon>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CanaryOverflow.Infrastructure\CanaryOverflow.Infrastructure.csproj" />
+    <ProjectReference Include="..\CanaryOverflow.Identity\CanaryOverflow.Identity.csproj" />
   </ItemGroup>
 </Project>

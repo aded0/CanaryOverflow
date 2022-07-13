@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace CanaryOverflow.Infrastructure.Models;
+namespace CanaryOverflow.Identity.Models;
 
 public class Role : IdentityRole<Guid>
 {
-    
 }

@@ -1,8 +1,8 @@
-﻿using CanaryOverflow.Infrastructure.Models;
+﻿using CanaryOverflow.Identity.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace CanaryOverflow.Infrastructure.Data;
+namespace CanaryOverflow.Identity.Data;
 
 public class CanaryDbContext : IdentityDbContext<User, Role, Guid>
 {

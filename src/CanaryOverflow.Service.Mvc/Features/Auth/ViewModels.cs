@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using CanaryOverflow.Infrastructure.Models;
 
 namespace CanaryOverflow.Service.Mvc.Features.Auth;
 
@@ -27,11 +26,6 @@ public class SignupViewModel
         ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
     [DataType(DataType.Password)]
     public string Password { get; init; } = null!;
-
-    public User ToUser()
-    {
-        return new User(DisplayName, Email);
-    }
 }
 
 public class LoginViewModel

@@ -1,5 +1,5 @@
 ﻿using System.Web;
-using CanaryOverflow.Infrastructure.Models;
+using CanaryOverflow.Identity.Models;
 using CanaryOverflow.Service.Mvc.Email;
 using CanaryOverflow.Service.Mvc.Features.Notification;
 using Microsoft.AspNetCore.Authorization;
@@ -33,8 +33,7 @@ public class AuthController : Controller
     }
 
     [HttpPost]
-    [ActionName("Signup")]
-    public async Task<IActionResult> SignupPost([FromForm] SignupViewModel vm, [FromRoute] string? returnUrl = "/")
+    public async Task<IActionResult> Signup([FromForm] SignupViewModel vm, [FromRoute] string? returnUrl = "/")
     {
         if (!ModelState.IsValid)
         {
@@ -42,7 +41,9 @@ public class AuthController : Controller
             return View("/Features/Auth/Signup.cshtml", vm);
         }
 
-        var user = vm.ToUser();
+        var user = new User();
+        await _userManager.SetUserNameAsync(user, vm.DisplayName);
+        await _userManager.SetEmailAsync(user, vm.Email);
         var identityResult = await _userManager.CreateAsync(user, vm.Password);
 
         if (!identityResult.Succeeded)
