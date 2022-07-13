@@ -25,7 +25,7 @@
       <input aria-required="true" asp-for="Password" autocomplete="new-password" class="textbox"/>
       <span asp-validation-for="Password" class="error"></span>
     </div>
-    <button class="form__commit button button--primary" type="submit">@Localizer[Signup.SignUp]</button>
+    <button class="form__commit button button--primary" data-turbo="false" type="submit">@Localizer[Signup.SignUp]</button>
   </form>
   <div class="bottom-links">
     <span>
