@@ -2,22 +2,18 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>@ViewData["Title"]</title>
-  <link asp-append-version="true" href="~/styles.css" rel="stylesheet"/>
-  <script asp-append-version="true" defer src="~/bundle.js"></script>
+  <link asp-append-version="true" href="~/css/styles.css" rel="stylesheet"/>
+  <script asp-append-version="true" asp-src-include="~/js/*.js" defer></script>
 </head>
 
 <body>
 
-<div class="app app-slim">
+<div class="container container--centered">
   <partial name="_Header.cshtml"/>
 
-  <div class="app-slim__container">
-    <div>
-      @RenderBody()
-    </div>
-  </div>
+  <main>@RenderBody()</main>
 </div>
 
 </body>
