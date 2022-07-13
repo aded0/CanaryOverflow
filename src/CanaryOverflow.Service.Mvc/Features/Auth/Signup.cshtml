@@ -8,28 +8,29 @@
   ViewData["Title"] = "Signup";
 }
 
-<div>
-  <form asp-action="Signup" asp-controller="Auth" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form" method="post" data-turbo-frame="notification-message">
+<article>
+  <form asp-action="Signup" asp-controller="Auth" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form signup-form" method="post">
     <div class="form__section">
-      <label asp-for="DisplayName" class="label"></label>
-      <input aria-required="true" asp-for="DisplayName" autocomplete="username" class="input form__input">
+      <label asp-for="DisplayName" class="label label--pointer"></label>
+      <input aria-required="true" asp-for="DisplayName" autocomplete="username" class="textbox">
       <span asp-validation-for="DisplayName" class="error"></span>
     </div>
     <div class="form__section">
-      <label asp-for="Email" class="label"></label>
-      <input aria-required="true" asp-for="Email" autocomplete="email" class="input form__input"/>
+      <label asp-for="Email" class="label label--pointer"></label>
+      <input aria-required="true" asp-for="Email" autocomplete="email" class="textbox"/>
       <span asp-validation-for="Email" class="error"></span>
     </div>
     <div class="form__section">
-      <label asp-for="Password" class="label"></label>
-      <input aria-required="true" asp-for="Password" autocomplete="new-password" class="input form__input"/>
+      <label asp-for="Password" class="label label--pointer"></label>
+      <input aria-required="true" asp-for="Password" autocomplete="new-password" class="textbox"/>
       <span asp-validation-for="Password" class="error"></span>
     </div>
-    <button class="button button_primary form__commit" type="submit">@Localizer[Signup.SignUp]</button>
+    <button class="form__commit button button--primary" type="submit">@Localizer[Signup.SignUp]</button>
   </form>
-  <div class="form__links">
+  <div class="bottom-links">
     <span>
-      @Localizer[Signup.HaveAccountQuestion] <a class="form__link" asp-controller="Auth" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">@Localizer[Signup.LogIn]</a>
+      @Localizer[Signup.HaveAccountQuestion]
+      <a class="bottom-links__link" asp-controller="Auth" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">@Localizer[Signup.LogIn]</a>
     </span>
   </div>
-</div>
+</article>
