@@ -17,11 +17,11 @@ function buildStyles() {
 }
 
 function buildEmail() {
-  return gulp.src('./Email/ConfirmationEmail.cshtml')
-    .pipe(inlineCss())
-    //todo: how to name, where to save
-    .pipe(rename('ConfirmationEmail.cshtml'))
-    .pipe(gulp.dest('./Email'));
+  return gulp.src('../CanaryOverflow.Email/ConfirmationEmail.cshtml')
+    .pipe(inlineCss({
+      removeHtmlSelectors: true
+    }))
+    .pipe(gulp.dest('../CanaryOverflow.Email/Generated/'));
 }
 
 exports.default = gulp.parallel(buildStyles, buildEmail);

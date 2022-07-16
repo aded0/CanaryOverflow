@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="ConfirmationEmail.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Generated" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentEmail.Core" Version="3.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Generated\ConfirmationEmail.cshtml" />
+    <EmbeddedResource Include="Generated\ConfirmationEmail.cshtml" />
+  </ItemGroup>
+
+</Project>

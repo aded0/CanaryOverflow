@@ -100,6 +100,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CanaryOverflow.Email\CanaryOverflow.Email.csproj" />
     <ProjectReference Include="..\CanaryOverflow.Identity\CanaryOverflow.Identity.csproj" />
   </ItemGroup>
 
