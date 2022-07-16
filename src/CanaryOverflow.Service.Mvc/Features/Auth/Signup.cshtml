@@ -10,6 +10,7 @@
 
 <article>
   <form asp-action="Signup" asp-controller="Authn" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form signup-form" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
     <div class="form__section">
       <label asp-for="DisplayName" class="label label--pointer"></label>
       <input aria-required="true" asp-for="DisplayName" autocomplete="username" class="textbox">
