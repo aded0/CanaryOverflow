@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CanaryOverflow.Service.Mvc.Features.Auth;
 
-[Authorize]
+[AllowAnonymous]
+[AutoValidateAntiforgeryToken]
 public class AuthnController : Controller
 {
     private readonly ILogger<AuthnController> _logger;
@@ -25,7 +26,6 @@ public class AuthnController : Controller
         _emailSender = emailSender;
     }
 
-    [AllowAnonymous]
     public IActionResult Signup(string? returnUrl)
     {
         ViewData["ReturnUrl"] = returnUrl;
@@ -33,8 +33,6 @@ public class AuthnController : Controller
     }
 
     [HttpPost]
-    [AllowAnonymous]
-    [AutoValidateAntiforgeryToken]
     public async Task<IActionResult> Signup([FromForm] SignupViewModel vm, string? returnUrl)
     {
         if (!ModelState.IsValid)
@@ -90,23 +88,14 @@ public class AuthnController : Controller
         });
     }
 
-    public IActionResult Login(string? returnUrl = null)
+    public IActionResult Login(string? returnUrl)
     {
-        if (string.IsNullOrWhiteSpace(returnUrl))
-        {
-            ViewData["ReturnUrl"] = Url.Content("~/");
-        }
-        else
-        {
-            ViewData["ReturnUrl"] = returnUrl;
-        }
-
+        ViewData["ReturnUrl"] = returnUrl;
         return View("/Features/Auth/Login.cshtml");
     }
 
     [HttpPost]
-    [ActionName("Login")]
-    public async Task<IActionResult> LoginPost([FromForm] LoginViewModel vm, string returnUrl)
+    public async Task<IActionResult> Login([FromForm] LoginViewModel vm, string? returnUrl)
     {
         if (!ModelState.IsValid) return View("/Features/Auth/Login.cshtml", vm);
 

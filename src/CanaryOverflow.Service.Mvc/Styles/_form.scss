@@ -4,8 +4,11 @@
 
   &__section {
     display: flex;
-    flex-direction: column;
     margin: 0.25rem 0;
+  }
+
+  &__section--vertical {
+    flex-direction: column;
   }
 
   &__commit {

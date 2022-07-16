@@ -26,7 +26,7 @@
   </div>
   <ul class="menu-list menu-list--horizontal">
     <li>
-      <a asp-action="Login" asp-controller="Authn" class="button button--secondary" role="button">Log in</a>
+      <a asp-action="Login" asp-controller="Authn" asp-route-returnUrl="@Url.Action("Index", "Home")" class="button button--secondary" role="button">Log in</a>
     </li>
     <li>
       <a asp-action="Signup" asp-controller="Authn" asp-route-returnUrl="@Url.Action("Index", "Home")" class="button button--primary" role="button">Sign up</a>

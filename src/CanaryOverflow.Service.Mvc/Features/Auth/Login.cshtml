@@ -5,48 +5,34 @@
   ViewData["Title"] = "Log in";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<div class="row">
-  <div class="col-md-4">
-    <section>
-      <form asp-controller="Authn" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" id="account" method="post">
-        <h2>Use a local account to log in.</h2>
-        <hr/>
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-floating">
-          <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true"/>
-          <label asp-for="Email" class="form-label"></label>
-          <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-        <div class="form-floating">
-          <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true"/>
-          <label asp-for="Password" class="form-label"></label>
-          <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-        <div>
-          <div class="checkbox">
-            <label asp-for="RememberMe" class="form-label">
-              <input class="form-check-input" asp-for="RememberMe"/>
-              @Html.DisplayNameFor(m => m.RememberMe)
-            </label>
-          </div>
-        </div>
-        <div>
-          <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
-        </div>
-        <div>
-          <p>
-            <a asp-controller="Authn" asp-action="ForgotPassword">Forgot your password?</a>
-          </p>
-          <p>
-            <a asp-controller="Authn" asp-action="Signup" asp-route-returnurl="@ViewData["ReturnUrl"]">Register as a new user</a>
-          </p>
-          <p>
-            <a asp-controller="Authn" asp-action="ResendEmailConfirmation" id="resend-confirmation">Resend email confirmation</a>
-          </p>
-        </div>
-      </form>
-    </section>
-  </div>
-</div>
+<article>
+  <form asp-action="Login" asp-controller="Authn" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form signup-form" data-turbo="false" method="post" novalidate>
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form__section form__section--vertical">
+      <label asp-for="Email" class="label label--pointer label--vertical"></label>
+      <input aria-required="true" asp-for="Email" autocomplete="username" class="textbox"/>
+      <span asp-validation-for="Email" class="error"></span>
+    </div>
+    <div class="form__section form__section--vertical">
+      <label asp-for="Password" class="label label--pointer label--vertical"></label>
+      <input aria-required="true" asp-for="Password" autocomplete="current-password" class="textbox"/>
+      <span asp-validation-for="Password" class="error"></span>
+    </div>
+    <div class="form__section">
+      <input asp-for="RememberMe" type="checkbox" class="checkbox checkbox--left"/>
+      <label asp-for="RememberMe" class="label label--pointer"></label>
+    </div>
+    <button type="submit" class="form__commit button button--primary">Log in</button>
+  </form>
+  <ul class="menu-list menu-list--vertical bottom-links">
+    <li>
+      <a asp-action="ForgotPassword" asp-controller="Authn" class="bottom-links__link">Forgot your password?</a>
+    </li>
+    <li>
+      <a asp-action="Signup" asp-controller="Authn" asp-route-returnurl="@ViewData["ReturnUrl"]" class="bottom-links__link">Register as a new user</a>
+    </li>
+    <li>
+      <a asp-action="ResendEmailConfirmation" asp-controller="Authn" class="bottom-links__link">Resend email confirmation</a>
+    </li>
+  </ul>
+</article>

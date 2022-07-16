@@ -30,9 +30,16 @@ public class SignupViewModel
 
 public class LoginViewModel
 {
-    [Required] [EmailAddress] public string? Email { get; set; }
+    [Required]
+    [EmailAddress]
+    [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.Email),
+        ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
+    [DataType(DataType.EmailAddress)]
+    public string? Email { get; set; }
 
     [Required]
+    [Display(Name = nameof(Resources.Features.Auth.SignupViewModel.Password),
+        ResourceType = typeof(Resources.Features.Auth.SignupViewModel))]
     [DataType(DataType.Password)]
     public string? Password { get; set; }
 
