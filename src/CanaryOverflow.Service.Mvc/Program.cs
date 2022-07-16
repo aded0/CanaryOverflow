@@ -1,7 +1,9 @@
+using CanaryOverflow.Email;
 using CanaryOverflow.Identity.Data;
+using CanaryOverflow.Identity.Features;
 using CanaryOverflow.Identity.Models;
 using CanaryOverflow.Service.Mvc;
-using CanaryOverflow.Service.Mvc.Email;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +27,6 @@ builder.Services.AddIdentity<User, Role>(opts =>
 //     options.LoginPath = "/Auth/Login";
 // });
 
-// builder.Services.AddAuthValidators();
 builder.Services.AddLocalization(opts => opts.ResourcesPath = "Resources");
 
 builder.Services.Configure<RequestLocalizationOptions>(opts =>
@@ -50,6 +51,8 @@ builder.Services.AddTransient<ConfirmationSender>()
     .AddFluentEmail("no-reply@canaryoverflow.com", "CanaryOverflow")
     .AddSmtpSender("mx1.canaryoverflow.com", 25)
     .AddRazorRenderer();
+
+builder.Services.AddMediatR(typeof(CreateIdentityUserHandler));
 
 var app = builder.Build();
 

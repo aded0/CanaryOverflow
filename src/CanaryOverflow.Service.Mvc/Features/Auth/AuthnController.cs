@@ -1,7 +1,7 @@
-﻿using System.Web;
+﻿using CanaryOverflow.Identity.Features;
 using CanaryOverflow.Identity.Models;
-using CanaryOverflow.Service.Mvc.Email;
 using CanaryOverflow.Service.Mvc.Features.Notification;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,15 +15,15 @@ public class AuthnController : Controller
     private readonly ILogger<AuthnController> _logger;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly ConfirmationSender _emailSender;
+    private readonly IMediator _mediator;
 
     public AuthnController(ILogger<AuthnController> logger, SignInManager<User> signInManager,
-        UserManager<User> userManager, ConfirmationSender emailSender)
+        UserManager<User> userManager, IMediator mediator)
     {
         _logger = logger;
         _signInManager = signInManager;
         _userManager = userManager;
-        _emailSender = emailSender;
+        _mediator = mediator;
     }
 
     public IActionResult Signup(string? returnUrl)
@@ -41,24 +41,20 @@ public class AuthnController : Controller
             return View("/Features/Auth/Signup.cshtml", vm);
         }
 
-        var user = new User(vm.DisplayName, vm.Email);
-        var identityResult = await _userManager.CreateAsync(user, vm.Password);
+        var callbackUri = Url.Action("ConfirmEmail", "Authn")!;
+        var result =
+            await _mediator.Send(new CreateIdentityUserCommand(vm.DisplayName, vm.Email, vm.Password, callbackUri));
 
-        if (!identityResult.Succeeded)
+        if (result.IsFailure)
         {
-            foreach (var error in identityResult.Errors)
+            foreach (var description in result.Error.Descriptions)
             {
-                ModelState.AddModelError("", error.Description);
+                ModelState.AddModelError("", description);
             }
 
             ViewData["ReturnUrl"] = returnUrl;
             return View("/Features/Auth/Signup.cshtml", vm);
         }
-
-        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var confirmationUri = Url.Action("ConfirmEmail", "Authn", new {userId = user.Id, code}, Request.Scheme)!;
-
-        await _emailSender.SendConfirmationEmailAsync(vm.Email, vm.DisplayName, confirmationUri);
 
         return PartialView("/Features/Notification/_Message.cshtml",
             new MessageViewModel("You're almost done! Please check your email to confirm your account."));
@@ -136,10 +132,10 @@ public class AuthnController : Controller
             new {code},
             Request.Scheme);
 
-        await _emailSender.SendConfirmationEmailAsync(
-            vm.Email,
-            "Reset Password",
-            $"Please reset your password by <a href='{HttpUtility.HtmlEncode(callbackUrl)}'>clicking here</a>.");
+        // await _emailSender.SendConfirmationEmailAsync(
+        //     vm.Email,
+        //     "Reset Password",
+        //     $"Please reset your password by <a href='{HttpUtility.HtmlEncode(callbackUrl)}'>clicking here</a>.");
 
         return RedirectToAction("ForgotPasswordConfirmation", "Authn");
     }
@@ -217,10 +213,10 @@ public class AuthnController : Controller
             "Authn",
             new {userId, code},
             Request.Scheme);
-        await _emailSender.SendConfirmationEmailAsync(
-            vm.Email,
-            "Confirm your email",
-            $"Please confirm your account by <a href='{HttpUtility.HtmlEncode(callbackUrl)}'>clicking here</a>.");
+        // await _emailSender.SendConfirmationEmailAsync(
+        //     vm.Email,
+        //     "Confirm your email",
+        //     $"Please confirm your account by <a href='{HttpUtility.HtmlEncode(callbackUrl)}'>clicking here</a>.");
 
         ModelState.AddModelError("", "Verification email sent. Please check your email.");
         return View("/Features/Auth/ResendEmailConfirmation.cshtml", vm);
