@@ -1,4 +1,27 @@
-﻿.mail__header {
-  background-color: #0ea5e9;
-  color: #e4e4e7;
+﻿body {
+  background-color: #e4e4e7; /* zinc-200 */
+  margin: 0;
+}
+
+.header {
+  background-color: #0284c5; /* sky-600 */
+  color: #f4f4f5; /* zinc-100 */
+}
+
+.title {
+  margin: 0;
+  padding: 10px 10px 20px;
+}
+
+.content {
+  background-color: #f4f4f5; /* zinc-100 */
+  color: #27272a; /* zinc-800 */
+}
+
+.message {
+  padding: 10px;
+}
+
+.link {
+  color: #0284c5; /* sky-600 */
 }

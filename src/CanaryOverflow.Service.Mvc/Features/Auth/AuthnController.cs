@@ -41,7 +41,7 @@ public class AuthnController : Controller
             return View("/Features/Auth/Signup.cshtml", vm);
         }
 
-        var callbackUri = Url.Action("ConfirmEmail", "Authn")!;
+        var callbackUri = Url.Action("ConfirmEmail", "Authn", null, Request.Scheme)!;
         var result =
             await _mediator.Send(new CreateIdentityUserCommand(vm.DisplayName, vm.Email, vm.Password, callbackUri));
 

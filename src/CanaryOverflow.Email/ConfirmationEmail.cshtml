@@ -7,18 +7,19 @@
 </head>
 
 <body>
-<table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%">
+<table align="center" valign="top" border="0" cellpadding="0" cellspacing="0" width="600">
+  <tbody>
   <tr>
-    <td align="center" valign="top">
-      <table border="0" cellpadding="10" cellspacing="0" width="600" class="mail__header">
-        <tr>
-          <td align="center" valign="top">
-            <h1>Hi @Model.DisplayName! Welcome to CanaryOverflow</h1>
-          </td>
-        </tr>
-      </table>
+    <td align="center" valign="middle" class="header">
+      <h1 class="title">Hi @Model.DisplayName! Welcome to CanaryOverflow</h1>
     </td>
   </tr>
+  <tr>
+    <td align="left" valign="top" class="content">
+      <p class="message">Thanks you so much for sign up to CanaryOverflow community. You registration is almost done! Please confirm your account by clicking <a href="@Model.ConfirmationUri" class="link">here</a>.</p>
+    </td>
+  </tr>
+  </tbody>
 </table>
 </body>
 </html>
