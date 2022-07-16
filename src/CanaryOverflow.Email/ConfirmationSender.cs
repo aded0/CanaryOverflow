@@ -17,7 +17,7 @@ public class ConfirmationSender
         return _fluentEmail
             .To(email)
             .Subject("Account confirmation")
-            .UsingTemplateFromEmbedded("CanaryOverflow.Email.Generated.ConfirmationEmail.cshtml",
+            .UsingTemplateFromEmbedded("CanaryOverflow.Email.Generated.ConfirmationEmail.html",
                 new ConfirmationEmailViewModel(displayName, confirmationUri),
                 typeof(ConfirmationEmailViewModel).Assembly)
             .SendAsync();

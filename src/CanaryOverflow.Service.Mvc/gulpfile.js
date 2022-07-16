@@ -17,7 +17,7 @@ function buildStyles() {
 }
 
 function buildEmail() {
-  return gulp.src('../CanaryOverflow.Email/ConfirmationEmail.cshtml')
+  return gulp.src('../CanaryOverflow.Email/ConfirmationEmail.html')
     .pipe(inlineCss({
       removeHtmlSelectors: true
     }))
