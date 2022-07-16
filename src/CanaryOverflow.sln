@@ -20,6 +20,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{B4AE
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanaryOverflow.Email", "CanaryOverflow.Email\CanaryOverflow.Email.csproj", "{D5386D02-C6B7-4C66-800F-3A86BB1A60A8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionFolder", "SolutionFolder", "{CC3D8C80-5186-445F-80F0-6EB473287657}"
+	ProjectSection(SolutionItems) = preProject
+		..\LICENSE = ..\LICENSE
+		..\README.md = ..\README.md
+		..\.github\workflows\coverage.yml = ..\.github\workflows\coverage.yml
+		..\.github\workflows\security.yml = ..\.github\workflows\security.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
