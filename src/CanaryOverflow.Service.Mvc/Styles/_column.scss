@@ -1,0 +1,31 @@
+﻿.column {
+  &__title {
+    text-transform: uppercase;
+    font-weight: bold;
+    margin: 0 0 1rem;
+  }
+
+  &__title-link {
+    text-decoration: none;
+    color: var(--zinc-300);
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__list-item {
+    margin: 0.25rem 0;
+  }
+
+  &__list-link {
+    text-decoration: none;
+    color: var(--zinc-400);
+  }
+
+  &__list-link:hover {
+    color: var(--zinc-300);
+  }
+}

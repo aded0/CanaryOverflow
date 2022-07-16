@@ -14,7 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanaryOverflow.Service.Mvc", "CanaryOverflow.Service.Mvc\CanaryOverflow.Service.Mvc.csproj", "{EB6A0634-D273-4FDF-8BBD-0E5AD5249E24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanaryOverflow.Infrastructure", "CanaryOverflow.Infrastructure\CanaryOverflow.Infrastructure.csproj", "{65925B72-6D21-42FD-8CC2-90ACE44CDD60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CanaryOverflow.Identity", "CanaryOverflow.Identity\CanaryOverflow.Identity.csproj", "{65925B72-6D21-42FD-8CC2-90ACE44CDD60}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{B4AE8077-5836-41EC-877C-89856816B827}"
 EndProject

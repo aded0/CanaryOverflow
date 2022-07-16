@@ -51,8 +51,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>IdentityErrors.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Content Remove="Email\ConfirmationEmail.cshtml" />
-    <EmbeddedResource Include="Email\ConfirmationEmail.cshtml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -89,39 +87,18 @@
     <Content Update="Views\Shared\Footer.css">
       <DependentUpon>_Footer.cshtml</DependentUpon>
     </Content>
-    <Content Update="package-lock.json">
-      <DependentUpon>package.json</DependentUpon>
-    </Content>
     <Content Update="appsettings.Development.json">
       <DependentUpon>appsettings.json</DependentUpon>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Views\Shared\notification_controller.ts">
-      <DependentUpon>_Notification.cshtml</DependentUpon>
-    </None>
-    <None Update="Features\Auth\Signup.css">
-      <DependentUpon>Signup.cshtml</DependentUpon>
-    </None>
-    <None Update="Views\Shared\Footer.css">
-      <DependentUpon>_Footer.cshtml</DependentUpon>
-    </None>
-    <None Update="Views\Shared\Header.css">
-      <DependentUpon>_Header.cshtml</DependentUpon>
-    </None>
-    <None Update="Views\Shared\Layout.css">
-      <DependentUpon>_Layout.cshtml</DependentUpon>
-    </None>
-    <None Update="Views\Shared\LayoutSlim.css">
-      <DependentUpon>_LayoutSlim.cshtml</DependentUpon>
-    </None>
     <None Update="Views\Shared\Notification.css">
       <DependentUpon>_Notification.cshtml</DependentUpon>
     </None>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CanaryOverflow.Infrastructure\CanaryOverflow.Infrastructure.csproj" />
+    <ProjectReference Include="..\CanaryOverflow.Identity\CanaryOverflow.Identity.csproj" />
   </ItemGroup>
 </Project>

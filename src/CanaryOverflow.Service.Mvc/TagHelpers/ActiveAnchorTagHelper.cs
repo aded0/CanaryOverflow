@@ -29,18 +29,17 @@ public class ActiveAnchorTagHelper : TagHelper
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        if (!string.IsNullOrWhiteSpace(ActiveClass) && MatchController() && MatchAction())
+        if (string.IsNullOrWhiteSpace(ActiveClass) || !MatchController() || !MatchAction()) return;
+        
+        if (output.Attributes.TryGetAttribute("class", out var classAttribute))
         {
-            if (output.Attributes.TryGetAttribute("class", out var classAttribute))
-            {
-                var newValue = string.Join(' ', classAttribute.Value, ActiveClass);
-                var attribute = new TagHelperAttribute(classAttribute.Name, newValue, classAttribute.ValueStyle);
-                output.Attributes.SetAttribute(attribute);
-            }
-            else
-            {
-                output.Attributes.Add("class", ActiveClass);
-            }
+            var newValue = string.Join(' ', classAttribute.Value, ActiveClass);
+            var attribute = new TagHelperAttribute(classAttribute.Name, newValue, classAttribute.ValueStyle);
+            output.Attributes.SetAttribute(attribute);
+        }
+        else
+        {
+            output.Attributes.Add("class", ActiveClass);
         }
     }
 

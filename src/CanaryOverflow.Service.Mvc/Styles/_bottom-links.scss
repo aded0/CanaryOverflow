@@ -1,0 +1,14 @@
+﻿.bottom-links {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--zinc-800);
+
+  &__link {
+    color: var(--sky-600);
+    text-decoration: none;
+  }
+
+  &__link:hover {
+    color: var(--sky-400);
+  }
+}

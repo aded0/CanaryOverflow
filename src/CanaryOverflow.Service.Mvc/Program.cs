@@ -1,5 +1,5 @@
-using CanaryOverflow.Infrastructure.Data;
-using CanaryOverflow.Infrastructure.Models;
+using CanaryOverflow.Identity.Data;
+using CanaryOverflow.Identity.Models;
 using CanaryOverflow.Service.Mvc;
 using CanaryOverflow.Service.Mvc.Email;
 using Microsoft.AspNetCore.Identity;
@@ -64,11 +64,9 @@ app.UseStaticFiles();
 app.UseRequestLocalization();
 
 app.UseRouting();
-// app.UseAuthentication();
-// app.UseAuthorization();
+app.UseAuthentication();
+app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{userId?}");
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}");
 
 app.Run();

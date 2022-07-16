@@ -1,0 +1,16 @@
+﻿.menu-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-list--horizontal {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.menu-list--vertical {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem
+}

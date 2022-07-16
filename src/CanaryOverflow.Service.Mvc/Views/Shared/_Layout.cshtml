@@ -4,23 +4,23 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>@ViewData["Title"]</title>
-  <link asp-append-version="true" href="~/styles.css" rel="stylesheet"/>
-  <script asp-append-version="true" defer src="~/bundle.js"></script>
+  <link asp-append-version="true" data-turbo-track="reload" href="~/css/styles.css" rel="stylesheet" />
+  <script asp-append-version="true" asp-src-include="~/js/*.js" data-turbo-track="reload" defer></script>
 </head>
 
 <body>
-<div class="app">
-  <partial name="_Notification.cshtml"/>
-  <partial name="_Header.cshtml"/>
+<partial name="_Header.cshtml"/>
 
-  <div class="app__body">
+<div class="container">
 
-    <aside class="sidebar">
-      <div class="sidebar__menu">
+  <aside class="container__sidebar">
+
+    <nav>
+      <section class="group">
         <h5 class="group__title">public</h5>
-        <ul class="group">
+        <ul class="menu-list">
           <li>
-            <a asp-action="Index" asp-active-class="group__link_active" asp-controller="Home" class="group__link">Questions</a>
+            <a asp-action="Index" asp-controller="Home" class="group__link">Questions</a>
           </li>
           <li>
             <a class="group__link" href="">Tags</a>
@@ -29,8 +29,10 @@
             <a class="group__link" href="">Users</a>
           </li>
         </ul>
+      </section>
+      <section class="group">
         <h5 class="group__title">find a job</h5>
-        <ul class="group">
+        <ul class="menu-list">
           <li>
             <a class="group__link" href="">Jobs</a>
           </li>
@@ -38,15 +40,16 @@
             <a class="group__link" href="">Companies</a>
           </li>
         </ul>
-      </div>
-    </aside>
+      </section>
+    </nav>
 
-    <main class="content">@RenderBody()</main>
+  </aside>
 
-  </div>
+  <main class="container__content">@RenderBody()</main>
 
-  <partial name="_Footer.cshtml"/>
 </div>
+
+<partial name="_Footer.cshtml"/>
 
 </body>
 </html>

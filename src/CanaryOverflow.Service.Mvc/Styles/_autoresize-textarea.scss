@@ -1,0 +1,7 @@
+﻿@use './textbox';
+
+.autoresize-textarea {
+  @extend .textbox;
+  resize: none;
+  overflow-y: hidden;
+}

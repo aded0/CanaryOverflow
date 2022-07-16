@@ -1,0 +1,8 @@
+﻿.link {
+  color: var(--zinc-700);
+  text-decoration: none;
+
+  &--active {
+    color: var(--zinc-50);
+  }
+}

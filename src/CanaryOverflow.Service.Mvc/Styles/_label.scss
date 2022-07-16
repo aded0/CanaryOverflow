@@ -1,0 +1,13 @@
+﻿.label {
+  font-weight: 600;
+  color: var(--zinc-800);
+
+  &--vertical {
+    margin-bottom: 0.25rem;
+  }
+
+  &--pointer {
+    cursor: pointer;
+  }
+}
+

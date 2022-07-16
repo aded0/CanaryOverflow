@@ -17,6 +17,7 @@ public class ConfirmationSender
         return _fluentEmail
             .To(email)
             .Subject(subject)
+            //todo: sync template file path
             .UsingTemplateFromEmbedded("CanaryOverflow.Service.Mvc.Email.ConfirmationEmail.cshtml",
                 new ConfirmationEmailViewModel(subject, confirmationUri), typeof(ConfirmationEmailViewModel).Assembly)
             .SendAsync();
