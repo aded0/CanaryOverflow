@@ -8,16 +8,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CanaryOverflow.Service.Mvc.Features.Auth;
 
-[AllowAnonymous]
-[AutoValidateAntiforgeryToken]
-public class AuthController : Controller
+[Authorize]
+public class AuthnController : Controller
 {
-    private readonly ILogger<AuthController> _logger;
+    private readonly ILogger<AuthnController> _logger;
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
     private readonly ConfirmationSender _emailSender;
 
-    public AuthController(ILogger<AuthController> logger, SignInManager<User> signInManager,
+    public AuthnController(ILogger<AuthnController> logger, SignInManager<User> signInManager,
         UserManager<User> userManager, ConfirmationSender emailSender)
     {
         _logger = logger;
@@ -26,14 +25,17 @@ public class AuthController : Controller
         _emailSender = emailSender;
     }
 
-    public IActionResult Signup([FromRoute] string? returnUrl = "/")
+    [AllowAnonymous]
+    public IActionResult Signup(string? returnUrl)
     {
         ViewData["ReturnUrl"] = returnUrl;
         return View("/Features/Auth/Signup.cshtml");
     }
 
     [HttpPost]
-    public async Task<IActionResult> Signup([FromForm] SignupViewModel vm, [FromRoute] string? returnUrl = "/")
+    [AllowAnonymous]
+    [AutoValidateAntiforgeryToken]
+    public async Task<IActionResult> Signup([FromForm] SignupViewModel vm, string? returnUrl)
     {
         if (!ModelState.IsValid)
         {
@@ -41,9 +43,7 @@ public class AuthController : Controller
             return View("/Features/Auth/Signup.cshtml", vm);
         }
 
-        var user = new User();
-        await _userManager.SetUserNameAsync(user, vm.DisplayName);
-        await _userManager.SetEmailAsync(user, vm.Email);
+        var user = new User(vm.DisplayName, vm.Email);
         var identityResult = await _userManager.CreateAsync(user, vm.Password);
 
         if (!identityResult.Succeeded)
@@ -58,9 +58,9 @@ public class AuthController : Controller
         }
 
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-        var callbackUrl = Url.Action("ConfirmEmail", "Auth", new {userId = user.Id, code}, Request.Scheme)!;
+        var confirmationUri = Url.Action("ConfirmEmail", "Authn", new {userId = user.Id, code}, Request.Scheme)!;
 
-        await _emailSender.SendConfirmationEmailAsync(vm.Email, "Confirm your email", callbackUrl);
+        await _emailSender.SendConfirmationEmailAsync(vm.Email, vm.DisplayName, confirmationUri);
 
         return PartialView("/Features/Notification/_Message.cshtml",
             new MessageViewModel("You're almost done! Please check your email to confirm your account."));
@@ -137,13 +137,13 @@ public class AuthController : Controller
         if (user is null || !await _userManager.IsEmailConfirmedAsync(user))
         {
             // Don't reveal that the user does not exist or is not confirmed
-            return RedirectToAction("ForgotPasswordConfirmation", "Auth");
+            return RedirectToAction("ForgotPasswordConfirmation", "Authn");
         }
 
         var code = await _userManager.GeneratePasswordResetTokenAsync(user);
         var callbackUrl = Url.Action(
             "ResetPassword",
-            "Auth",
+            "Authn",
             new {code},
             Request.Scheme);
 
@@ -152,7 +152,7 @@ public class AuthController : Controller
             "Reset Password",
             $"Please reset your password by <a href='{HttpUtility.HtmlEncode(callbackUrl)}'>clicking here</a>.");
 
-        return RedirectToAction("ForgotPasswordConfirmation", "Auth");
+        return RedirectToAction("ForgotPasswordConfirmation", "Authn");
     }
 
     public IActionResult ForgotPasswordConfirmation()
@@ -184,11 +184,11 @@ public class AuthController : Controller
         if (user is null)
         {
             // Don't reveal that the user does not exist
-            return RedirectToAction("ResetPasswordConfirmation", "Auth");
+            return RedirectToAction("ResetPasswordConfirmation", "Authn");
         }
 
         var result = await _userManager.ResetPasswordAsync(user, vm.Code, vm.Password);
-        if (result.Succeeded) return RedirectToAction("ResetPasswordConfirmation", "Auth");
+        if (result.Succeeded) return RedirectToAction("ResetPasswordConfirmation", "Authn");
 
         foreach (var error in result.Errors)
         {
@@ -225,7 +225,7 @@ public class AuthController : Controller
         var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
         var callbackUrl = Url.Action(
             "ConfirmEmail",
-            "Auth",
+            "Authn",
             new {userId, code},
             Request.Scheme);
         await _emailSender.SendConfirmationEmailAsync(

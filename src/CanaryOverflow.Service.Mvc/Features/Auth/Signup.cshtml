@@ -9,7 +9,7 @@
 }
 
 <article>
-  <form asp-action="Signup" asp-controller="Auth" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form signup-form" method="post">
+  <form asp-action="Signup" asp-controller="Authn" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form signup-form" method="post">
     <div class="form__section">
       <label asp-for="DisplayName" class="label label--pointer"></label>
       <input aria-required="true" asp-for="DisplayName" autocomplete="username" class="textbox">
@@ -30,7 +30,7 @@
   <div class="bottom-links">
     <span>
       @Localizer[Signup.HaveAccountQuestion]
-      <a class="bottom-links__link" asp-controller="Auth" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">@Localizer[Signup.LogIn]</a>
+      <a class="bottom-links__link" asp-controller="Authn" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]">@Localizer[Signup.LogIn]</a>
     </span>
   </div>
 </article>

@@ -7,7 +7,7 @@
   @{
     if (User.Identity?.IsAuthenticated == true)
     {
-      <form asp-controller="Auth" asp-action="Logout" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form-inline" method="post">
+      <form asp-controller="Authn" asp-action="Logout" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form-inline" method="post">
         <button type="submit" class="nav-link btn btn-link text-dark">Click here to Logout</button>
       </form>
     }
