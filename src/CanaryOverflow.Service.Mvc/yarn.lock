@@ -1062,13 +1062,6 @@
     "@types/minimatch" "*"
     "@types/node" "*"
 
-"@types/gulp-concat@^0.0.33":
-  version "0.0.33"
-  resolved "https://registry.yarnpkg.com/@types/gulp-concat/-/gulp-concat-0.0.33.tgz#67dbd6ffaadb02784a6c66b98017251d973bd1a7"
-  integrity sha512-8On3yjnwXFKmGWm+P9GKBLzuYW9kGnhd3+sTj6cdIPFchYAEdqhc7Q3egTLK/Oqr083w1Q3SyRPAWEHAuxj4DQ==
-  dependencies:
-    "@types/node" "*"
-
 "@types/gulp-postcss@^8.0.2":
   version "8.0.2"
   resolved "https://registry.yarnpkg.com/@types/gulp-postcss/-/gulp-postcss-8.0.2.tgz#6343f7034fd0b5ca239f277b8b67d8a8bcb3f86f"
@@ -1948,13 +1941,6 @@ concat-stream@^1.6.0:
     inherits "^2.0.3"
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
-
-concat-with-sourcemaps@^1.0.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/concat-with-sourcemaps/-/concat-with-sourcemaps-1.1.0.tgz#d4ea93f05ae25790951b99e7b3b09e3908a4082e"
-  integrity sha512-4gEjHJFT9e+2W/77h/DS5SGUgwDaOwprX8L/gl5+3ixnzkVJJsZWDSelmN3Oilw3LNDZjZV0yqH1hLG3k6nghg==
-  dependencies:
-    source-map "^0.6.1"
 
 convert-source-map@^1.0.0, convert-source-map@^1.5.0, convert-source-map@^1.7.0:
   version "1.8.0"
@@ -2862,15 +2848,6 @@ gulp-cli@^2.2.0:
     semver-greatest-satisfied-range "^1.1.0"
     v8flags "^3.2.0"
     yargs "^7.1.0"
-
-gulp-concat@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/gulp-concat/-/gulp-concat-2.6.1.tgz#633d16c95d88504628ad02665663cee5a4793353"
-  integrity sha512-a2scActrQrDBpBbR3WUZGyGS1JEPLg5PZJdIa7/Bi3GuKAmPYDK6SFhy/NZq5R8KsKKFvtfR0fakbUCcKGCCjg==
-  dependencies:
-    concat-with-sourcemaps "^1.0.0"
-    through2 "^2.0.0"
-    vinyl "^2.0.0"
 
 gulp-inline-css@^4.0.0:
   version "4.0.0"
