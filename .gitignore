@@ -451,3 +451,7 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+
+# Generated assets
+src/CanaryOverflow.Service.Mvc/wwwroot
+src/CanaryOverflow.Email/Genarated
