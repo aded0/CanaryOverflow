@@ -4,7 +4,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>@ViewData["Title"]</title>
-  <link asp-append-version="true" data-turbo-track="reload" href="~/css/styles.css" rel="stylesheet" />
+  <link asp-append-version="true" data-turbo-track="reload" href="~/css/styles.css" rel="stylesheet"/>
   <script asp-append-version="true" asp-src-include="~/js/*.js" data-turbo-track="reload" defer></script>
 </head>
 
@@ -20,7 +20,7 @@
         <h5 class="group__title">public</h5>
         <ul class="menu-list">
           <li>
-            <a asp-action="Index" asp-controller="Home" class="group__link">Questions</a>
+            <a asp-action="Index" asp-active-class="group__link--active" asp-controller="Home" class="group__link">Questions</a>
           </li>
           <li>
             <a class="group__link" href="">Tags</a>
