@@ -29,7 +29,7 @@ public class AuthnController : Controller
     public IActionResult Signup(string? returnUrl)
     {
         ViewData["ReturnUrl"] = returnUrl;
-        return View("/Features/Auth/Signup.cshtml");
+        return PartialView("/Features/Auth/Signup.cshtml");
     }
 
     [HttpPost]
@@ -38,7 +38,7 @@ public class AuthnController : Controller
         if (!ModelState.IsValid)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            return View("/Features/Auth/Signup.cshtml", vm);
+            return PartialView("/Features/Auth/_SignupForm.cshtml", vm);
         }
 
         var callbackUri = Url.Action("ConfirmEmail", "Authn", null, Request.Scheme)!;
@@ -53,11 +53,10 @@ public class AuthnController : Controller
             }
 
             ViewData["ReturnUrl"] = returnUrl;
-            return View("/Features/Auth/Signup.cshtml", vm);
+            return PartialView("/Features/Auth/_SignupForm.cshtml", vm);
         }
 
-        return PartialView("/Features/Notification/_Message.cshtml",
-            new MessageViewModel("You're almost done! Please check your email to confirm your account."));
+        return LocalRedirect(returnUrl);
     }
 
     public async Task<IActionResult> ConfirmEmail(string? userId, string? code)

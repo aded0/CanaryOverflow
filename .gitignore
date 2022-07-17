@@ -454,4 +454,4 @@ $RECYCLE.BIN/
 
 # Generated assets
 src/CanaryOverflow.Service.Mvc/wwwroot
-src/CanaryOverflow.Email/Genarated
+src/CanaryOverflow.Email/Generated
