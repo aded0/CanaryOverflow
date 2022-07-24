@@ -7,9 +7,8 @@
   Layout = "_LayoutSlim";
   ViewData["Title"] = "Sign Up";
 }
-
 <article>
-  <partial name="/Features/Auth/_SignupForm.cshtml" model="@Model" view-data="@ViewData"/>
+  <partial name="/Features/Auth/_SignupForm.cshtml" model="Model" view-data="ViewData"/>
   <div class="bottom-links">
     <span>
       @Localizer[Signup.HaveAccountQuestion]

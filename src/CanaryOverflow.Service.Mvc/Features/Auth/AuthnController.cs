@@ -1,6 +1,5 @@
 ﻿using CanaryOverflow.Identity.Features;
 using CanaryOverflow.Identity.Models;
-using CanaryOverflow.Service.Mvc.Features.Notification;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -26,19 +25,19 @@ public class AuthnController : Controller
         _mediator = mediator;
     }
 
-    public IActionResult Signup(string? returnUrl)
+    public IActionResult Signup(string returnUrl = "/")
     {
         ViewData["ReturnUrl"] = returnUrl;
         return PartialView("/Features/Auth/Signup.cshtml");
     }
 
     [HttpPost]
-    public async Task<IActionResult> Signup([FromForm] SignupViewModel vm, string? returnUrl)
+    public async Task<IActionResult> Signup([FromForm] SignupViewModel vm, string returnUrl = "/")
     {
         if (!ModelState.IsValid)
         {
             ViewData["ReturnUrl"] = returnUrl;
-            return PartialView("/Features/Auth/_SignupForm.cshtml", vm);
+            return this.TurboStream("/Features/Auth/_SignupFormStream.cshtml", vm);
         }
 
         var callbackUri = Url.Action("ConfirmEmail", "Authn", null, Request.Scheme)!;
@@ -53,7 +52,7 @@ public class AuthnController : Controller
             }
 
             ViewData["ReturnUrl"] = returnUrl;
-            return PartialView("/Features/Auth/_SignupForm.cshtml", vm);
+            return this.TurboStream("/Features/Auth/_SignupFormStream.cshtml", vm);
         }
 
         return LocalRedirect(returnUrl);
@@ -128,7 +127,7 @@ public class AuthnController : Controller
         var callbackUrl = Url.Action(
             "ResetPassword",
             "Authn",
-            new {code},
+            new { code },
             Request.Scheme);
 
         // await _emailSender.SendConfirmationEmailAsync(
@@ -210,7 +209,7 @@ public class AuthnController : Controller
         var callbackUrl = Url.Action(
             "ConfirmEmail",
             "Authn",
-            new {userId, code},
+            new { userId, code },
             Request.Scheme);
         // await _emailSender.SendConfirmationEmailAsync(
         //     vm.Email,

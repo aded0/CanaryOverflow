@@ -3,24 +3,22 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @model CanaryOverflow.Service.Mvc.Features.Auth.SignupViewModel
 @inject IViewLocalizer Localizer
-<turbo-frame id="signup-form">
-  <form asp-action="Signup" asp-controller="Authn" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form card card--mb" method="post" novalidate>
-    <div asp-validation-summary="ModelOnly"></div>
-    <div class="form__section form__section--vertical">
-      <label asp-for="DisplayName" class="label label--pointer label--vertical"></label>
-      <input aria-required="true" asp-for="DisplayName" autocomplete="username" class="textbox">
-      <span asp-validation-for="DisplayName" class="error"></span>
-    </div>
-    <div class="form__section form__section--vertical">
-      <label asp-for="Email" class="label label--pointer label--vertical"></label>
-      <input aria-required="true" asp-for="Email" autocomplete="email" class="textbox"/>
-      <span asp-validation-for="Email" class="error"></span>
-    </div>
-    <div class="form__section form__section--vertical">
-      <label asp-for="Password" class="label label--pointer label--vertical"></label>
-      <input aria-required="true" asp-for="Password" autocomplete="new-password" class="textbox"/>
-      <span asp-validation-for="Password" class="error"></span>
-    </div>
-    <button class="form__commit button button--primary" type="submit">@Localizer[Signup.SignUp]</button>
-  </form>
-</turbo-frame>
+<form asp-action="Signup" asp-controller="Authn" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form card card--mb" id="signup-form" method="post" novalidate>
+  <div asp-validation-summary="ModelOnly"></div>
+  <div class="form__section form__section--vertical">
+    <label asp-for="DisplayName" class="label label--pointer label--vertical"></label>
+    <input aria-required="true" asp-for="DisplayName" autocomplete="username" class="textbox">
+    <span asp-validation-for="DisplayName" class="error"></span>
+  </div>
+  <div class="form__section form__section--vertical">
+    <label asp-for="Email" class="label label--pointer label--vertical"></label>
+    <input aria-required="true" asp-for="Email" autocomplete="email" class="textbox" />
+    <span asp-validation-for="Email" class="error"></span>
+  </div>
+  <div class="form__section form__section--vertical">
+    <label asp-for="Password" class="label label--pointer label--vertical"></label>
+    <input aria-required="true" asp-for="Password" autocomplete="new-password" class="textbox" />
+    <span asp-validation-for="Password" class="error"></span>
+  </div>
+  <button class="form__commit button button--primary" type="submit">@Localizer[Signup.SignUp]</button>
+</form>
