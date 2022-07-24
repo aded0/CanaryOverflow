@@ -1,0 +1,18 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using Microsoft.AspNetCore.Mvc.Localization
+@using CanaryOverflow.Service.Mvc.Resources.Features.Auth
+@model CanaryOverflow.Service.Mvc.Features.Auth.SignupViewModel
+@inject IViewLocalizer Localizer
+@{
+  Layout = "_LayoutSlim";
+  ViewData["Title"] = "Sign Up";
+}
+<article>
+  <partial name="/Features/Auth/_SignupForm.cshtml" model="Model" view-data="ViewData"/>
+  <div class="bottom-links">
+    <span>
+      @Localizer[Signup.HaveAccountQuestion]
+      <a asp-action="Login" asp-controller="Authn" asp-route-returnurl="@ViewData["ReturnUrl"]" class="bottom-links__link">@Localizer[Signup.LogIn]</a>
+    </span>
+  </div>
+</article>

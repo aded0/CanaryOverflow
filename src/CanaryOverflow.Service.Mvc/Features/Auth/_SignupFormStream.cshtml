@@ -1,0 +1,7 @@
+@using CanaryOverflow.Service.Mvc.Features.Auth
+@model SignupViewModel
+<turbo-stream action="replace" target="signup-form">
+  <template>
+    <partial name="/Features/Auth/_SignupForm.cshtml" model="Model" view-data="ViewData" />
+  </template>
+</turbo-stream>

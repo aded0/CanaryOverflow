@@ -1,0 +1,11 @@
+﻿.textbox {
+  border-radius: 0.25rem;
+  border: 1px solid var(--zinc-400);
+  color: var(--zinc-800);
+  padding: 0.25rem;
+
+  &:focus {
+    outline: 4px solid var(--sky-200);
+    border-color: var(--sky-500);
+  }
+}

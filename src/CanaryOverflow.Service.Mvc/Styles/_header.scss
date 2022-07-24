@@ -1,0 +1,50 @@
+﻿.header {
+  display: flex;
+  align-items: center;
+  height: var(--header-height);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+
+  &__link {
+    flex-shrink: 0;
+    padding: 0.4em 0.6em;
+    display: flex;
+    align-items: center;
+    transition: 0.2s background-color;
+  }
+
+  &__link:hover {
+    background-color: var(--zinc-200);
+    transition: 0.2s background-color;
+  }
+
+  &__text {
+    &--xlarge {
+      font-size: 1.25rem;
+    }
+
+    &--bold {
+      font-weight: 700;
+    }
+  }
+
+  &__search-box {
+    flex-grow: 1;
+    padding: 0 0.5rem;
+  }
+
+  &__controls {
+    flex-shrink: 0;
+    display: flex;
+    gap: 4px;
+    padding: 0 0.5em;
+  }
+
+  &--light {
+    background-color: var(--zinc-100);
+    filter: drop-shadow(0 4px 3px rgb(0 0 0 / 0.07)) drop-shadow(0 2px 2px rgb(0 0 0 / 0.06));
+  }
+}

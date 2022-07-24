@@ -1,0 +1,30 @@
+﻿.checkbox {
+  width: 1rem;
+  height: 1rem;
+  appearance: none;
+  border: 1px solid var(--zinc-300);
+  border-radius: 0.25rem;
+  background-color: var(--zinc-100);
+  transition: 0.3s background-color, 0.3s border-color;
+  cursor: pointer;
+
+  &:checked {
+    background-color: var(--sky-500);
+    transition: 0.3s background-color, 0.3s border-color;
+    border-color: var(--sky-500);
+    background-image: url(data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%2016%2011.379%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22m15.772%200.9698-0.7409-0.7409c-0.30524-0.30521-0.80351-0.30521-1.1114%200l-7.7691%207.7715-4.0697-4.0697c-0.30521-0.30525-0.80351-0.30525-1.1113%200l-0.74093%200.7409c-0.30521%200.30525-0.30521%200.80351%200%201.1113l5.3635%205.3635c0.15394%200.15394%200.35217%200.2322%200.55306%200.2322s0.40175-0.07826%200.5531-0.2322l9.0656-9.0656c0.31306-0.31043%200.31306-0.8061%200.0078-1.1114z%22%20fill%3D%22%23fafafa%22%2F%3E%3C%2Fsvg%3E);
+    background-position-x: 50%;
+    background-position-y: 50%;
+    background-repeat: no-repeat;
+    background-size: 70%;
+  }
+
+  &:focus {
+    outline: 2px solid var(--sky-500);
+    outline-offset: 2px;
+  }
+
+  &--left {
+    margin-right: 0.5rem;
+  }
+}

@@ -1,0 +1,38 @@
+﻿@using Microsoft.AspNetCore.Mvc.TagHelpers
+@model CanaryOverflow.Service.Mvc.Features.Auth.LoginViewModel
+@{
+  Layout = "_LayoutSlim";
+  ViewData["Title"] = "Log in";
+}
+
+<article>
+  <form asp-action="Login" asp-controller="Authn" asp-route-returnurl="@ViewData["ReturnUrl"]" class="form card card--mb" method="post" novalidate>
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form__section form__section--vertical">
+      <label asp-for="Email" class="label label--pointer label--vertical"></label>
+      <input aria-required="true" asp-for="Email" autocomplete="username" class="textbox"/>
+      <span asp-validation-for="Email" class="error"></span>
+    </div>
+    <div class="form__section form__section--vertical">
+      <label asp-for="Password" class="label label--pointer label--vertical"></label>
+      <input aria-required="true" asp-for="Password" autocomplete="current-password" class="textbox"/>
+      <span asp-validation-for="Password" class="error"></span>
+    </div>
+    <div class="form__section">
+      <input asp-for="RememberMe" type="checkbox" class="checkbox checkbox--left"/>
+      <label asp-for="RememberMe" class="label label--pointer"></label>
+    </div>
+    <button type="submit" class="form__commit button button--primary">Log in</button>
+  </form>
+  <ul class="menu-list menu-list--vertical bottom-links">
+    <li>
+      <a asp-action="ForgotPassword" asp-controller="Authn" class="bottom-links__link">Forgot your password?</a>
+    </li>
+    <li>
+      <a asp-action="Signup" asp-controller="Authn" asp-route-returnurl="@ViewData["ReturnUrl"]" class="bottom-links__link">Register as a new user</a>
+    </li>
+    <li>
+      <a asp-action="ResendEmailConfirmation" asp-controller="Authn" class="bottom-links__link">Resend email confirmation</a>
+    </li>
+  </ul>
+</article>

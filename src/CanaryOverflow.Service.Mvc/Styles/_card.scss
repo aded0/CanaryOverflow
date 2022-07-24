@@ -1,0 +1,11 @@
+﻿.card {
+  border-radius: 0.25rem;
+  background-color: white;
+  padding: 1rem;
+  width: 250px;
+  box-shadow: 0 0 20px 0 var(--zinc-300);
+
+  &--mb {
+    margin: 1.25rem 1.25rem 2.25rem 1.25rem;
+  }
+}

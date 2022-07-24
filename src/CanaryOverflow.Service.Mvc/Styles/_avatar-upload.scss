@@ -1,0 +1,37 @@
+﻿%size--128 {
+  width: 128px;
+  height: 128px;
+}
+
+.avatar-upload {
+  @extend %size--128;
+  position: relative;
+  overflow: hidden;
+
+  &__img {
+    @extend %size--128;
+  }
+
+  &__button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    text-align: center;
+    padding: 0.25rem 0;
+    cursor: pointer;
+    background-color: var(--zinc-900--alpha50);
+    transition: 0.3s background-color;
+    color: var(--zinc-50);
+
+    &:hover {
+      background-color: var(--zinc-900--alpha70);
+      transition: 0.3s background-color;
+    }
+  }
+
+  &__file-picker {
+    display: none;
+  }
+}

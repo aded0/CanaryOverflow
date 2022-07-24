@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using CanaryOverflow.Common;
 using CanaryOverflow.Domain.Services;
@@ -8,29 +9,30 @@ namespace CanaryOverflow.Domain.ProfileAggregate;
 
 #region Profile domain events
 
-internal record ProfileCreated
-    (Guid Id, string DisplayName, DateTime CreatedAt, Guid AvatarId, string? Summary) : IDomainEvent;
+internal record ProfileCreated(Guid Id, string DisplayName, DateTime CreatedAt, Guid AvatarId) : IDomainEvent;
 
-internal record DisplayNameChanged(string NewDisplayName) : IDomainEvent;
+internal record DisplayNameChanged(string DisplayName) : IDomainEvent;
 
-internal record AvatarChanged(Guid NewAvatarId) : IDomainEvent;
+internal record AvatarChanged(Guid AvatarId) : IDomainEvent;
 
-internal record SummaryChanged(string? Summary) : IDomainEvent;
+internal record ProfileSummaryChanged(string? Summary) : IDomainEvent;
 
 #endregion
 
 public class Profile : AggregateRoot<Guid, Profile>
 {
-    public static async Task<Profile> Create(string? displayName, Guid avatarId, string? summary,
-        IAssetsService assetsService)
+    private const string DisplayNameEmpty = "Display name is empty.";
+
+    public static async Task<Profile> Create(Guid id, string? displayName, DateTime createdAt,
+        ICreateAvatar createAvatar)
     {
+        if (id == Guid.Empty) throw new ArgumentException("Profile id is empty.", nameof(id));
         if (string.IsNullOrWhiteSpace(displayName))
-            throw new ArgumentNullException(nameof(displayName), "Display name can not be empty.");
+            throw new ArgumentNullException(nameof(displayName), DisplayNameEmpty);
 
-        var exists = await assetsService.IsAvatarExists(avatarId);
-        if (exists is false) throw new ArgumentException("AvatarId can not be empty.", nameof(avatarId));
+        var uploadedAvatarId = await createAvatar.CreateAsync(id, displayName);
 
-        return new Profile(displayName, avatarId, summary);
+        return new Profile(id, displayName, createdAt, uploadedAvatarId);
     }
 
     [UsedImplicitly]
@@ -38,9 +40,9 @@ public class Profile : AggregateRoot<Guid, Profile>
     {
     }
 
-    private Profile(string displayName, Guid avatarId, string? summary)
+    private Profile(Guid id, string displayName, DateTime createdAt, Guid avatarId)
     {
-        Append(new ProfileCreated(Guid.NewGuid(), displayName, DateTime.Now, avatarId, summary));
+        Append(new ProfileCreated(id, displayName, createdAt, avatarId));
     }
 
     public string? DisplayName { get; private set; }
@@ -51,22 +53,21 @@ public class Profile : AggregateRoot<Guid, Profile>
     public void ChangeDisplayName(string displayName)
     {
         if (string.IsNullOrWhiteSpace(displayName))
-            throw new ArgumentNullException(nameof(displayName), "Display name can not be empty.");
+            throw new ArgumentNullException(nameof(displayName), DisplayNameEmpty);
 
         Append(new DisplayNameChanged(displayName));
     }
 
-    public async Task ChangeAvatar(Guid avatarId, IAssetsService assetsService)
+    public async Task ChangeAvatarAsync(Stream newAvatarData, Guid previousAvatarId, IChangeAvatar changeAvatar)
     {
-        var exists = await assetsService.IsAvatarExists(avatarId);
-        if (exists is false) throw new ArgumentException("AvatarId can not be empty.", nameof(avatarId));
+        var uploadedAvatarId = await changeAvatar.ChangeAsync(newAvatarData, previousAvatarId);
 
-        Append(new AvatarChanged(avatarId));
+        Append(new AvatarChanged(uploadedAvatarId));
     }
 
     public void ChangeSummary(string? summary)
     {
-        Append(new SummaryChanged(summary));
+        Append(new ProfileSummaryChanged(summary));
     }
 
     protected override void When(IDomainEvent @event)
@@ -85,8 +86,8 @@ public class Profile : AggregateRoot<Guid, Profile>
                 Apply(avatarChanged);
                 break;
 
-            case SummaryChanged summaryChanged:
-                Apply(summaryChanged);
+            case ProfileSummaryChanged profileSummaryChanged:
+                Apply(profileSummaryChanged);
                 break;
         }
     }
@@ -100,22 +101,21 @@ public class Profile : AggregateRoot<Guid, Profile>
         DisplayName = profileCreated.DisplayName;
         CreatedAt = profileCreated.CreatedAt;
         AvatarId = profileCreated.AvatarId;
-        Summary = profileCreated.Summary;
     }
 
     private void Apply(DisplayNameChanged displayNameChanged)
     {
-        DisplayName = displayNameChanged.NewDisplayName;
+        DisplayName = displayNameChanged.DisplayName;
     }
 
     private void Apply(AvatarChanged avatarChanged)
     {
-        AvatarId = avatarChanged.NewAvatarId;
+        AvatarId = avatarChanged.AvatarId;
     }
 
-    private void Apply(SummaryChanged summaryChanged)
+    private void Apply(ProfileSummaryChanged profileSummaryChanged)
     {
-        Summary = summaryChanged.Summary;
+        Summary = profileSummaryChanged.Summary;
     }
 
     #endregion

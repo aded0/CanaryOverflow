@@ -1,0 +1,19 @@
+﻿.search-box {
+  position: relative;
+
+  &__icon {
+    position: absolute;
+    top: 50%;
+    margin-top: -9px;
+    left: 0.4rem;
+    height: 18px;
+    width: 18px;
+    pointer-events: none;
+    fill: var(--zinc-400);
+  }
+
+  &__textbox {
+    padding-left: 1.8rem;
+    width: 100%;
+  }
+}

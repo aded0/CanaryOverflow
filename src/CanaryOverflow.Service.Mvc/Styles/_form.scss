@@ -1,0 +1,21 @@
+﻿.form {
+  display: flex;
+  flex-direction: column;
+
+  &__section {
+    display: flex;
+    margin: 0.25rem 0;
+  }
+
+  &__section--vertical {
+    flex-direction: column;
+  }
+
+  &__commit {
+    margin-top: 1rem;
+  }
+
+  &__button {
+    width: fit-content;
+  }
+}
